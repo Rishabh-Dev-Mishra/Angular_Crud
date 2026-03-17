@@ -1,0 +1,90 @@
+/* Full-page container centered */
+.container {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Card box */
+.box {
+    background-color: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    padding: 30px 40px;
+    width: 350px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Section heading */
+.top-content {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+/* Input section */
+.cred {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Labels */
+.cred h5 {
+    font-size: 0.9rem;
+    color: #666;
+    margin: 0;
+}
+
+/* Inputs */
+input {
+    padding: 12px 15px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    outline: none;
+    transition: 0.3s;
+    font-size: 0.95rem;
+}
+
+input:focus {
+    border-color: #f6ef3b;
+    box-shadow: 0 0 5px rgba(246, 239, 59, 0.6);
+}
+
+/* Button */
+button {
+    margin-top: 15px;
+    background-color: #f6ef3b;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    padding: 12px;
+    border-radius: 12px;
+    width: 100%;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background-color: #f2e800;
+    transform: scale(1.03);
+}
+
+/* Footer text */
+h6 {
+    font-size: 0.85rem;
+    color: #999;
+    text-align: center;
+    margin-top: 10px;
+}

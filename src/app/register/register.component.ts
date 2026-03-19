@@ -7,17 +7,19 @@ import { FormsModule } from '@angular/forms'; // 1. Must import this for [(ngMod
   standalone: true,
   imports: [FormsModule], // 2. Add it to the imports array
   templateUrl: './register.component.html',
-  styleUrl: './register.component.css'
+  styleUrls: ['./register.component.css']
 })
 export class RegisterComponent {
-  username = '';
+  firstname = '';
+  lastname = '';
+  email = '';
   password = '';
   message = '';
 
   private dataService = inject(DataService);
 
   register() {
-    const user = { username: this.username, password: this.password };
+    const user = { firstname: this.firstname, password: this.password, lastname: this.lastname, email: this.email };
     
     this.dataService.register(user).subscribe({
       next: (res: any) => this.message = res.message,

@@ -6,16 +6,13 @@ import { HttpClient } from '@angular/common/http'
   providedIn: 'root'
 })
 export class DataService {
-
-  constructor() { }
-  private http = inject(HttpClient);
-  private url = 'http://localhost:3000/api';
-
-  postUserData(data: any){
-    return this.http.post(`${this.url}/users`, data);
+  url = "http://localhost:3000";
+  constructor(private http: HttpClient){}
+  register(data: any){
+    return this.http.post(this.url+"/register", data);
   }
 
-  getUserData(){
-    return this.http.get(`${this.url}/users`)
+  login(data: any){
+    return this.http.post(this.url+"/login", data);
   }
 }

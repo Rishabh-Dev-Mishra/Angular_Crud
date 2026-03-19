@@ -19,7 +19,7 @@ export class RegisterComponent {
   register() {
     const user = { username: this.username, password: this.password };
     
-    this.dataService.postUserData(user).subscribe({
+    this.dataService.register(user).subscribe({
       next: (res: any) => this.message = res.message,
       error: (err: any) => this.message = err.error?.message || 'An error occurred'
     });

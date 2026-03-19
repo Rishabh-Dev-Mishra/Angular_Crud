@@ -42,4 +42,4 @@ testem.log
 Thumbs.db
 
 
-./auth-backend/node_modules
+auth-backend/node_modules

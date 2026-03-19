@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Basic
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.22.
@@ -57,3 +58,7 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+=======
+# Angular_Crud
+Simple angular app for practice
+>>>>>>> b00ecf50d0b7ed669ba7c410130554f2d7191316

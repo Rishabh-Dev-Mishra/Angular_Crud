@@ -20,8 +20,6 @@ export class RegisterComponent {
     const user = { username: this.username, password: this.password };
     
     this.dataService.postUserData(user).subscribe({
-      // 3. Fixed the typo: 'error' instead of 'eror'
-      // 4. Fixed the syntax: 'err.error' instead of 'err: error'
       next: (res: any) => this.message = res.message,
       error: (err: any) => this.message = err.error?.message || 'An error occurred'
     });

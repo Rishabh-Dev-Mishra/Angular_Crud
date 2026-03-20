@@ -38,11 +38,16 @@ app.post("/register", async (req, res) => {
   }
 });
 app.post("/login", async (req, res)=>{
-    const {email, password} = req.body;
-    const user = await pool.query("Select * from users where email = $1", [email]);
+  const {email, password} = req.body;
+  try{
+    const user = await pool.query("Select * from users where email = $1 and password = $2", [email, password]);
     if(user.rows.length === 0)
             return res.status(400).send("User not found");
     res.json({message: "Login Success"});
+  }
+  catch(err){
+    res.status(500).json({message: " Server Error"})
+  }
 });
 
 app.listen(3000, (req, res)=>{

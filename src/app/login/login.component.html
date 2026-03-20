@@ -3,10 +3,12 @@
     <h4 class="top-content">Login Here</h4>
     <div class="cred">
       <h5>Email Id</h5>
-      <input type="email" name="" id="" placeholder="email" />
+      <input type="email" name="email" id="" placeholder="email" [(ngModel)] = "email"/>
       <h5>Password</h5>
       <input
         type="password"
+        name = "password"
+        [(ngModel)] = "password"
         required="true"
         required
         pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}"

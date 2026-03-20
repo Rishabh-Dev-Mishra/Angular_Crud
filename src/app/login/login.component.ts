@@ -21,6 +21,12 @@ export class LoginComponent {
   private toast = inject(ToastrService)
 
   login(){
+
+    if (!this.email || !this.password || !this.email.includes('@')) {
+    this.toast.warning('Please fix the errors before logging in', 'Form Invalid');
+    return;
+  }
+
     const user = {
       email: this.email,
       password: this.password

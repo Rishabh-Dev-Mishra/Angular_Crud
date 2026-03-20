@@ -1,11 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { DataService } from '../data.service';
-import { FormsModule } from '@angular/forms'; // 1. Must import this for [(ngModel)]
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [FormsModule], // 2. Add it to the imports array
+  imports: [FormsModule], 
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })

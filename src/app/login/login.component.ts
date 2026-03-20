@@ -31,7 +31,14 @@ export class LoginComponent {
         this.router.navigate(['/home']);
       },
       error:(err:any)=> {
-        this.message = err.error?.message || "Login failed";  
+        if (err.status === 401 ) {
+        alert("Invalid email or password");
+      } else if (err.status === 400) {
+        alert("User Not Registered");
+      } else {
+        alert("An unexpected error occurred");
+      }
+        this.message = err.error?.message || "Login failed";
       },
     })
   }

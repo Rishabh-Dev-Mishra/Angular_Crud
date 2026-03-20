@@ -3,6 +3,7 @@ import { DataService } from '../data.service';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { AuthServiceService } from '../auth-service.service';
 
 @Component({
   selector: 'app-login',
@@ -17,6 +18,7 @@ export class LoginComponent {
   message = '';
 
   private dataservice = inject(DataService);  
+  private authService = inject(AuthServiceService)
   private router = inject(Router);  
   private toast = inject(ToastrService)
 
@@ -37,6 +39,7 @@ export class LoginComponent {
         this.message = res.message;
         this.toast.success(res.message || "Login Success");
         console.log(res);
+        this.authService.login("LoggedIn")
         this.router.navigate(['/home']);
       },
       error:(err:any)=> {

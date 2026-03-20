@@ -1,9 +1,10 @@
 import { Component, inject } from '@angular/core';
 import { DataService } from '../data.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
-  imports: [],
+  imports: [FormsModule],
   standalone: true,
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'

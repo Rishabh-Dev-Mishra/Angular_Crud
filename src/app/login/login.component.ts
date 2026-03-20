@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { DataService } from '../data.service';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
@@ -17,6 +18,7 @@ export class LoginComponent {
 
   private dataservice = inject(DataService);  
   private router = inject(Router);  
+  private toast = inject(ToastrService)
 
   login(){
     const user = {
@@ -27,16 +29,17 @@ export class LoginComponent {
     this.dataservice.login(user).subscribe({
       next: (res: any)=>{
         this.message = res.message;
+        this.toast.success(res.message || "Login Success");
         console.log(res);
         this.router.navigate(['/home']);
       },
       error:(err:any)=> {
         if (err.status === 401 ) {
-        alert("Invalid email or password");
+        this.toast.error("Invalid email or password")
       } else if (err.status === 400) {
-        alert("User Not Registered");
+        this.toast.error("User Not Registered");
       } else {
-        alert("An unexpected error occurred");
+        this.toast.error("An unexpected error occurred");
       }
         this.message = err.error?.message || "Login failed";
       },

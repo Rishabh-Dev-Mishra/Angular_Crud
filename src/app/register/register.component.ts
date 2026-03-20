@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { DataService } from '../data.service';
 import { FormsModule } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-register',
@@ -17,13 +18,18 @@ export class RegisterComponent {
   message = '';
 
   private dataService = inject(DataService);
+  private toast = inject(ToastrService)
 
   register() {
     const user = { firstname: this.firstname, password: this.password, lastname: this.lastname, email: this.email };
     
     this.dataService.register(user).subscribe({
-      next: (res: any) => this.message = res.message,
-      error: (err: any) => this.message = err.error?.message || 'An error occurred'
+      next: (res: any) => {this.message = res.message
+        this.toast.success("Register Sucess")
+      },
+      error: (err: any) => {this.message = err.error?.message || 'An error occurred'
+        this.toast.warning("Invalid details")
+      }
     });
   }
 }

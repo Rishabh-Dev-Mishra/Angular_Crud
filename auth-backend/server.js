@@ -4,13 +4,14 @@ const cors = require("cors")
 const pool = require("./db")
 const jwt = require("jsonwebtoken")
 
-require('dotenv').config(); 
+require('dotenv').config({path: '../.env'}); 
 app.use(cors());
-app.use(express.json());
+app.use(express.json());  
 
 app.get("/", (req, res)=>{
     res.send("Welcome");
 })
+
 
 app.post("/register", async (req, res) => {
   try {
@@ -42,19 +43,23 @@ app.post("/login", async (req, res) => {
   const { email, password } = req.body;
   try {
 
-    const user = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
+    const ExisitingUser = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
     
-    if (user.rows.length === 0) {
+    if (ExisitingUser.rows.length === 0) {
       return res.status(400).send("User not found");
     }
 
 
-    if (user.rows[0].password !== password) {
+    if (ExisitingUser.rows[0].password !== password) {
       return res.status(401).send("Invalid password");
     }
 
 
-    const token = jwt.sign({ email: email }, process.env.SECRET_KEY, { expiresIn: '1h' });
+    const token = jwt.sign(
+    { email: email },
+    process.env.SECRET,
+    { expiresIn: "1h" }
+);
     
     res.json({ message: "Login Success", token: token });
 

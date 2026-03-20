@@ -3,6 +3,7 @@ const app = express()
 const cors = require("cors")
 const pool = require("./db")
 const jwt = require("jsonwebtoken")
+const bcrypt = require("bcrypt");
 
 require('dotenv').config({path: '../.env'}); 
 app.use(cors());
@@ -27,9 +28,12 @@ app.post("/register", async (req, res) => {
       return res.status(400).json({ message: "User already exists" });
     }
 
+    const salthash = 10;
+    const hashedpassword = await bcrypt.hash(password, salthash);
+
     await pool.query(
       "INSERT INTO users (firstname, lastname, email, password) VALUES ($1, $2, $3, $4)",
-      [firstname, lastname, email, password]
+      [firstname, lastname, email, hashedpassword]
     );
 
     res.json({ message: "Registered successfully" });
@@ -39,6 +43,7 @@ app.post("/register", async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
   try {
@@ -49,8 +54,9 @@ app.post("/login", async (req, res) => {
       return res.status(400).send("User not found");
     }
 
+     const isMatch = await bcrypt.compare(password, ExisitingUser.rows[0].password);
 
-    if (ExisitingUser.rows[0].password !== password) {
+    if (!isMatch) {
       return res.status(401).send("Invalid password");
     }
 

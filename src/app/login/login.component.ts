@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { DataService } from '../data.service';
+import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -14,7 +15,8 @@ export class LoginComponent {
   password = '';
   message = '';
 
-  private dataservice = inject(DataService);    
+  private dataservice = inject(DataService);  
+  private router = inject(Router);  
 
   login(){
     const user = {
@@ -26,6 +28,7 @@ export class LoginComponent {
       next: (res: any)=>{
         this.message = res.message;
         console.log(res);
+        this.router.navigate(['/home']);
       },
       error:(err:any)=> {
         this.message = err.error?.message || "Login failed";  

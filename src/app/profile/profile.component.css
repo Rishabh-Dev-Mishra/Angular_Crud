@@ -29,11 +29,6 @@
     background: linear-gradient(to right, #ff9966, #ff5e62);
 }
 
-/* Image Styling */
-.image-container {
-    margin-top: -60px; /* Pulls image up into header */
-}
-
 img {
     width: 120px;
     height: 120px;
@@ -111,3 +106,46 @@ img {
     align-items: center;
     gap: 8px;
 }
+
+
+.image-container {
+    margin-top: -60px;
+    position: relative; /* Required for absolute positioning of modal */
+    display: inline-block;
+}
+
+/* New Hover Modal Styling */
+.hover-modal {
+    position: absolute;
+    top: -80px; /* Adjust to float above the image */
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    padding: 10px 15px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    width: 180px;
+    z-index: 10;
+    font-size: 13px;
+    text-align: left;
+    border: 1px solid #eee;
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+/* Small arrow pointing down from the modal */
+.hover-modal::after {
+    content: "";
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid white;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+    to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+

@@ -21,10 +21,9 @@ export class RegisterComponent {
   private dataService = inject(DataService);
   private toast = inject(ToastrService)
 
-  register() {
-    const user = { firstname: this.firstname, password: this.password, lastname: this.lastname, email: this.email };
+  register(form: any) {
     
-    this.dataService.register(user).subscribe({
+    this.dataService.register(form.value).subscribe({
       next: (res: any) => {this.message = res.message
         this.toast.success("Register Sucess")
       },

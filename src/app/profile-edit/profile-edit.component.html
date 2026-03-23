@@ -1,0 +1,11 @@
+<div class="container">
+    <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+        <label for="firstName">firstname</label>
+        <input type="text" formControlName="firstName">
+        <label for="lastName">lastname</label>
+        <input type="text" formControlName="lastName">
+        <label for="email">email</label>
+        <input type="email" formControlName="email">
+        <button type="submit" [disabled] = "userForm.invalid">Save changes</button>
+    </form>
+</div>

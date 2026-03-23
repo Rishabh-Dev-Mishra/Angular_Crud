@@ -26,16 +26,16 @@ export class LoginComponent implements OnInit{
     this.authService.logout();
   }
 
-  login(){
+  login(form: any){
 
-    if (!this.email || !this.password || !this.email.includes('@')) {
+    if (form.invalid) {
     this.toast.warning('Please fix the errors before logging in', 'Form Invalid');
     return;
   }
 
     const user = {
-      email: this.email,
-      password: this.password
+      email: form.value.email,
+      password: form.value.password
     };
 
     this.dataservice.login(user).subscribe({

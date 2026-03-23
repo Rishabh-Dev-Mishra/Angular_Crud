@@ -1,11 +1,13 @@
 <div class="container">
   <div class="box">
     <h4 class="top-content">Register Here</h4>
-    <div class="cred">
+    <form #registerForm="ngForm" (ngSubmit)="register(registerForm)">
+      <div class="cred">
       <h5>First Name</h5>
       <input
         type="text"
         required="true"
+        name="firstname"
         [(ngModel)]="firstname"
         placeholder="First name"
       />
@@ -13,6 +15,7 @@
       <h5>Last Name</h5>
       <input
         type="text"
+        name="lastname"
         required="true"
         [(ngModel)]="lastname"
         placeholder="Last name"
@@ -21,9 +24,9 @@
       <h5>Email Id</h5>
       <input
         type="email"
+        name="email"
         required="true"
         [(ngModel)]="email"
-        pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
         required
         email placeholder="email"
         #emailRef="ngModel"
@@ -46,9 +49,9 @@
       <input
         type="password"
         required="true"
+        name="password"
         [(ngModel)]="password"
         #passRef="ngModel"
-        pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}"
         title="Must contain at least one number, one uppercase, one lowercase letter, and one special character (!@#$%^&*), and be at least 8 characters long"
         required="true"
         placeholder="Password"
@@ -60,7 +63,8 @@
         </div>
       }
     </div>
-    <button type="button" (click)="register()">Register</button>
+    <button type="submit" [disabled] = "registerForm.invalid">Register</button>
+    </form>
     <h6>Already have an account? <a routerLink="/">Login</a></h6>
   </div>
 </div>

@@ -1,11 +1,16 @@
 <div class="container">
-    <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
-        <label for="firstName">firstname</label>
-        <input type="text" formControlName="firstName">
-        <label for="lastName">lastname</label>
-        <input type="text" formControlName="lastName">
-        <label for="email">email</label>
-        <input type="email" formControlName="email">
-        <button type="submit" [disabled] = "userForm.invalid">Save changes</button>
+  <div class="box">
+    <h4 class="top-content">Edit Here</h4>
+    <form class="forms" #editForm="ngForm" (ngSubmit)="(editForm)">
+      <div class="cred">
+        <label for="firstName">Firstname</label>
+        <input type="text" name="firstName" />
+        <label for="lastName">Lastname</label>
+        <input type="text" name="lastName" />
+        <label for="email">Email</label>
+        <input type="email" name="email" />
+      </div>
+      <button type="submit" [disabled]="editForm.invalid">Save Changes</button>
     </form>
+  </div>
 </div>

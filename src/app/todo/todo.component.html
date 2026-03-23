@@ -1,15 +1,16 @@
 <div class="navbar">
   TODO APP &nbsp;<sub><i>Pending to do</i></sub>
   <div class="profile-section">
-    <a href="/profile">
-      <i class="fa fa-fw fa-user profile-icon"></i>
+    <a routerLink="/profile">
+      <img *ngIf = "imageURL; else icons" [src]="imageURL" alt="">
+      <ng-template #icons> <i class="fa fa-fw fa-user profile-icon"></i> </ng-template>
     </a>
   </div>
 </div>
 <h1 class="above-content">Get It Done</h1>
 <div class="container">
   <div class="middle-box">
-    <div class="cont-text">
+    <div class="cont-text">p
       <i><pre>--- Lets have it ---</pre></i>
     </div>
     <div class="job">

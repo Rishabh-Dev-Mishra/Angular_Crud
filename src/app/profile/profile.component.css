@@ -1,0 +1,113 @@
+/* Page Background with a soft gradient */
+.profile-page-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Glassmorphism Card */
+.profile-card {
+    width: 350px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.profile-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Colorful Header */
+.card-header {
+    height: 100px;
+    background: linear-gradient(to right, #ff9966, #ff5e62);
+}
+
+/* Image Styling */
+.image-container {
+    margin-top: -60px; /* Pulls image up into header */
+}
+
+img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 5px solid white;
+    object-fit: cover;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* Typography */
+.profile-name {
+    margin: 15px 0 5px;
+    font-size: 24px;
+    color: #333;
+}
+
+.profile-email {
+    color: #777;
+    font-size: 14px;
+    margin-bottom: 25px;
+}
+
+/* Information List */
+.info-section {
+    padding: 0 30px;
+    margin-bottom: 25px;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.label {
+    color: #999;
+    font-weight: 500;
+}
+
+.value {
+    color: #444;
+}
+
+.active {
+    color: #2ecc71;
+    font-weight: bold;
+}
+
+/* Buttons */
+.edit-btn {
+    background-color: #ff5e62;
+    color: white;
+    border: none;
+    padding: 12px 40px;
+    border-radius: 25px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 30px;
+    transition: background 0.3s;
+}
+
+.edit-btn:hover {
+    background-color: #e04d51;
+}
+
+.back-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    text-decoration: none;
+    color: #555;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}

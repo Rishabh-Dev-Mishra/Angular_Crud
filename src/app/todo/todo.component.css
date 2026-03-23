@@ -155,21 +155,21 @@
     align-items: center;
     margin-right: 25px;
     justify-content: center;
-    flex-shrink: 0; /* Prevents the navbar from squishing it into an oval */
+    flex-shrink: 0;
 }
 
-/* The Icon/Circle itself */
-.profile-icon {
-    width: 45px;      /* Fixed width */
-    height: 45px;     /* Fixed height (same as width for circle) */
+
+.profile-icon, img {
+    width: 45px;     
+    height: 45px;     
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 20px; 
     color: #102050; 
-    background: rgba(16, 32, 80, 0.15); /* Slightly darker for better visibility */
-    border: 2px solid #102050; /* Makes it clearly defined */
-    border-radius: 50%; /* Force perfect circle */
+    background: rgba(16, 32, 80, 0.15); 
+    border: 2px solid #102050;
+    border-radius: 50%; 
     transition: 0.3s;
     cursor: pointer;
 }
@@ -178,3 +178,4 @@
     background: #102050;
     color: #fff;
 }
+

@@ -15,4 +15,8 @@ export class DataService {
   login(data: any){
     return this.http.post(this.url+"/login", data);
   }
+
+  edit(data: any){
+    return this.http.post(this.url+"/edit-profile",data);
+  }
 }

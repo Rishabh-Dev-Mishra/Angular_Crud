@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { DataService } from '../data.service';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -12,7 +12,7 @@ import { AuthServiceService } from '../auth-service.service';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit{
   email = '';
   password = '';
   message = '';
@@ -21,6 +21,10 @@ export class LoginComponent {
   private authService = inject(AuthServiceService)
   private router = inject(Router);  
   private toast = inject(ToastrService)
+
+  ngOnInit() {
+    this.authService.logout();
+  }
 
   login(){
 

@@ -39,7 +39,7 @@ export class LoginComponent {
         this.message = res.message;
         this.toast.success(res.message || "Login Success");
         console.log(res);
-        this.authService.login("LoggedIn")
+        this.authService.login("token")
         this.router.navigate(['/home']);
       },
       error:(err:any)=> {

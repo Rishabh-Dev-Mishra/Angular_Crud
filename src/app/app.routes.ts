@@ -10,7 +10,7 @@ export const routes: Routes = [
     {path: "", component : LoginComponent},
     {path: "register", component: RegisterComponent},
     {path: "home", component: TodoComponent, canActivate: [routeGuardGuard]},
-    {path: "profile", component: ProfileComponent},
+    {path: "profile", component: ProfileComponent, canActivate: [routeGuardGuard]},
     {path: "**", component: PageNotFoundComponent}
 
 ];

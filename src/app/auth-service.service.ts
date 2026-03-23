@@ -1,19 +1,17 @@
-import { Token } from '@angular/compiler';
 import { Injectable, signal } from '@angular/core';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class AuthServiceService {
-
-  constructor() { }
-  isLoggedIn = signal<boolean>(!!localStorage.getItem('auth_token'));
-  login(token:string){
-    localStorage.setItem('auth_token', token)
-    this.isLoggedIn.set(true);
+  isLoggedIn(): boolean {
+    return !!localStorage.getItem('userToken'); 
   }
-  logout(){
-    localStorage.removeItem('auth_token')
-    this.isLoggedIn.set(false); 
+
+  login(token: string) {
+    localStorage.setItem('userToken', token);
+  }
+
+  logout() {
+    localStorage.removeItem('userToken');
   }
 }
+

@@ -1,13 +1,13 @@
 import { Component, inject } from '@angular/core';
 import { DataService } from '../data.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { AuthServiceService } from '../auth-service.service';
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule],
+  imports: [FormsModule, RouterLink],
   standalone: true,
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'

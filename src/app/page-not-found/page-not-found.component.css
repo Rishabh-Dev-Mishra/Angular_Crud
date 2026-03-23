@@ -1,0 +1,39 @@
+.text{
+    /* background-color: bisque; */
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.main
+{
+    background-color: orangered;
+    font-size: larger;
+    border-radius: 10px;
+    margin-top: 15%;
+    height: 50px;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 25px 0px 25px;
+}
+
+.sub{
+    font-size: medium;
+
+}
+
+.sub a{
+    text-decoration: none;
+    text-shadow: chartreuse;
+    width: 100px;
+    padding: 5px;
+    margin-left: 5px;
+}
+.sub a:hover{
+    color: red;
+    background-color: rgb(221, 204, 15);
+    
+}

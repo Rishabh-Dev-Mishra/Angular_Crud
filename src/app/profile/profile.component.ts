@@ -14,6 +14,8 @@ export class ProfileComponent {
   
   private dataservice = inject(DataService);
   readonly serverUrl = 'http://localhost:3000/'; 
+  protected name = sessionStorage.getItem('userName');
+  protected email = sessionStorage.getItem('userEmail')
 
   get imageURL(): string {
   const path = sessionStorage.getItem('userImage'); 

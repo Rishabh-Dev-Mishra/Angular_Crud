@@ -18,10 +18,19 @@ export class DataService {
   
   
   public img_path: string = sessionStorage.getItem('userImage') || "";
+  public userName: string = sessionStorage.getItem('userName') || "(..)";
+  public userEmail: string = sessionStorage.getItem('userEmail') || "(..)";
+
   
   setProfileImage(path: string) {
     this.img_path = path;
     sessionStorage.setItem('userImage', path);
+  }
+  setInfo(name: string, email:string){
+    this.userName = name;
+    this.userEmail = email;
+    sessionStorage.setItem('userName', name);
+    sessionStorage.setItem('userEmail', email);
   }
   edit(data: any){
     return this.http.post(this.url+"/edit-profile",data);

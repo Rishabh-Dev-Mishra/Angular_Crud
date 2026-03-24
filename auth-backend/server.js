@@ -96,8 +96,8 @@ app.post("/login", async (req, res) => {
     const token = jwt.sign({ email: email }, process.env.SECRET, {
       expiresIn: "1h",
     });
-
-    res.json({ message: "Login Success", token: token, img_pth: image_path });
+    const userName = ExisitingUser.rows[0].firstname;
+    res.json({ message: "Login Success", token: token, img_pth: image_path, name: userName,email:email });
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ error: "Internal Server Error" });

@@ -46,6 +46,7 @@ export class LoginComponent implements OnInit{
         this.authService.saveToken(res.token);
         if (res.img_pth.length > 0) { 
           this.dataservice.setProfileImage(res.img_pth);
+          this.dataservice.setInfo(res.name, res.email)
         }
         else{
           this.dataservice.setProfileImage('')

@@ -76,3 +76,51 @@ button:hover {
     background-color: #f2e800;
     transform: scale(1.03);
 }
+
+/* Container for the toggle */
+.toggle-container {
+  display: flex;
+  background-color: #f1f3f5; /* Light grey background */
+  padding: 5px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  width: fit-content;
+  border: 1px solid #e9ecef;
+}
+
+/* Base button styles */
+.toggle-container button {
+  border: none;
+  background: none;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #495057;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.3s ease; /* Smooth transition */
+}
+
+/* Hover state for inactive buttons */
+.toggle-container button:hover:not(.active) {
+  background-color: #e9ecef;
+  color: #212529;
+}
+
+/* Active state (The selected button) */
+.toggle-container button.active {
+  background-color: #ffffff; /* White card effect */
+  color: #007bff; /* Primary brand color */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+}
+
+/* Layout for your existing box */
+.box {
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center the toggle in the box */
+}

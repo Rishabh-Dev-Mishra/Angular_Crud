@@ -1,16 +1,45 @@
 <div class="container">
+  <div class="toggle-container">
+  <button type="button" 
+          [class.active]="!showPasswordFields" 
+          (click)="showPasswordFields = false">
+    Edit Profile
+  </button>
+  <button type="button" 
+          [class.active]="showPasswordFields" 
+          (click)="showPasswordFields = true">
+    Change Password
+  </button>
+</div>
+
   <div class="box">
     <h4 class="top-content">Edit Here</h4>
     <form class="forms" #editForm="ngForm" (ngSubmit)="editform(editForm)">
-      <div class="cred">
+      <div class="cred" *ngIf = "!showPasswordFields; else pass">
         <label for="firstname">Firstname</label>
         <input type="text" name="firstname" ngModel/>
         <label for="lastname">Lastname</label>
         <input type="text" name="lastname" ngModel/>
         <label for="email">Email</label>
-        <input type="email" name="email" ngModel  />
+        <input type="email" name="email" ngModel required />
       </div>
+      <ng-template #pass>
+        <div class="cred">
+        <label for="email">Current Email</label>
+        <input type="email" name="email" ngModel required/>
+        <label for="currentpassword">CurrentPassword</label>
+        <input type="text" name = "currentpassword" ngModel required>
+        <label for="newpassword">New Password</label>
+        <input type="text" name="newpassword" ngModel required>
+      </div>
+      </ng-template>
+      
       <button type="submit" [disabled]="editForm.invalid">Save Changes</button>
     </form>
+    
   </div>
 </div>
+
+
+
+        

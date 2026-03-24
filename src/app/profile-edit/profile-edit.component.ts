@@ -1,18 +1,20 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-import { FormBuilder, FormGroup, FormsModule, Validators, ReactiveFormsModule} from "@angular/forms";
+import { FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { DataService } from '../data.service';
 import { Router } from '@angular/router';
+import { NgIf } from "@angular/common";
 
 @Component({
   selector: 'app-profile-edit',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule],
+  imports: [FormsModule, ReactiveFormsModule, NgIf],
   templateUrl: './profile-edit.component.html',
   styleUrl: './profile-edit.component.css'
 })
 export class ProfileEditComponent{
   message = '';
+  showPasswordFields:boolean=false;
   constructor(private router: Router) {}
   private toast = inject(ToastrService);
   private dataservice = inject(DataService)

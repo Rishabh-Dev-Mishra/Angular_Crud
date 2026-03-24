@@ -8,10 +8,10 @@
 
     <div class="card-body">
       <div class="image-container">
-        <img
-          src="https://media.newyorker.com/photos/59095bb86552fa0be682d9d0/master/pass/Monkey-Selfie.jpg"
-          alt="Profile Image"
-        />
+        <img *ngIf="imageURL; else icons" [src]="imageURL" alt="Profile" />
+        <ng-template #icons>
+          <i class="fa fa-fw fa-user profile-icon"></i>
+        </ng-template>
       </div>
 
       <h2 class="profile-name">ABC</h2>
@@ -28,7 +28,7 @@
         </div>
       </div>
 
-      <button class="edit-btn" routerLink = "/edit-profile">Edit Profile</button>
+      <button class="edit-btn" routerLink="/edit-profile">Edit Profile</button>
     </div>
   </div>
 </div>

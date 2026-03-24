@@ -11,11 +11,17 @@ export class DataService {
   register(data: any){
     return this.http.post(this.url+"/register", data);
   }
-
+  
   login(data: any){
     return this.http.post(this.url+"/login", data);
   }
-
+  
+  public img_path: string = localStorage.getItem('userImage') || "";
+  
+  setProfileImage(path: string) {
+    this.img_path = path;
+    localStorage.setItem('userImage', path);
+  }
   edit(data: any){
     return this.http.post(this.url+"/edit-profile",data);
   }

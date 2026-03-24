@@ -4,10 +4,20 @@ const cors = require("cors");
 const pool = require("./db");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const multer = require("multer")
 
 require("dotenv").config({ path: "../.env" });
 app.use(cors());
 app.use(express.json());
+app.use('/uploads', express.static('uploads'));
+
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, 'uploads/'),
+  filename: (req, file, cb) => cb(null, Date.now() + '-' + file.originalname)
+});
+
+const upload = multer({ storage: storage });
 
 app.get("/", (req, res) => {
   res.send("Welcome");
@@ -65,10 +75,11 @@ app.post("/login", async (req, res) => {
       [email],
     );
 
+    
     if (ExisitingUser.rows.length === 0) {
       return res.status(400).send("User not found");
     }
-
+    
     const isMatch = await bcrypt.compare(
       password,
       ExisitingUser.rows[0].password,
@@ -77,13 +88,15 @@ app.post("/login", async (req, res) => {
     if (!isMatch) {
       return res.status(401).send("Invalid password");
     }
-    currentUser = ExisitingUser;
+    
+    const image_path = ExisitingUser.rows[0].image_path;
 
     const token = jwt.sign({ email: email }, process.env.SECRET, {
       expiresIn: "1h",
     });
+    console.log(image_path);
 
-    res.json({ message: "Login Success", token: token });
+    res.json({ message: "Login Success", token: token, img_pth: image_path });
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ error: "Internal Server Error" });

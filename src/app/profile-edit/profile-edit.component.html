@@ -1,45 +1,62 @@
 <div class="container">
   <div class="toggle-container">
-  <button type="button" 
-          [class.active]="!showPasswordFields" 
-          (click)="showPasswordFields = false">
-    Edit Profile
-  </button>
-  <button type="button" 
-          [class.active]="showPasswordFields" 
-          (click)="showPasswordFields = true">
-    Change Password
-  </button>
-</div>
+    <button
+      type="button"
+      [class.active]="!showPasswordFields"
+      (click)="showPasswordFields = false"
+    >
+      Edit Profile
+    </button>
+    <button
+      type="button"
+      [class.active]="showPasswordFields"
+      (click)="showPasswordFields = true"
+    >
+      Change Password
+    </button>
+  </div>
 
   <div class="box">
     <h4 class="top-content">Edit Here</h4>
     <form class="forms" #editForm="ngForm" (ngSubmit)="editform(editForm)">
-      <div class="cred" *ngIf = "!showPasswordFields; else pass">
+      <div class="cred" *ngIf="!showPasswordFields; else pass">
+        <div class="cred" *ngIf="!showPasswordFields; else pass">
+          <!-- Profile Image Preview -->
+          <div class="profile-img-container" (click)="fileInput.click()">
+            <img [src]="imageUrl" alt="Profile" class="profile-img" />
+          </div>
+          <!-- Hidden File Input -->
+          <input
+            type="file"
+            #fileInput
+            (change)="onFileSelected($event)"
+            style="display: none"
+            accept="image/*"
+          />
+          <label for="firstname">Firstname</label>
+          <input type="text" name="firstname" ngModel />
+          <!-- ... rest of your fields ... -->
+        </div>
+
         <label for="firstname">Firstname</label>
-        <input type="text" name="firstname" ngModel/>
+        <input type="text" name="firstname" ngModel />
         <label for="lastname">Lastname</label>
-        <input type="text" name="lastname" ngModel/>
+        <input type="text" name="lastname" ngModel />
         <label for="email">Email</label>
         <input type="email" name="email" ngModel required />
       </div>
       <ng-template #pass>
         <div class="cred">
-        <label for="email">Current Email</label>
-        <input type="email" name="email" ngModel required/>
-        <label for="currentpassword">CurrentPassword</label>
-        <input type="text" name = "currentpassword" ngModel required>
-        <label for="newpassword">New Password</label>
-        <input type="text" name="newpassword" ngModel required>
-      </div>
+          <label for="email">Current Email</label>
+          <input type="email" name="email" ngModel required />
+          <label for="currentpassword">CurrentPassword</label>
+          <input type="text" name="currentpassword" ngModel required />
+          <label for="newpassword">New Password</label>
+          <input type="text" name="newpassword" ngModel required />
+        </div>
       </ng-template>
-      
+
       <button type="submit" [disabled]="editForm.invalid">Save Changes</button>
     </form>
-    
   </div>
 </div>
-
-
-
-        

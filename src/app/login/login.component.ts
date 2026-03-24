@@ -44,6 +44,9 @@ export class LoginComponent implements OnInit{
         this.toast.success(res.message || "Login Success");
         console.log(res);
         this.authService.saveToken(res.token);
+        if (res.img_pth) { 
+          this.dataservice.setProfileImage(res.img_pth);
+        }
         this.router.navigate(['/home']);
       },
       error:(err:any)=> {

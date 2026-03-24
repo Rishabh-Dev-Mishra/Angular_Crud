@@ -88,13 +88,14 @@ app.post("/login", async (req, res) => {
     if (!isMatch) {
       return res.status(401).send("Invalid password");
     }
+
+    const userImage = ExisitingUser.rows[0].image_path;
     
-    const image_path = ExisitingUser.rows[0].image_path;
+    const image_path = userImage!==null && userImage.length > 0  ? ExisitingUser.rows[0].image_path : '';
 
     const token = jwt.sign({ email: email }, process.env.SECRET, {
       expiresIn: "1h",
     });
-    console.log(image_path);
 
     res.json({ message: "Login Success", token: token, img_pth: image_path });
   } catch (err) {
@@ -103,29 +104,39 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.post("/edit-profile", verifyToken, async (req, res) => {
+app.post("/edit-profile", verifyToken, upload.single('image'), async (req, res) => {
   try {
     if (req.body.firstname) {
-      const { firstname, lastname, email } = req.body;
-
       const emailFromToken = req.user.email;
+      const { firstname, lastname, email } = req.body;
+      
+      // 1. Get the new filename if a file was uploaded
+      let newImagePath = req.file ? req.file.filename : null;
 
       if (!firstname || !lastname || !email) {
         return res.status(400).json({ message: "All fields are required" });
       }
 
-      const existingUser = await pool.query(
-        "SELECT * FROM users WHERE email = $1",
-        [emailFromToken],
-      );
+      const existingUser = await pool.query("SELECT * FROM users WHERE email = $1", [emailFromToken]);
       if (existingUser.rows.length == 0) {
-        return res.status(400).json({ message: "User do not exists" });
+        return res.status(400).json({ message: "User does not exist" });
       }
 
-      await pool.query(
-        "UPDATE users SET firstname = $1, lastname = $2, email = $3 WHERE email = $4",
-        [firstname, lastname, email, emailFromToken],
-      );
+      if (newImagePath) {
+        await pool.query(
+          "UPDATE users SET firstname = $1, lastname = $2, email = $3, image_path = $4 WHERE email = $5",
+          [firstname, lastname, email, newImagePath, emailFromToken]
+        );
+      } else {
+        await pool.query(
+          "UPDATE users SET firstname = $1, lastname = $2, email = $3 WHERE email = $4",
+          [firstname, lastname, email, emailFromToken]
+        );
+      }
+      return res.json({ 
+        message: "Profile updated successfully", 
+        img_pth: newImagePath 
+      });
     } else {
       const { email, currentpassword, newpassword } = req.body;
 
@@ -164,11 +175,10 @@ app.post("/edit-profile", verifyToken, async (req, res) => {
         return res.status(405).send("New Password is same as Current");
 
       await pool.query(
-        "UPDATE users SET email = $2, password=$1 WHERE email = $2",
+        "UPDATE users SET password=$1 WHERE email = $2",
         [hashedpassword, emailFromToken],
       );
     }
-    res.json({ message: "Updated successfully" });
   } catch (err) {
     console.error("Register error:", err.message);
     res.status(500).json({ message: "Internal server error" });

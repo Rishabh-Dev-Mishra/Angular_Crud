@@ -1,17 +1,10 @@
 <div class="container">
+  <!-- Toggle Buttons -->
   <div class="toggle-container">
-    <button
-      type="button"
-      [class.active]="!showPasswordFields"
-      (click)="showPasswordFields = false"
-    >
+    <button type="button" [class.active]="!showPasswordFields" (click)="showPasswordFields = false">
       Edit Profile
     </button>
-    <button
-      type="button"
-      [class.active]="showPasswordFields"
-      (click)="showPasswordFields = true"
-    >
+    <button type="button" [class.active]="showPasswordFields" (click)="showPasswordFields = true">
       Change Password
     </button>
   </div>
@@ -19,40 +12,45 @@
   <div class="box">
     <h4 class="top-content">Edit Here</h4>
     <form class="forms" #editForm="ngForm" (ngSubmit)="editform(editForm)">
+      
       <div class="cred" *ngIf="!showPasswordFields; else pass">
-        <div class="cred" *ngIf="!showPasswordFields; else pass">
-          <!-- Profile Image Preview -->
-          <div class="profile-img-container" (click)="fileInput.click()">
-            <img [src]="imageUrl" alt="Profile" class="profile-img" />
-          </div>
-          <!-- Hidden File Input -->
-          <input
-            type="file"
-            #fileInput
-            (change)="onFileSelected($event)"
-            style="display: none"
-            accept="image/*"
-          />
-          <label for="firstname">Firstname</label>
-          <input type="text" name="firstname" ngModel />
-          <!-- ... rest of your fields ... -->
+        <!-- 1. Profile Image Section -->
+        <div class="profile-img-container" (click)="fileInput.click()">
+          <!-- Uses the getter: shows preview if selected, else DB image -->
+          <img [src]="imageURL" alt="Profile" class="profile-img" *ngIf="imageURL; else noImg" />
+          <ng-template #noImg>
+            <div class="placeholder-icon"><i class="fa fa-user"></i></div>
+          </ng-template>
+          <div class="overlay"><span>Change photo</span></div>
         </div>
 
+        <!-- 2. Hidden File Input -->
+        <input
+          type="file"
+          #fileInput
+          (change)="onFileSelected($event)"
+          style="display: none"
+          accept="image/*"
+        />
+
         <label for="firstname">Firstname</label>
-        <input type="text" name="firstname" ngModel />
+        <input type="text" name="firstname" ngModel placeholder="Firstname" />
+        
         <label for="lastname">Lastname</label>
-        <input type="text" name="lastname" ngModel />
+        <input type="text" name="lastname" ngModel placeholder="Lastname" />
+        
         <label for="email">Email</label>
-        <input type="email" name="email" ngModel required />
+        <input type="email" name="email" ngModel required placeholder="Email" />
       </div>
+
       <ng-template #pass>
         <div class="cred">
           <label for="email">Current Email</label>
           <input type="email" name="email" ngModel required />
-          <label for="currentpassword">CurrentPassword</label>
-          <input type="text" name="currentpassword" ngModel required />
+          <label for="currentpassword">Current Password</label>
+          <input type="password" name="currentpassword" ngModel required />
           <label for="newpassword">New Password</label>
-          <input type="text" name="newpassword" ngModel required />
+          <input type="password" name="newpassword" ngModel required />
         </div>
       </ng-template>
 

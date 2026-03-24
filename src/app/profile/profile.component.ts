@@ -16,7 +16,7 @@ export class ProfileComponent {
   readonly serverUrl = 'http://localhost:3000/'; 
 
   get imageURL(): string {
-  const path = localStorage.getItem('userImage'); 
-  return path ? `${this.serverUrl}uploads/${path}` : '';
+  const path = sessionStorage.getItem('userImage'); 
+  return path && (path.length > 0) ? `${this.serverUrl}uploads/${path}` : '';
   }
 }

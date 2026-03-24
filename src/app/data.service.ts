@@ -16,11 +16,12 @@ export class DataService {
     return this.http.post(this.url+"/login", data);
   }
   
-  public img_path: string = localStorage.getItem('userImage') || "";
+  
+  public img_path: string = sessionStorage.getItem('userImage') || "";
   
   setProfileImage(path: string) {
     this.img_path = path;
-    localStorage.setItem('userImage', path);
+    sessionStorage.setItem('userImage', path);
   }
   edit(data: any){
     return this.http.post(this.url+"/edit-profile",data);

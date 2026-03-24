@@ -18,7 +18,9 @@ export class TodoComponent {
   readonly serverUrl = 'http://localhost:3000/'; 
 
   get imageURL(): string {
-  const path = localStorage.getItem('userImage'); 
-  return path ? `${this.serverUrl}uploads/${path}` : '';
-}
+  const path = sessionStorage.getItem('userImage'); 
+  if(path !== null && path.length > 0)
+    return path ? `${this.serverUrl}uploads/${path}` : '';
+  return '';
+  }
 }

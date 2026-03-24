@@ -11,7 +11,7 @@ export class AuthServiceService {
   }
 
   logout() {
-    sessionStorage.removeItem('userToken');
+    sessionStorage.clear();
   }
 }
 

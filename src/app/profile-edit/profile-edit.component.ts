@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { DataService } from '../data.service';
@@ -12,27 +12,38 @@ import { NgIf } from "@angular/common";
   templateUrl: './profile-edit.component.html',
   styleUrl: './profile-edit.component.css'
 })
-export class ProfileEditComponent {
-  message = '';
-  showPasswordFields: boolean = false;
-  
-  // Image properties
-  imageUrl: string = 'https://media.newyorker.com/photos/59095bb86552fa0be682d9d0/master/pass/Monkey-Selfie.jpg'; 
-  selectedFile: File | null = null;
 
+  export class ProfileEditComponent {
   private router = inject(Router);
   private toast = inject(ToastrService);
   private dataservice = inject(DataService);
+  
+  showPasswordFields: boolean = false;
+  readonly serverUrl = 'http://localhost:3000/'; 
 
-  // Triggered when user selects a file
+  // --- NEW PROPERTIES FOR IMAGE ---
+  selectedFile: File | null = null;
+  previewUrl: string | null = null;
+
+  // Updated Getter: Prioritizes the local preview, then the saved path
+  get imageURL(): string {
+    if (this.previewUrl) return this.previewUrl;
+    const path = this.dataservice.img_path || sessionStorage.getItem('userImage'); 
+    return path && (path.length > 0) ? `${this.serverUrl}uploads/${path}` : '';
+  }
+
+  // --- NEW METHOD: CAPTURE THE FILE ---
   onFileSelected(event: any) {
-    if (event.target.files && event.target.files[0]) {
-      this.selectedFile = event.target.files[0];
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
 
-      // // Local preview logic
-      // const reader = new FileReader();
-      // reader.onload = (e: any) => this.imageUrl = e.target.result;
-      // reader.readAsDataURL(this.selectedFile);
+      // Create a local preview
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.previewUrl = reader.result as string;
+      };
+      reader.readAsDataURL(file);
     }
   }
 
@@ -42,31 +53,32 @@ export class ProfileEditComponent {
       return;
     }
 
-    // Use FormData because we are sending a file (Multipart/form-data)
+    // --- SWITCH TO FORMDATA ---
     const formData = new FormData();
-    formData.append('firstname', form.value.firstname);
-    formData.append('lastname', form.value.lastname);
-    formData.append('email', form.value.email);
     
-    if (this.showPasswordFields) {
-      formData.append('currentpassword', form.value.currentpassword);
-      formData.append('newpassword', form.value.newpassword);
-    }
+    // Append text fields from the form
+    formData.append('firstname', form.value.firstname || '');
+    formData.append('lastname', form.value.lastname || '');
+    formData.append('email', form.value.email);
 
-    // Append the image file if one was selected
+    // Append the image file ONLY if one was selected
     if (this.selectedFile) {
-      formData.append('profileImage', this.selectedFile);
+      formData.append('image', this.selectedFile); 
     }
 
-    // Pass the formData object to your service
     this.dataservice.edit(formData).subscribe({
       next: (res: any) => {
         this.toast.success("Profile Updated Successfully");
-        this.router.navigate(["/"]);
+        
+        // Update local storage if backend returns the NEW image filename
+        if (res.img_pth) {
+          this.dataservice.setProfileImage(res.img_pth);
+        }
+        
+        this.router.navigate(["/home"]);
       },
       error: (err: any) => {
-        this.message = err.error?.message || 'An error occurred';
-        this.toast.error(this.message);
+        this.toast.error(err.error?.message || 'An error occurred');
       }
     });
   }

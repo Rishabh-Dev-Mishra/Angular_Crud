@@ -13,7 +13,20 @@ app.get("/", (req, res) => {
   res.send("Welcome");
 });
 
-var currentUser = "";
+
+
+const verifyToken = (req, res, next)=>{
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+  if(!token){
+    return res.status(401).json({message: "No token"})
+  }
+  jwt.verify(token, process.env.SECRET, (err, user)=>{
+    if(err)return res.status(401).json({message: "No user"});
+    req.user = user;
+    next();
+  })
+}
 
 app.post("/register", async (req, res) => {
   try {
@@ -79,9 +92,12 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.post("/edit-profile", async (req, res) => {
+app.post("/edit-profile",verifyToken, async (req, res) => {
+  console.log("Body received:", req.body);
   try {
     const { firstname, lastname, email } = req.body;
+
+    const emailFromToken = req.user.email;
 
     if (!firstname || !lastname || !email) {
       return res.status(400).json({ message: "All fields are required" });
@@ -89,7 +105,7 @@ app.post("/edit-profile", async (req, res) => {
 
     const existingUser = await pool.query(
       "SELECT * FROM users WHERE email = $1",
-      [currentUser.email],
+      [emailFromToken],
     );
     if (existingUser.rows.length == 0) {
       return res.status(400).json({ message: "User do not exists" });
@@ -97,13 +113,10 @@ app.post("/edit-profile", async (req, res) => {
 
     await pool.query(
       "UPDATE users SET firstname = $1, lastname = $2, email = $3 WHERE email = $4",
-      [firstname, lastname, email, currentUser.email],
+      [firstname, lastname, email, emailFromToken],
     );
-    currentUser = await pool.query(
-      "SELECT * FROM users WHERE email = $1",
-      [email],
-    );
-    res.json({ message: "Registered successfully" });
+  
+    res.json({ message: "Updated successfully" });
   } catch (err) {
     console.error("Register error:", err.message);
     res.status(500).json({ message: "Internal server error" });

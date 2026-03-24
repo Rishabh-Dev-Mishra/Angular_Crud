@@ -1,14 +1,14 @@
 <div class="container">
   <div class="box">
     <h4 class="top-content">Edit Here</h4>
-    <form class="forms" #editForm="ngForm" (ngSubmit)="(editForm)">
+    <form class="forms" #editForm="ngForm" (ngSubmit)="editform(editForm)">
       <div class="cred">
-        <label for="firstName">Firstname</label>
-        <input type="text" name="firstName" />
-        <label for="lastName">Lastname</label>
-        <input type="text" name="lastName" />
+        <label for="firstname">Firstname</label>
+        <input type="text" name="firstname" ngModel/>
+        <label for="lastname">Lastname</label>
+        <input type="text" name="lastname" ngModel/>
         <label for="email">Email</label>
-        <input type="email" name="email" />
+        <input type="email" name="email" ngModel  />
       </div>
       <button type="submit" [disabled]="editForm.invalid">Save Changes</button>
     </form>

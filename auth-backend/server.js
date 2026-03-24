@@ -13,7 +13,7 @@ app.get("/", (req, res) => {
   res.send("Welcome");
 });
 
-const currentUser = "";
+var currentUser = "";
 
 app.post("/register", async (req, res) => {
   try {

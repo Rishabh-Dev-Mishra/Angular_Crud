@@ -6,8 +6,8 @@ export class AuthServiceService {
     return !!sessionStorage.getItem('userToken'); 
   }
 
-  login(token: string) {
-    sessionStorage.setItem('userToken', token);
+  saveToken(token:string){
+    sessionStorage.setItem("userToken", token)
   }
 
   logout() {

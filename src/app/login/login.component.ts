@@ -43,7 +43,7 @@ export class LoginComponent implements OnInit{
         this.message = res.message;
         this.toast.success(res.message || "Login Success");
         console.log(res);
-        this.authService.login("token")
+        this.authService.saveToken(res.token);
         this.router.navigate(['/home']);
       },
       error:(err:any)=> {

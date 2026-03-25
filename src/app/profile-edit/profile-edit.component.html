@@ -11,7 +11,7 @@
 
   <div class="box">
     <h4 class="top-content">Edit Here</h4>
-    <form class="forms" #editForm="ngForm" (ngSubmit)="editform(editForm)">
+    <form class="forms" #editForm="ngForm" (ngSubmit)="showPasswordFields ? updatePassword(editForm) : editform(editForm)">
       
       <div class="cred" *ngIf="!showPasswordFields; else pass">
         <!-- 1. Profile Image Section -->
@@ -21,7 +21,6 @@
           <ng-template #noImg>
             <div class="placeholder-icon"><i class="fa fa-user"></i></div>
           </ng-template>
-          <div class="overlay"><span>Change photo</span></div>
         </div>
 
         <!-- 2. Hidden File Input -->

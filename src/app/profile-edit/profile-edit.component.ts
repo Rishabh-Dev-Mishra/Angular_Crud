@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { DataService } from '../data.service';
 import { Router } from '@angular/router';
 import { NgIf } from "@angular/common";
+import { getCurrentInjector } from '@angular/core/primitives/di';
 
 @Component({
   selector: 'app-profile-edit',
@@ -70,16 +71,40 @@ import { NgIf } from "@angular/common";
       next: (res: any) => {
         this.toast.success("Profile Updated Successfully");
         
-        // Update local storage if backend returns the NEW image filename
         if (res.img_pth) {
           this.dataservice.setProfileImage(res.img_pth);
         }
-        
+        sessionStorage.setItem('userName', res.name);
+        sessionStorage.setItem('userEmail', res.email);
         this.router.navigate(["/home"]);
       },
       error: (err: any) => {
         this.toast.error(err.error?.message || 'An error occurred');
       }
     });
+
+  }
+  updatePassword(form: any){
+      if (form.invalid) {
+      this.toast.warning('Please fix the errors before submitting', 'Form Invalid');
+      return;
+    }
+
+    const payload = {
+      email: form.value.email,
+      currentpassword: form.value.currentpassword,
+      newpassword: form.value.newpassword
+    }
+
+    this.dataservice.edit(payload).subscribe({
+      next: (res: any) => {
+      this.toast.success("Password Updated Successfully");
+      this.showPasswordFields = false;
+      form.reset();
+    },
+    error: (err: any) => {
+      this.toast.error(err.error || err.statusText || 'Update failed');
+    }
+    })
   }
 }

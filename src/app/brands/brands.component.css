@@ -1,0 +1,177 @@
+
+
+.brands-container {
+    padding: 120px 10% 80px;
+    min-height: 100vh;
+    color: white;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Header Section */
+.brands-header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    color: #ff004c;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.brands-header h1 {
+    font-size: 3.5rem;
+    margin: 15px 0 30px;
+}
+
+/* Luxury Search Bar */
+.search-wrapper {
+    position: relative;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.search-wrapper input {
+    width: 100%;
+    padding: 15px 25px 15px 50px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50px;
+    color: white;
+    outline: none;
+    backdrop-filter: blur(10px);
+    transition: 0.3s;
+}
+
+.search-wrapper input:focus {
+    border-color: #ff004c;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.search-wrapper i {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #666;
+}
+
+/* Brand Cards Grid */
+.brands-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+.brand-card {
+    position: relative;
+    text-decoration: none;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 24px;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    backdrop-filter: blur(10px);
+    overflow: hidden;
+}
+
+.brand-logo {
+    height: 80px;
+    margin-bottom: 25px;
+    filter: grayscale(1) brightness(1.5); /* Makes logos look uniform */
+    transition: 0.4s;
+}
+
+.brand-logo img {
+    height: 100%;
+    object-fit: contain;
+}
+
+.brand-info h3 {
+    color: white;
+    font-size: 1.4rem;
+    margin-bottom: 8px;
+}
+
+.brand-info p {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+/* Hover Effects */
+.brand-card:hover {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: #ff004c;
+    transform: translateY(-10px);
+}
+
+.brand-card:hover .brand-logo {
+    filter: grayscale(0) brightness(1); /* Color returns on hover */
+    transform: scale(1.1);
+}
+
+.card-arrow {
+    position: absolute;
+    bottom: -20px;
+    right: 20px;
+    font-size: 1.5rem;
+    color: #ff004c;
+    opacity: 0;
+    transition: 0.3s;
+}
+
+.brand-card:hover .card-arrow {
+    bottom: 20px;
+    opacity: 1;
+}
+
+/* Premium Back Button - High Visibility Version */
+.back-btn {
+    position: fixed; 
+    top: 110px;      /* Increased to ensure it's below a standard navbar */
+    left: 30px;
+    z-index: 9999;   /* Very high z-index to stay above background balls */
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: #ffffff;  
+    background-color: rgb(222, 49, 78); 
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 12px 24px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    backdrop-filter: blur(15px); /* Frosty glass effect */
+    transition: all 0.3s ease;
+}
+
+.back-btn .icon {
+    font-size: 1.2rem;
+    line-height: 1;
+}
+
+.back-btn:hover {
+    background: #ff004c; /* Glows red on hover */
+    color: white;
+    border-color: #ff004c;
+    box-shadow: 0 0 20px rgba(255, 0, 76, 0.4);
+    transform: translateX(-5px);
+}
+
+/* If your navbar is very tall, move the button down further */
+@media (max-width: 768px) {
+    .back-btn {
+        top: 90px;
+        left: 15px;
+        padding: 8px 16px;
+    }
+}

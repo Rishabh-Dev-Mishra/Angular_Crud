@@ -1,0 +1,53 @@
+<app-navbar></app-navbar>
+<main class="brands-container">
+    <a routerLink="/home" class="back-btn">
+    <span class="icon">←</span>
+    <span class="label">Home</span>
+  </a>
+  <header class="brands-header">
+    <span class="eyebrow">Select Your Heritage</span>
+    <h1>World-Class <span class="text-gradient">Manufacturers</span></h1>
+    <div class="search-wrapper">
+      <i class="fa fa-search"></i>
+      <input type="text" placeholder="Search brands (e.g. Porsche, Ferrari...)">
+    </div>
+  </header>
+
+  <div class="brands-grid">
+    <a routerLink="/cars/porsche" class="brand-card">
+      <div class="brand-logo">
+        <img src="https://www.car-logos.org/wp-content/uploads/2011/09/porsche.png" alt="Porsche">
+      </div>
+      <div class="brand-info">
+        <h3>Porsche</h3>
+        <p>12 Models Available</p>
+      </div>
+      <div class="card-arrow">→</div>
+    </a>
+
+    <a routerLink="/cars/ferrari" class="brand-card">
+      <div class="brand-logo">
+        <img src="https://www.car-logos.org/wp-content/uploads/2011/09/ferrari.png" alt="Ferrari">
+      </div>
+      <div class="brand-info">
+        <h3>Ferrari</h3>
+        <p>8 Models Available</p>
+      </div>
+      <div class="card-arrow">→</div>
+    </a>
+
+    <a routerLink="/cars/lamborghini" class="brand-card">
+      <div class="brand-logo">
+        <img src="https://www.car-logos.org/wp-content/uploads/2011/09/lamborghini.png" alt="Lamborghini">
+      </div>
+      <div class="brand-info">
+        <h3>Lamborghini</h3>
+        <p>6 Models Available</p>
+      </div>
+      <div class="card-arrow">→</div>
+    </a>
+
+    </div>
+</main>
+
+<app-footer></app-footer>

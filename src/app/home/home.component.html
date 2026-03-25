@@ -1,5 +1,7 @@
 <app-navbar></app-navbar>
-
+<a routerLink="/profile" class="back-btn">
+  <i class="fa fa-arrow-left"></i> Back
+</a>
 <main class="content-wrapper">
     <section class="hero-section">
         <div class="hero-content">
@@ -7,7 +9,7 @@
             <h1>Precision Performance. <br> <span class="text-gradient">Pure Luxury.</span></h1>
             <p>Experience the world's most prestigious automotive collection. From track-ready supercars to handcrafted grand tourers.</p>
             <div class="cta-group">
-                <button class="btn-primary">Explore Inventory</button>
+                <button class="btn-primary" (click)="goToInven()">Explore Inventory</button>
                 <button class="btn-secondary">Book a Viewing</button>
             </div>
         </div>

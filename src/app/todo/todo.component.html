@@ -1,32 +1,4 @@
-<div class="navbar">
-  TODO APP &nbsp;<sub><i>Pending to do</i></sub>
-  
-  <div class="profile-section"
-      (mouseenter)="hoverService.setHover(true)" 
-      (mouseleave)="hoverService.setHover(false)">
-    
-    <a routerLink="/profile">
-      <img *ngIf="imageURL; else icons" [src]="imageURL" alt="Profile">
-      <ng-template #icons>
-        <i class="fa fa-fw fa-user profile-icon"></i>
-      </ng-template>
-    </a>
-
-    <!-- THE POPUP BOX -->
-    @if (hoverService.isHovered()) {
-      <div class="hover-modal-nav">
-        <div class="modal-content">
-          <p><strong>{{name}}</strong></p>
-          <p class="small-text">{{email}}</p>
-          <hr>
-          <p>📸 Last Active: 2 mins ago</p>
-          <p>📍 Location: Jungle</p>
-        </div>
-      </div>
-    }
-  </div>
-</div>
-
+<app-navbar></app-navbar>
 <h1 class="above-content">Get It Done</h1>
 <div class="container">
   <div class="middle-box">

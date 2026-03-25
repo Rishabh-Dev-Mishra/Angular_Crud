@@ -22,7 +22,6 @@ import { getCurrentInjector } from '@angular/core/primitives/di';
   showPasswordFields: boolean = false;
   readonly serverUrl = 'http://localhost:3000/'; 
 
-  // --- NEW PROPERTIES FOR IMAGE ---
   selectedFile: File | null = null;
   previewUrl: string | null = null;
 

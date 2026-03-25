@@ -2,11 +2,12 @@ import { NgIf } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DataService } from '../data.service';
+import { NavbarComponent } from '../navbar/navbar.component';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [RouterLink, NgIf],
+  imports: [RouterLink, NgIf, NavbarComponent],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'
 })

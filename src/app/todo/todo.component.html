@@ -7,41 +7,23 @@
     </div>
     <div class="job">
       <h4 class="job-head">Enter the job to be completed</h4>
-      <input class="get-job" type="text" placeholder="type here" />
-      <button class="add-job">ADD</button>
+      <input class="get-job" type="text" placeholder="type here" [(ngModel)] = "newTask"/>
+      <button class="add-job" (click)="add()">ADD</button>
     </div>
     <div class="completed">
-      <h4 class="completed-head">Completed Tasks:-</h4>
+      <h4 class="completed-head"> Task Details:-</h4>
       <hr style="border: 0; border-top: 2px dashed black" />
       <div class="wrapper">
         <table class="completed-task">
           <tr>
             <th>Tasks</th>
-            <th>Timing</th>
             <th>Completed</th>
           </tr>
-          <tr>
-            <td>Morning Exercise</td>
-            <td>7:00 AM</td>
-            <td><input type="checkbox" /></td>
+          <tr *ngFor="let task of tasks">
+            <td>{{task}}</td>
+            <td><input type="checkbox"></td>
           </tr>
-          <tr>
-            <td>BreakFast</td>
-            <td>8:30 AM</td>
-            <td><input type="checkbox" /></td>
-          </tr>
-
-          <tr>
-            <td>Reach Office</td>
-            <td>9:30 AM</td>
-            <td><input type="checkbox" /></td>
-          </tr>
-
-          <tr>
-            <td>Lunch</td>
-            <td>2:20 PM</td>
-            <td><input type="checkbox" /></td>
-          </tr>
+          
         </table>
       </div>
     </div>

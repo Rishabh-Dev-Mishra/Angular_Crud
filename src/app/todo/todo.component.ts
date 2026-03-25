@@ -1,18 +1,26 @@
 import { Component, inject } from '@angular/core';
 import { FooterComponent } from '../footer/footer.component';
 import { RouterLink } from '@angular/router';
-import { NgIf } from '@angular/common';
+import { NgIf, NgForOf } from '@angular/common';
 import { DataService } from '../data.service';
 import { ProfileHoverService } from '../profile-hover-service.service';
 import { NavbarComponent } from '../navbar/navbar.component';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-todo',
-  standalone: true, // Ensure this is present for imports to work
-  imports: [FooterComponent, NavbarComponent],
+  standalone: true,
+  imports: [FooterComponent, NavbarComponent, FormsModule, NgForOf],
   templateUrl: './todo.component.html',
   styleUrl: './todo.component.css'
 })
 export class TodoComponent {
-  
+  newTask: string = '';
+  tasks: string[] = [];
+  add(){
+    if(this.newTask.trim() !== ''){
+      this.tasks.push(this.newTask)
+      this.newTask = '';
+    }
+  }
 }

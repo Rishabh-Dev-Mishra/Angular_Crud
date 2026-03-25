@@ -1,0 +1,124 @@
+
+.content-wrapper {
+    position: relative;
+    z-index: 1;
+    color: var(--text-main);
+    font-family: 'Inter', sans-serif; /* Recommended font */
+}
+
+/* Hero Styling */
+.hero-section {
+    height: 90vh;
+    display: flex;
+    align-items: center;
+    padding: 0 10%;
+}
+
+.hero-content h1 {
+    font-size: clamp(3rem, 8vw, 5rem);
+    line-height: 1.1;
+    font-weight: 800;
+    margin: 20px 0;
+}
+
+.text-gradient {
+    background: linear-gradient(90deg, #ff004c, #007bff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.hero-content p {
+    max-width: 500px;
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    margin-bottom: 40px;
+}
+
+/* Premium Buttons */
+.cta-group { display: flex; gap: 20px; }
+
+.btn-primary {
+    padding: 15px 35px;
+    background: white;
+    color: black;
+    border: none;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 10px 20px rgba(255,0,76,0.3);
+}
+
+.btn-secondary {
+    padding: 15px 35px;
+    background: transparent;
+    color: white;
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(10px);
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(255,0,76,0.3); }
+
+/* Inventory Grid */
+.inventory-preview {
+    padding: 100px 10%;
+}
+
+.section-header h2 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.line {
+    width: 60px;
+    height: 4px;
+    background: var(--accent);
+    margin-bottom: 50px;
+}
+
+.car-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.car-card {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.car-card:hover {
+    transform: scale(1.02);
+    border-color: var(--accent);
+}
+
+.car-image img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+}
+
+.car-info {
+    padding: 25px;
+}
+
+.car-info h3 { margin: 0; font-size: 1.5rem; }
+.car-info p { color: var(--text-muted); margin: 10px 0 20px; }
+
+.details-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+}

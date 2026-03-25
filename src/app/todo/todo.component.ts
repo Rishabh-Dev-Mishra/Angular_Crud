@@ -1,16 +1,13 @@
 import { Component, inject } from '@angular/core';
 import { FooterComponent } from '../footer/footer.component';
-import { RouterLink } from '@angular/router';
-import { NgIf, NgForOf } from '@angular/common';
-import { DataService } from '../data.service';
-import { ProfileHoverService } from '../profile-hover-service.service';
+import { NgFor } from '@angular/common';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-todo',
   standalone: true,
-  imports: [FooterComponent, NavbarComponent, FormsModule, NgForOf],
+  imports: [FooterComponent, NavbarComponent, FormsModule, NgFor],
   templateUrl: './todo.component.html',
   styleUrl: './todo.component.css'
 })

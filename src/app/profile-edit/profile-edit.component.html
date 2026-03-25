@@ -2,26 +2,43 @@
   <i class="fa fa-arrow-left"></i> Back
 </a>
 <div class="container">
-  
   <!-- Toggle Buttons -->
   <div class="toggle-container">
-    <button type="button" [class.active]="!showPasswordFields" (click)="showPasswordFields = false">
+    <button
+      type="button"
+      [class.active]="!showPasswordFields"
+      (click)="showPasswordFields = false"
+    >
       Edit Profile
     </button>
-    <button type="button" [class.active]="showPasswordFields" (click)="showPasswordFields = true">
+    <button
+      type="button"
+      [class.active]="showPasswordFields"
+      (click)="showPasswordFields = true"
+    >
       Change Password
     </button>
   </div>
 
   <div class="box">
     <h4 class="top-content">Edit Here</h4>
-    <form class="forms" #editForm="ngForm" (ngSubmit)="showPasswordFields ? updatePassword(editForm) : editform(editForm)">
-      
+    <form
+      class="forms"
+      #editForm="ngForm"
+      (ngSubmit)="
+        showPasswordFields ? updatePassword(editForm) : editform(editForm)
+      "
+    >
       <div class="cred" *ngIf="!showPasswordFields; else pass">
         <!-- 1. Profile Image Section -->
         <div class="profile-img-container" (click)="fileInput.click()">
           <!-- Uses the getter: shows preview if selected, else DB image -->
-          <img [src]="imageURL" alt="Profile" class="profile-img" *ngIf="imageURL; else noImg" />
+          <img
+            [src]="imageURL"
+            alt="Profile"
+            class="profile-img"
+            *ngIf="imageURL; else noImg"
+          />
           <ng-template #noImg>
             <div class="placeholder-icon"><i class="fa fa-user"></i></div>
           </ng-template>
@@ -38,22 +55,64 @@
 
         <label for="firstname">Firstname</label>
         <input type="text" name="firstname" ngModel placeholder="Firstname" />
-        
+
         <label for="lastname">Lastname</label>
         <input type="text" name="lastname" ngModel placeholder="Lastname" />
-        
+
         <label for="email">Email</label>
         <input type="email" name="email" ngModel required placeholder="Email" />
       </div>
 
       <ng-template #pass>
         <div class="cred">
-          <label for="email">Current Email</label>
-          <input type="email" name="email" ngModel required />
           <label for="currentpassword">Current Password</label>
-          <input type="password" name="currentpassword" ngModel required />
+          <input
+            type="password"
+            name="currentpassword"
+            ngModel
+            #currPass="ngModel"
+            required
+          />
+          @if (currPass.invalid && currPass.touched) {
+            <small style="color: red">Current password is required.</small>
+          }
+
           <label for="newpassword">New Password</label>
-          <input type="password" name="newpassword" ngModel required />
+          <input
+            type="password"
+            name="newpassword"
+            ngModel
+            #newPass="ngModel"
+            required
+            minlength="8"
+            pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*]).*"
+          />
+          <div style="color: red; font-size: 12px">
+            @if (newPass.errors?.["required"] && newPass.touched) {
+              <span>New password is required.</span>
+            }
+            @if (newPass.errors?.["minlength"] && newPass.touched) {
+              <span>Min 8 characters.</span>
+            }
+            @if (newPass.errors?.["pattern"] && newPass.touched) {
+              <span>Must have: A-Z, a-z, 0-9, and symbol.</span>
+            }
+          </div>
+
+
+          <label for="confirmpassword">Confirm Password</label>
+          <input
+            type="password"
+            name="confirmpassword"
+            ngModel
+            #confirmPass="ngModel"
+            required
+          />
+          <div style="color: red; font-size: 12px">
+            @if (confirmPass.touched && confirmPass.value !== newPass.value) {
+              <span>Passwords do not match.</span>
+            }
+          </div>
         </div>
       </ng-template>
 

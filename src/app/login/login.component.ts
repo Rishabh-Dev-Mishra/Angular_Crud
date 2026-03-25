@@ -44,9 +44,9 @@ export class LoginComponent implements OnInit{
         this.toast.success(res.message || "Login Success");
         console.log(res);
         this.authService.saveToken(res.token);
+        this.dataservice.setInfo(res.name, res.email)
         if (res.img_pth.length > 0) { 
           this.dataservice.setProfileImage(res.img_pth);
-          this.dataservice.setInfo(res.name, res.email)
         }
         else{
           this.dataservice.setProfileImage('')

@@ -124,17 +124,12 @@ app.post(
     try {
 
       if(req.body.currentpassword){
-        const { email, currentpassword, newpassword } = req.body;
+        const { confirmpassword, currentpassword, newpassword } = req.body;
 
         const emailFromToken = req.user.email;
-        if (!email || !currentpassword || !newpassword)
+        if (!confirmpassword || !currentpassword || !newpassword)
           return res.status(402).send("Bad Request");
 
-        if (email.toLowerCase() !== emailFromToken.toLowerCase()) {
-          return res
-            .status(403)
-            .send("Email does not match the logged-in user");
-        }
 
         const ExisitingUser = await pool.query(
           "SELECT * FROM users WHERE email = $1",
@@ -157,8 +152,13 @@ app.post(
           ExisitingUser.rows[0].password,
         );
 
+
+
         if (compareNew)
           return res.status(405).send("New Password is same as Current");
+
+        if(confirmpassword != newpassword) return res.status(405).send("Password not same as newpassword")
+
         const salthash = 10;
         const hashedpassword = await bcrypt.hash(newpassword, salthash);
 

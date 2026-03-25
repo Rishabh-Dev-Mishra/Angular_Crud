@@ -34,13 +34,22 @@
           required="true"
           #passRef="ngModel"
           required
+          minlength="8"
+          pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*]).*"
           title="Must contain at least one number, one uppercase, one lowercase letter, and one special character (!@#$%^&*), and be at least 8 characters long"
           placeholder="password"
         />
-        @if (passRef.value === "" && passRef.touched) {
-          <div style="color: red; font-size: 12px; margin-top: 5px">
-            Password is required.
-          </div>
+        @if (passRef.errors?.["required"] && passRef.touched) {
+          <span style="color: red; font-size: 12px; margin-top: 5px">Password is required.</span>
+        }
+        @if (passRef.errors?.["minlength"] && passRef.touched) {
+          <span style="color: red; font-size: 12px; margin-top: 5px">Must be at least 8 characters long.</span>
+        }
+        @if (passRef.errors?.["pattern"] && passRef.touched) {
+          <span style="color: red; font-size: 12px; margin-top: 5px"
+            >Must include: 1 uppercase, 1 lowercase, 1 number, and 1
+            symbol.</span
+          >
         }
       </div>
       <button type="submit" [disabled] = "loginForm.invalid">Login</button>

@@ -90,9 +90,9 @@ import { getCurrentInjector } from '@angular/core/primitives/di';
     }
 
     const payload = {
-      email: form.value.email,
       currentpassword: form.value.currentpassword,
-      newpassword: form.value.newpassword
+      newpassword: form.value.newpassword, 
+      confirmpassword: form.value.confirmpassword
     }
 
     this.dataservice.edit(payload).subscribe({

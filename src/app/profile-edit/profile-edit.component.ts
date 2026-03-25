@@ -2,14 +2,14 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { DataService } from '../data.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { NgIf } from "@angular/common";
 import { getCurrentInjector } from '@angular/core/primitives/di';
 
 @Component({
   selector: 'app-profile-edit',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, NgIf],
+  imports: [FormsModule, ReactiveFormsModule, NgIf, RouterLink],
   templateUrl: './profile-edit.component.html',
   styleUrl: './profile-edit.component.css'
 })

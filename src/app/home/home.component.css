@@ -84,41 +84,48 @@
     margin-bottom: 50px;
 }
 
-.car-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
-}
-
-.car-card {
-    background: var(--glass);
-    border: 1px solid var(--glass-border);
-    backdrop-filter: blur(15px);
-    border-radius: 20px;
-    overflow: hidden;
-    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.car-card:hover {
-    transform: scale(1.02);
-    border-color: var(--accent);
-}
-
-.car-image img {
-    width: 100%;
-    height: 250px;
+.car-image{
+    width: 50%;
+    height:50%;
     object-fit: cover;
 }
 
-.car-info {
-    padding: 25px;
+.carousel-container{
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+    position: relative;
+    margin-top: 20px;
+    background-color: rgb(2255, 255, 255)
 }
 
-.car-info h3 { margin: 0; font-size: 1.5rem; }
-.car-info p { color: var(--text-muted); margin: 10px 0 20px; }
+.carousel-track{
+    display: flex;
+    width: 800%;
+    height: 100%;
+    animation: scroll 30s infinite linear;
+}
 
-.details-link {
-    color: var(--accent);
-    text-decoration: none;
-    font-weight: 600;
+.slide{
+    flex: 0 0 12.5%;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.slide img{
+    width: 50%;
+    height: 100%;
+    padding: 0 10px;
+    object-fit:cover;
+    border-radius: 10px;
+    object-position: center;
+}
+
+@keyframes scroll {
+    0% { 
+        transform: translateX(0); 
+    }
+    100% { 
+        transform: translateX(-50%); 
+    }
 }

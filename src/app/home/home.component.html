@@ -1,61 +1,96 @@
 <app-navbar></app-navbar>
-<a routerLink="/profile" class="back-btn">
-  <i class="fa fa-arrow-left"></i> Back
-</a>
 <main class="content-wrapper">
-    <section class="hero-section">
-        <div class="hero-content">
-            <span class="subtitle">Exclusivity Redefined</span>
-            <h1>Precision Performance. <br> <span class="text-gradient">Pure Luxury.</span></h1>
-            <p>Experience the world's most prestigious automotive collection. From track-ready supercars to handcrafted grand tourers.</p>
-            <div class="cta-group">
-                <button class="btn-primary" (click)="goToInven()">Explore Inventory</button>
-                <button class="btn-secondary">Book a Viewing</button>
-            </div>
+  <section class="hero-section">
+    <div class="hero-content">
+      <span class="subtitle">Exclusivity Redefined</span>
+      <h1>
+        Precision Performance. <br />
+        <span class="text-gradient">Pure Luxury.</span>
+      </h1>
+      <p>
+        Experience the world's most prestigious automotive collection. From
+        track-ready supercars to handcrafted grand tourers.
+      </p>
+      <div class="cta-group">
+        <button class="btn-primary" (click)="goToInven()">
+          Explore Inventory
+        </button>
+        <button class="btn-secondary">Book a Viewing</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="inventory-preview">
+    <div class="section-header">
+      <h2>Current Collection</h2>
+      <div class="line"></div>
+    </div>
+
+    <div class="carousel-container">
+      <div class="carousel-track">
+        <div class="slide">
+            <img
+          class="car-image"
+          src="https://images.unsplash.com/photo-1630312465536-5c6b1f76dc3f?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          alt=""
+        />
         </div>
-    </section>
+     
+      <div class="slide">
+        <img
+          class="car-image"
+          src="https://images.unsplash.com/photo-1630312465536-5c6b1f76dc3f?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          alt=""
+        />
+      </div>
+      <div class="slide">
+        <img
+          class="car-image"
+          src="https://images.unsplash.com/photo-1630312465536-5c6b1f76dc3f?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          alt=""
+        />
+      </div>
+      <div class="slide">
+        <img
+          class="car-image"
+          src="https://images.unsplash.com/photo-1630312465536-5c6b1f76dc3f?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          alt=""
+        />
+      </div>
 
-    <section class="inventory-preview">
-        <div class="section-header">
-            <h2>Current Collection</h2>
-            <div class="line"></div>
+
+      <div class="slide">
+            <img
+          class="car-image"
+          src="https://images.unsplash.com/photo-1630312465536-5c6b1f76dc3f?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          alt=""
+        />
         </div>
-
-        <div class="car-grid">
-            <div class="car-card">
-                <div class="car-image">
-                    <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&q=80&w=800" alt="Porsche 911">
-                </div>
-                <div class="car-info">
-                    <h3>911 GT3 RS</h3>
-                    <p>Starting at $223,800</p>
-                    <a href="#" class="details-link">View Details →</a>
-                </div>
-            </div>
-
-            <div class="car-card">
-                <div class="car-image">
-                    <img src="https://images.unsplash.com/photo-1614164185128-e4ec99c436d7?auto=format&fit=crop&q=80&w=800" alt="Lamborghini">
-                </div>
-                <div class="car-info">
-                    <h3>Aventador SVJ</h3>
-                    <p>Price on Request</p>
-                    <a href="#" class="details-link">View Details →</a>
-                </div>
-            </div>
-
-            <div class="car-card">
-                <div class="car-image">
-                    <img src="https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&q=80&w=800" alt="Ferrari">
-                </div>
-                <div class="car-info">
-                    <h3>Ferrari F8 Tributo</h3>
-                    <p>Starting at $280,000</p>
-                    <a href="#" class="details-link">View Details →</a>
-                </div>
-            </div>
-        </div>
-    </section>
+     
+      <div class="slide">
+        <img
+          class="car-image"
+          src="https://images.unsplash.com/photo-1630312465536-5c6b1f76dc3f?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          alt=""
+        />
+      </div>
+      <div class="slide">
+        <img
+          class="car-image"
+          src="https://images.unsplash.com/photo-1630312465536-5c6b1f76dc3f?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          alt=""
+        />
+      </div>
+      <div class="slide">
+        <img
+          class="car-image"
+          src="https://images.unsplash.com/photo-1630312465536-5c6b1f76dc3f?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          alt=""
+        />
+      </div>
+       </div>
+    </div>
+  </section>
 </main>
 
 <app-footer></app-footer>

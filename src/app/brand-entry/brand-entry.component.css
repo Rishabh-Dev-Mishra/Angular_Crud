@@ -64,6 +64,7 @@ input[type="text"] {
     border: 1px solid rgba(255, 255, 255, 0.1);
     padding: 15px;
     border-radius: 12px;
+    border-color: #c83186;
     color: #fff;
     outline: none;
     transition: 0.3s;

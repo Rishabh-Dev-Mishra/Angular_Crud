@@ -7,13 +7,16 @@ const bcrypt = require("bcrypt");
 const multer = require("multer");
 
 require("dotenv").config({ path: "../.env" });
-app.use(cors());
+app.use(cors({
+  origin: "http://localhost:4200",
+  allowedHeaders: ['Authorization', 'Content-Type'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
+}));
 app.use(express.json());
+
+
 app.use("/uploads", express.static("uploads"));
 
-app.use(cors({
-  headers: ['authorization', 'Content-Type'] 
-}));
 
 
 const storage = multer.diskStorage({
@@ -73,6 +76,7 @@ app.post("/register", async (req, res) => {
 
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
+  
   try {
     const ExisitingUser = await pool.query(
       "SELECT * FROM users WHERE email = $1",
@@ -213,6 +217,19 @@ app.post(
     }
   },
 );
+
+app.post("/brand_details", (req, res)=>{
+  try{
+  const {brandName} = req.body;
+  if(!brandName) return res.status(303).json({message: "Data Required"})
+  res.status(200).json({ 
+    message: "Success", 
+    data: brandName 
+  });}
+  catch(err){
+    console.log(err)
+  }
+})
 
 app.listen(3000, (req, res) => {
   console.log("Server Is Running");

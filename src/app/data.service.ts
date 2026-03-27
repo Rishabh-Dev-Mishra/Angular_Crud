@@ -35,4 +35,9 @@ export class DataService {
   edit(data: any){
     return this.http.post(this.url+"/edit-profile",data);
   }
+
+  addBrand(data: any){
+    return this.http.post(this.url+"/brand_details", data)
+  }
+
 }

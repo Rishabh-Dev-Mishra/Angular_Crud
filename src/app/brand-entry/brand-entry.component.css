@@ -65,13 +65,14 @@ input[type="text"] {
     padding: 15px;
     border-radius: 12px;
     border-color: #c83186;
-    color: #fff;
+    color: #1111;
     outline: none;
     transition: 0.3s;
 }
 
 input[type="text"]:focus {
     border-color: #ff004c;
+    color: black;
     background: rgba(255, 255, 255, 0.08);
     box-shadow: 0 0 15px rgba(255, 0, 76, 0.2);
 }

@@ -218,16 +218,21 @@ app.post(
   },
 );
 
-app.post("/brand_details", (req, res)=>{
+app.post("/brand_details", upload.single("image"), async(req, res)=>{
   try{
   const {brandName} = req.body;
-  if(!brandName) return res.status(303).json({message: "Data Required"})
+  let imagePath = req.file? req.file.filename:null
+  if(!brandName || imagePath == null) return res.status(303).json({message: "Data Required"})
+
+    await pool.query("INSERT INTO brands (brand_name, brand_logo) values ($1, $2)", [brandName, imagePath]);
+
   res.status(200).json({ 
     message: "Success", 
     data: brandName 
   });}
   catch(err){
     console.log(err)
+    return res.status(500).json({ message: "Internal Server Error", error: err.message });
   }
 })
 

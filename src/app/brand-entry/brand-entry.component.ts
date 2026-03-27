@@ -18,13 +18,33 @@ export class BrandEntryComponent {
   
   private toast = inject(ToastrService)
 
+  selectedFile: File | null = null;
+
   private brandName:string = '';
+
+  onFileSelected(event:any){
+    const file = event.target.files[0];
+    if(file){
+      this.selectedFile = file;
+    }
+  }
   
   update(form :any){
-    const newBrand = {
-    brandName : form.value.brandName,
-  }
-    this.dataservice.addBrand(newBrand).subscribe({
+    if (form.invalid) {
+      this.toast.warning('Please fix the errors before submitting', 'Form Invalid');
+      return;
+    }
+
+    const formData = new FormData();
+
+    formData.append('brandName', form.value.brandName);
+
+    if(this.selectedFile){
+      formData.append('image', this.selectedFile);
+    }
+
+    
+    this.dataservice.addBrand(formData).subscribe({
       next: (res:any)=>{
         this.toast.success("Added Successfully")
       },

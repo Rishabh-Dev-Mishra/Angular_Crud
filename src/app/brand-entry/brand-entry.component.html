@@ -9,7 +9,7 @@
             <div class="input-group">
                 <label for="logo">Brand Logo / Photo</label>
                 <div class="file-input-wrapper">
-                    <input type="file" name="logo" ngModel id="logo">
+                    <input type="file" #fileInput (change)="onFileSelected($event)" name="logo" id="logo" accept="image/*">
                 </div>
             </div>
 

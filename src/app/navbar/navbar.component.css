@@ -1,17 +1,10 @@
-/* Reset & Base Layout */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
 
-/* Navbar Enhancements */
 .navbar {
     background-image: linear-gradient(to top, #a8edea 0%, #fed6e3 100%);
     padding: 12px 25px;
     font-weight: bold;
     display: flex;   
-    width: 100%;     
+    width: auto;     
     justify-content: space-between; 
     align-items: center;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
@@ -29,7 +22,7 @@
 }
 
 /* Profile Image & Icon Styling */
-.profile-icon, img {
+.profile-icon, .profile-section img {
     width: 45px;     
     height: 45px;     
     display: flex;
@@ -44,12 +37,12 @@
 
 
 
-.profile-icon:hover, img:hover {
+.profile-icon:hover, .profile-section img:hover {
     transform: scale(1.05);
     box-shadow: 0 0 10px rgba(16, 32, 80, 0.2);
 }
 
-/* --- THE HOVER MODAL (NAVBAR POPUP) --- */
+
 .hover-modal-nav {
     position: absolute;
     top: 55px; /* Appears below the icon */

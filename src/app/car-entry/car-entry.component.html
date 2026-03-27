@@ -1,1 +1,64 @@
-<p>car-entry works!</p>
+<app-navbar></app-navbar>
+
+<div class="admin-page-wrapper">
+    <div class="glass-form-card">
+        <h1 class="main-title">Add New Brand</h1>
+        <p class="subtitle">Expand the luxury collection</p>
+        
+        <form #brandform="ngForm" (ngSubmit)="update(brandform)" class="premium-form">
+
+            <div class="input-group">
+                <label for="logo">Car Photo</label>
+                <div class="file-input-wrapper">
+                    <input type="file" name="photo" ngModel id="photo">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="modelName">Model Name</label>
+                <input type="text" name="modelName" ngModel id="modelName" placeholder="e.g. Martin">
+            </div>
+
+            <div class="input-group">
+                <label for="category">Category</label>
+                <input type="text" name="category" ngModel id="category" placeholder="e.g. Luxury">
+            </div>
+
+            <div class="input-group">
+                <label for="engineType">Engine Type</label>
+                <input type="text" name="EngineType" ngModel id="EngineType" placeholder="e.g. Mhawk">
+            </div>
+
+            <div class="input-group">
+                <label for="horsePower">Horse Power</label>
+                <input type="text" name="horsePower" ngModel id="horsePower" placeholder="e.g. 200">
+            </div>
+
+            <div class="input-group">
+                <label for="torque">Torque</label>
+                <input type="text" name="torque" ngModel id="torque" placeholder="e.g. 50">
+            </div>
+
+            <div class="input-group">
+                <label for="topSpeed">Top Speed</label>
+                <input type="text" name="topSpeed" ngModel id="topSpeed" placeholder="e.g. 200kmph">
+            </div>
+
+            <div class="input-group">
+                <label for="price">Price</label>
+                <input type="text" name="price" ngModel id="price" placeholder="e.g. $5000">
+            </div>
+
+            <div class="input-group">
+                <label for="description">Description</label>
+                <textarea type="text" name="description" ngModel id="description" ></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn">
+                <span>Save Brand</span>
+            </button>
+        </form>
+    </div>
+</div>
+
+<app-footer></app-footer>

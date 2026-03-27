@@ -1,1 +1,28 @@
-<p>brand-entry works!</p>
+<app-navbar></app-navbar>
+
+<div class="admin-page-wrapper">
+    <div class="glass-form-card">
+        <h1 class="main-title">Add New Brand</h1>
+        <p class="subtitle">Expand the luxury collection</p>
+        
+        <form #brandform="ngForm" (ngSubmit)="update(brandform)" class="premium-form">
+            <div class="input-group">
+                <label for="logo">Brand Logo / Photo</label>
+                <div class="file-input-wrapper">
+                    <input type="file" name="logo" ngModel id="logo">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="brandName">Official Name</label>
+                <input type="text" name="brandName" ngModel id="brandName" placeholder="e.g. Aston Martin">
+            </div>
+
+            <button type="submit" class="submit-btn">
+                <span>Save Brand</span>
+            </button>
+        </form>
+    </div>
+</div>
+
+<app-footer></app-footer>

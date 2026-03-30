@@ -60,18 +60,19 @@
 
 /* Input Fields */
 input[type="text"] {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+   color: black;
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 15px rgba(255, 0, 76, 0.2);
     padding: 15px;
     border-radius: 12px;
     border-color: #c83186;
-    color: #fff;
     outline: none;
     transition: 0.3s;
 }
 
 input[type="text"]:focus {
     border-color: #ff004c;
+    color: black;
     background: rgba(255, 255, 255, 0.08);
     box-shadow: 0 0 15px rgba(255, 0, 76, 0.2);
 }
@@ -83,7 +84,7 @@ input[type="file"] {
 
 input[type="file"]::file-selector-button {
     background: #333;
-    color: white;
+    color: black;
     border: none;
     padding: 8px 15px;
     border-radius: 8px;

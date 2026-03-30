@@ -14,6 +14,8 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './brand-entry.component.css'
 })
 export class BrandEntryComponent {
+
+  
   private dataservice = inject(DataService);
   
   private toast = inject(ToastrService)
@@ -47,6 +49,7 @@ export class BrandEntryComponent {
     this.dataservice.addBrand(formData).subscribe({
       next: (res:any)=>{
         this.toast.success("Added Successfully")
+        form.resetForm();
       },
       error: (err:any)=>{
         this.toast.error("Wrong!!");

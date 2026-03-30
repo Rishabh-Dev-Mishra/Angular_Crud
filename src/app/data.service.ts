@@ -40,4 +40,9 @@ export class DataService {
     return this.http.post(this.url+"/brand_details", data)
   }
 
+  addCar(data: any){
+    console.log(data);
+    return this.http.post(this.url+"/car_details", data)
+  }
+
 }

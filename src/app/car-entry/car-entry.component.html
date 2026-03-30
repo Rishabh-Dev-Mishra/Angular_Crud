@@ -10,7 +10,7 @@
             <div class="input-group">
                 <label for="logo">Car Photo</label>
                 <div class="file-input-wrapper">
-                    <input type="file" name="photo" ngModel id="photo">
+                    <input type="file" #fileInput (change)="onFileSelected($event)" ngModel id="image" name="image" accept="image/*">
                 </div>
             </div>
 
@@ -51,7 +51,7 @@
 
             <div class="input-group">
                 <label for="description">Description</label>
-                <textarea type="text" name="description" ngModel id="description" ></textarea>
+                <textarea maxlength="100" type="text" name="description" ngModel id="description" ></textarea>
             </div>
 
             <button type="submit" class="submit-btn">

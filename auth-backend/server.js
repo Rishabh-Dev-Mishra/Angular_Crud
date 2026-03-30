@@ -8,10 +8,12 @@ const multer = require("multer");
 
 require("dotenv").config({ path: "../.env" });
 app.use(cors({
-  origin: "http://localhost:4200",
-  allowedHeaders: ['Authorization', 'Content-Type'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
+  origin: "http://localhost:4200", 
+  credentials: true,            
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"] 
 }));
+
 app.use(express.json());
 
 
@@ -233,6 +235,21 @@ app.post("/brand_details", upload.single("image"), async(req, res)=>{
   catch(err){
     console.log(err)
     return res.status(500).json({ message: "Internal Server Error", error: err.message });
+  }
+})
+
+app.post("/car_details", upload.single("image"), async(req, res)=>{
+  try{
+    const{modelName, category, engineType,horsePower,torque,topSpeed,price,description} = req.body;
+    let imagePath = req.file?req.file.filename:null;
+    if(!modelName|| !category || !engineType || !horsePower || !torque || !topSpeed || !price || !description || imagePath == null){
+      return res.status(303).json({message:"All Detials Required"})
+    }
+    console.log(modelName);
+    return res.status(200).json({message:"Done"})
+  }
+  catch(err){
+    console.log(err)
   }
 })
 

@@ -225,6 +225,8 @@ app.post("/brand_details", upload.single("image"), async(req, res)=>{
   const {brandName} = req.body;
   let imagePath = req.file? req.file.filename:null
   if(!brandName || imagePath == null) return res.status(303).json({message: "Data Required"})
+  const has = pool.query("select * from brands where brandName = $1", [brandName]);
+  if(has.rows > 0) return res.status(303).json({message:"This brnad already exists"})
 
     await pool.query("INSERT INTO brands (brand_name, brand_logo) values ($1, $2)", [brandName, imagePath]);
 
@@ -238,20 +240,57 @@ app.post("/brand_details", upload.single("image"), async(req, res)=>{
   }
 })
 
-app.post("/car_details", upload.single("image"), async(req, res)=>{
-  try{
-    const{modelName, category, engineType,horsePower,torque,topSpeed,price,description} = req.body;
-    let imagePath = req.file?req.file.filename:null;
-    if(!modelName|| !category || !engineType || !horsePower || !torque || !topSpeed || !price || !description || imagePath == null){
-      return res.status(303).json({message:"All Detials Required"})
+app.post("/car_details", upload.single("image"), async (req, res) => {
+  try {
+    const { brandName, modelName, category, engineType, horsePower, torque, topSpeed, price, description } = req.body;
+    let imagePath = req.file ? req.file.filename : null;
+
+    if (!brandName || !modelName || !category || !engineType || !horsePower || !torque || !topSpeed || !price || !description || !imagePath) {
+      return res.status(400).json({ message: "All Details Required" });
     }
-    console.log(modelName);
-    return res.status(200).json({message:"Done"})
+
+    // Clean numeric inputs: Remove commas and currency symbols
+    const cleanHP = parseInt(horsePower.toString().replace(/,/g, ''), 10);
+    const cleanTorque = parseInt(torque.toString().replace(/,/g, ''), 10);
+    const cleanTopSpeed = parseInt(topSpeed.toString().replace(/,/g, ''), 10);
+    const cleanPrice = parseFloat(price.toString().replace(/[$,]/g, ''));
+
+    const brandRes = await pool.query("SELECT brand_id FROM brands WHERE brand_name = $1", [brandName]);
+    if (brandRes.rows.length === 0) {
+      return res.status(404).json({ message: "Brand not found" });
+    }
+    const brand_id = brandRes.rows[0].brand_id;
+
+    const exists = await pool.query(
+      "SELECT * FROM cars WHERE brand_id = $1 AND model_name = $2 AND category = $3",
+      [brand_id, modelName, category]
+    );
+
+    if (exists.rows.length > 0) {
+      return res.status(400).json({ message: "Already exists" });
+    }
+
+    const newCar = await pool.query(
+      "INSERT INTO cars (brand_id, model_name, category, car_logo) VALUES ($1, $2, $3, $4) RETURNING car_id",
+      [brand_id, modelName, category, imagePath]
+    );
+
+    const car_id = newCar.rows[0].car_id;
+
+    // Use the 'clean' numeric variables here
+    await pool.query(
+      "INSERT INTO car_details (car_id, engine_type, horsepower, torque, top_speed, price, description) VALUES ($1, $2, $3, $4, $5, $6, $7)",
+      [car_id, engineType, cleanHP, cleanTorque, cleanTopSpeed, cleanPrice, description]
+    );
+
+    res.status(200).json({ message: "Car details added successfully" });
+  } catch (err) {
+    console.error("Database Error:", err.message);
+    res.status(500).json({ message: "Internal Server Error", error: err.message });
   }
-  catch(err){
-    console.log(err)
-  }
-})
+});
+
+
 
 
 app.get("/brands", async(req, res)=>{
@@ -260,9 +299,46 @@ app.get("/brands", async(req, res)=>{
     return res.status(200).json(brands.rows ||  brands);
   } catch(err){
     console.log(err);
-    return res.status(300).json({message: "Unknown Error"});
+    return res.status(400).json({message: "Unknown Error"});
   }
 })
+
+
+app.get("/cars/:id/:name", async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    // 1. Convert string ID to Integer for your DB
+    const brandId = parseInt(id, 10);
+
+    // 2. Use LEFT JOIN so cars show even if specs are missing
+    // 3. Ensure 'ON' keyword is present
+    const query = `
+      SELECT 
+        c.car_id, c.brand_id, c.model_name, c.category, c.car_logo,
+        cd.price, cd.description, cd.engine_type, cd.horsepower, cd.torque, cd.top_speed
+      FROM cars c 
+      LEFT JOIN car_details cd ON c.car_id = cd.car_id 
+      WHERE c.brand_id = $1
+    `;
+    
+    const result = await pool.query(query, [brandId]);
+    
+    // Log for debugging: This shows in your Node terminal
+    console.log(`Brand ID ${brandId} found ${result.rows.length} cars.`);
+    
+    return res.status(200).json(result.rows);
+  } catch (err) {
+    // If this runs, it means your SQL query has an error
+    console.error("DATABASE ERROR:", err.message);
+    return res.status(500).json({ error: err.message });
+  }
+});
+
+
+
+
+
 
 app.listen(3000, (req, res) => {
   console.log("Server Is Running");

@@ -8,7 +8,7 @@ import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-car-entry',
-  imports: [FooterComponent, NavbarComponent, RouterLink, FormsModule],
+  imports: [FooterComponent, NavbarComponent, FormsModule],
   templateUrl: './car-entry.component.html',
   styleUrl: './car-entry.component.css'
 })
@@ -18,16 +18,6 @@ export class CarEntryComponent {
   private toast = inject(ToastrService);
 
   selectedFile: File | null = null;
-
-
-  private modelName:string = ""
-  private category:string = ""
-  private engineType:string = ""
-  private horsePower:string = ""
-  private torque:string = ""
-  private topSpeed:string = ""
-  private price:string = ""
-  private description:string = ""
 
   onFileSelected(event: any){
     const file = event.target.files[0];
@@ -41,7 +31,14 @@ export class CarEntryComponent {
       this.toast.warning('Fix the errors before proceeding');
       return;
     }
+
+    if(this.selectedFile==null){
+      this.toast.warning('Upload image');
+      return;
+    }
+
     const formData = new FormData();
+    formData.append('brandName', form.value.brandName);
     formData.append('modelName', form.value.modelName);
     formData.append('category', form.value.category);
     formData.append('engineType', form.value.engineType);
@@ -60,8 +57,7 @@ export class CarEntryComponent {
       },
       error:(err: any)=>{
         this.toast.error("Wrong!!")
-        console.log(err);;
-        
+        console.log(err);
       }
     })
   }

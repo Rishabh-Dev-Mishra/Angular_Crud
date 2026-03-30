@@ -173,3 +173,12 @@
   background: #d4af37; /* Changes to Gold on hover */
   color: #000;
 }
+
+.empty {
+    text-align: center;
+    padding: 100px 0;
+    font-size: 2rem;
+    color: #444;
+    font-weight: 700;
+    letter-spacing: 2px;
+}

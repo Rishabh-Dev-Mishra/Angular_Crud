@@ -9,7 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-brand-entry',
   standalone: true,
-  imports: [FormsModule , RouterLink, FooterComponent, NavbarComponent],
+  imports: [FormsModule, FooterComponent, NavbarComponent],
   templateUrl: './brand-entry.component.html',
   styleUrl: './brand-entry.component.css'
 })

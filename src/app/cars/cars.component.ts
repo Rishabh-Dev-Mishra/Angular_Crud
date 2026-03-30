@@ -1,13 +1,38 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { FooterComponent } from '../footer/footer.component';
+import { DataService } from '../data.service';
+import { ActivatedRoute } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-cars',
-  imports: [NavbarComponent, FooterComponent],
+  standalone: true,
+  imports: [NavbarComponent, FooterComponent, CommonModule],
   templateUrl: './cars.component.html',
   styleUrl: './cars.component.css'
 })
-export class CarsComponent {
+export class CarsComponent implements OnInit {
+  private route = inject(ActivatedRoute);
+  private dataservice = inject(DataService);
+  
+  carList: any[] = [];
 
+  ngOnInit(): void {
+    const id = this.route.snapshot.paramMap.get("id");
+    const name = this.route.snapshot.paramMap.get("name");
+
+    if (id && name) {
+      this.dataservice.getCars(id, name).subscribe({
+        next: (data: any) => {
+          this.carList = data;
+        },
+        error: (err) => {
+          console.error('Error fetching cars:', err);
+        }
+      });
+    } else {
+      console.warn("Missing route parameters: id or name");
+    }
+  }
 }

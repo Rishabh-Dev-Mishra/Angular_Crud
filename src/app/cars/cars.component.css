@@ -1,0 +1,172 @@
+/* Layout Container */
+.inventory-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding: 60px 20px;
+  /* Replaced aquamarine with a clean, modern off-white/light-grey */
+  background-color: #f8f9fa; 
+}
+
+/* Upper Hero Section */
+.upper-section {
+  text-align: center;
+  width: 100%;
+  max-width: 1000px;
+  padding: 60px 40px;
+  margin-bottom: 60px;
+  /* Dark Slate/Charcoal looks much more high-end than basic grey */
+  background: #1a1a1a; 
+  color: #ffffff;
+  border-radius: 24px;
+  /* Softer, deeper shadow for a 'floating' effect */
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2); 
+}
+
+.intro-text h1 {
+  font-size: 2.5rem;
+  margin: 15px 0;
+  letter-spacing: -1px;
+}
+
+.badge {
+  background: #d4af37; /* Gold accent */
+  color: #000;
+  padding: 6px 18px;
+  border-radius: 50px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.gradient-text {
+  background: linear-gradient(90deg, #d4af37, #ffffff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Search & Filters */
+.controls-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.search-bar input, .filter-select {
+  padding: 14px 25px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.05);
+  color: #fff;
+  border-radius: 12px;
+  backdrop-filter: blur(5px); /* Glassmorphism effect */
+  transition: 0.3s;
+}
+
+.search-bar input:focus {
+  background: rgba(255,255,255,0.15);
+  outline: none;
+  border-color: #d4af37;
+}
+
+/* Car Box Section */
+.car-box {
+  width: 100%;
+  max-width: 1200px;
+}
+
+.car-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 40px;
+}
+
+/* Individual Car Card */
+.car-card {
+  background: #ffffff;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid #eee;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.car-card:hover {
+  transform: translateY(-12px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+/* Image Section */
+.image-container {
+  height: 230px;
+  background: #333; /* Dark background for the car image */
+  position: relative;
+  /* Placeholder image style - add a subtle gradient */
+  background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.5));
+}
+
+.price-tag {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: #fff;
+  color: #1a1a1a;
+  padding: 8px 16px;
+  font-weight: 900;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* Car Details */
+.car-details {
+  padding: 30px;
+}
+
+.car-details h3 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: #1a1a1a;
+}
+
+.specs-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin: 25px 0;
+  padding: 20px 0;
+  border-top: 1px dashed #eee;
+}
+
+.spec-item .label {
+  display: block;
+  font-size: 0.75rem;
+  color: #aaa;
+  text-transform: uppercase;
+}
+
+.spec-item .value {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #333;
+}
+
+/* Button */
+.btn-view {
+  width: 100%;
+  padding: 16px;
+  background: #1a1a1a;
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  font-weight: 700;
+  letter-spacing: 1px;
+  transition: 0.3s;
+}
+
+.btn-view:hover {
+  background: #d4af37; /* Changes to Gold on hover */
+  color: #000;
+}

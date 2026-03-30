@@ -1,3 +1,77 @@
 <app-navbar></app-navbar>
 
+<main class="inventory-wrapper">
+  <section class="upper-section">
+    <div class="intro-text">
+      <span class="badge">The Vault</span>
+      <h1>Discover Your <span class="gradient-text">Next Masterpiece</span></h1>
+      <p>Filter through our curated selection of world-class automotive engineering.</p>
+    </div>
+
+    <div class="controls-container">
+      <div class="search-bar">
+        <!-- <i class="search-icon">🔍</i> -->
+        <input type="text" placeholder="Search by model, brand, or engine..." />
+      </div>
+      
+      <div class="filter-group">
+        <select class="filter-select">
+          <option value="">Category: All</option>
+          <option value="supercar">Supercars</option>
+          <option value="gt">Grand Tourers</option>
+        </select>
+        <select class="filter-select">
+          <option value="">Engine: All</option>
+          <option value="v8">V8</option>
+          <option value="v12">V12</option>
+          <option value="electric">Electric</option>
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <section class="car-box">
+    <div class="car-grid">
+      
+      <div class="car-card">
+        <div class="image-container">
+          <!-- <img src="https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&q=80&w=1200" alt="Car Image"> -->
+          <div class="price-tag">$285,000</div>
+        </div>
+        
+        <div class="car-details">
+          <span class="category-label">Supercar</span>
+          <h3>Lamborghini Huracán</h3>
+          
+          <div class="specs-grid">
+            <div class="spec-item">
+              <span class="label">Engine</span>
+              <span class="value">5.2L V10</span>
+            </div>
+            <div class="spec-item">
+              <span class="label">Horsepower</span>
+              <span class="value">640 HP</span>
+            </div>
+            <div class="spec-item">
+              <span class="label">Torque</span>
+              <span class="value">600 Nm</span>
+            </div>
+            <div class="spec-item">
+              <span class="label">Top Speed</span>
+              <span class="value">325 km/h</span>
+            </div>
+          </div>
+
+          <p class="description">
+            The pinnacle of Italian engineering, offering an unparalleled naturally aspirated experience.
+          </p>
+
+          <button class="btn-view">Enquire Now</button>
+        </div>
+      </div>
+
+      </div>
+  </section>
+</main>
+
 <app-footer></app-footer>

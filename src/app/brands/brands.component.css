@@ -1,207 +1,172 @@
-
-
+/* Container & Background */
 .brands-container {
     padding: 120px 10% 80px;
     min-height: 100vh;
+    background-color: #0a0a0a; /* Dark luxury theme */
     color: white;
     font-family: 'Inter', sans-serif;
+    position: relative;
+}
+
+/* Back Button */
+.back-btn {
+    position: absolute; 
+    top: 40px;
+    left: 10%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: #ffffff;  
+    background: rgba(255, 0, 76, 0.1);
+    border: 1px solid rgba(255, 0, 76, 0.3);
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.back-btn:hover {
+    background: #ff004c;
+    transform: translateX(-5px);
+    box-shadow: 0 0 20px rgba(255, 0, 76, 0.4);
 }
 
 /* Header Section */
 .brands-header {
     text-align: center;
-    margin-bottom: 60px;
-    color: #ff004c;
+    margin-bottom: 80px;
 }
 
 .eyebrow {
     text-transform: uppercase;
-    letter-spacing: 5px;
+    letter-spacing: 4px;
     color: #ff004c;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     font-weight: 700;
 }
 
 .brands-header h1 {
     font-size: 3.5rem;
-    margin: 15px 0 30px;
+    margin: 15px 0 35px;
+    font-weight: 800;
 }
 
-/* Luxury Search Bar */
+.text-gradient {
+    background: linear-gradient(90deg, #ff004c, #ff6b9d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Search Bar */
 .search-wrapper {
-    position: relative;
-    max-width: 500px;
+    max-width: 550px;
     margin: 0 auto;
 }
 
 .search-wrapper input {
     width: 100%;
-    padding: 15px 25px 15px 50px;
-    background: rgba(118, 3, 3, 0.05);
-    border: 1px solid rgba(13, 1, 1, 0.1);
-    border-radius: 50px;
-    color: black;
+    padding: 18px 30px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 100px;
+    color: white;
+    font-size: 1rem;
     outline: none;
     backdrop-filter: blur(10px);
-    transition: 0.3s;
+    transition: 0.4s;
 }
 
 .search-wrapper input:focus {
-    border-color: #ce0c47;
-    background: rgba(197, 109, 109, 0.08);
+    border-color: #ff004c;
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 30px rgba(255, 0, 76, 0.1);
 }
 
-.search-wrapper i {
-    position: absolute;
-    left: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #bc0e0e;
-}
-
-
-.brands-grid {
+/* Grid & List Handling */
+.brands-grid ul {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 25px;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
+/* Individual Card */
 .brand-card {
     position: relative;
-    text-decoration: none;
-    background: #1a1a1a; 
-    border-radius: 24px;
-    height: 350px; /* Fixed height for consistent grid */
     display: flex;
     flex-direction: column;
-    justify-content: flex-end; 
+    justify-content: flex-end;
+    height: 380px;
+    text-decoration: none;
+    background: #151515;
+    border-radius: 28px;
     overflow: hidden;
-    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    box-shadow: 0 20px 40px rgba(191, 11, 11, 0.6);
 }
 
-/* The Image now fills the entire card */
 .brand-logo {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    margin-bottom: 0; /* Remove previous margin */
-    filter: grayscale(0.5) brightness(0.7); /* Darker by default for text legibility */
-    transition: 0.5s;
     z-index: 1;
 }
 
 .brand-logo img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Important: ensures image fills the box without stretching */
+    object-fit: cover;
+    filter: brightness(0.6) grayscale(0.2);
+    transition: 0.6s ease;
 }
 
-/* Text Overlay Container */
 .brand-info {
     position: relative;
-    z-index: 2; /* Sits above the image */
-    padding: 30px;
-    text-align: left; /* Usually looks better for overlays */
+    z-index: 2;
+    padding: 35px;
     background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%);
-    width: 100%;
 }
 
 .brand-info h3 {
-    color: #ffffff; /* Changed to white for better contrast on images */
-    font-size: 1.6rem;
-    margin-bottom: 5px;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-}
-
-.brand-info p {
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 0.95rem;
     margin: 0;
-}
-
-/* Updated Hover Effects */
-.brand-card:hover {
-    transform: translateY(-10px);
-    border-color: #ff004c;
-    box-shadow: 0 15px 35px rgba(255, 0, 76, 0.2);
-}
-
-.brand-card:hover .brand-logo {
-    filter: grayscale(0) brightness(0.9);
-    transform: scale(1.1); /* Zoom effect on image */
-}
-
-/* Adjust Arrow for new layout */
-.card-arrow {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    bottom: auto; /* Reset from previous */
-    font-size: 1.2rem;
-    color: #ffffff;
-    background: #ff004c;
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transform: translateX(-10px);
-    transition: 0.3s;
-    z-index: 3;
-}
-
-.brand-card:hover .card-arrow {
-    opacity: 1;
-    transform: translateX(0);
-}
-
-.back-btn {
-    position: fixed; 
-    width: 7%;
-    top: 100px;      /* Increased to ensure it's below a standard navbar */
-    left: 15px;
-    z-index: 1000;   /* Very high z-index to stay above background balls */
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    text-decoration: none;
-    color: #ffffff;  
-    background-color: rgb(222, 49, 78); 
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    padding: 12px 24px;
-    border-radius: 50px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    backdrop-filter: blur(15px); /* Frosty glass effect */
-    transition: all 0.3s ease;
-}
-
-.back-btn .icon {
-    font-size: 1.2rem;
-    line-height: 1;
-}
-
-.back-btn:hover {
-    background: #ff004c; /* Glows red on hover */
+    font-size: 1.8rem;
     color: white;
-    border-color: #ff004c;
-    box-shadow: 0 0 20px rgba(255, 0, 76, 0.4);
-    transform: translateX(-5px);
+    letter-spacing: 1px;
 }
 
-/* If your navbar is very tall, move the button down further */
-@media (max-width: 768px) {
-    .back-btn {
-        top: 90px;
-        left: 15px;
-        padding: 8px 16px;
-    }
+/* Hover State */
+.brand-card:hover {
+    transform: translateY(-12px);
+    border-color: #ff004c;
+    box-shadow: 0 20px 40px rgba(191, 11, 11, 0.6);
 }
-/*  */
+
+.brand-card:hover .brand-logo img {
+    filter: brightness(0.9) grayscale(0);
+    transform: scale(1.1);
+}
+
+/* Empty State */
+.empty {
+    text-align: center;
+    padding: 100px 0;
+    font-size: 2rem;
+    color: #444;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .brands-header h1 { font-size: 2.5rem; }
+    .brands-container { padding: 100px 5% 50px; }
+    .back-btn { top: 20px; left: 5%; }
+}

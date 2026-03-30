@@ -58,15 +58,19 @@
 .search-bar input, .filter-select {
   padding: 14px 25px;
   border: 1px solid rgba(255,255,255,0.1);
-  background: rgba(255,255,255,0.05);
+  background: rgba(243, 241, 241, 0.05);
   color: #fff;
   border-radius: 12px;
-  backdrop-filter: blur(5px); /* Glassmorphism effect */
+  backdrop-filter: blur(5px); 
   transition: 0.3s;
 }
 
+.filter-select option{
+  background-color: #1a1a1a;
+}
+
 .search-bar input:focus {
-  background: rgba(255,255,255,0.15);
+  background: rgba(14, 3, 3, 0.15);
   outline: none;
   border-color: #d4af37;
 }
@@ -98,7 +102,6 @@
   box-shadow: 0 20px 40px rgba(0,0,0,0.15);
 }
 
-/* Image Section */
 .image-container {
   height: 230px;
   background: #333; /* Dark background for the car image */

@@ -45,4 +45,8 @@ export class DataService {
     return this.http.post(this.url+"/car_details", data)
   }
 
+  getBrands(){
+    return this.http.get(this.url+"/brands");
+  }
+
 }

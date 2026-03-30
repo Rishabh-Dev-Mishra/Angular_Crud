@@ -19,7 +19,7 @@ export const routes: Routes = [
     {path: "profile", component: ProfileComponent, canActivate: [routeGuardGuard]},
     {path: "edit-profile", component: ProfileEditComponent, canActivate: [routeGuardGuard]},
     {path: "brands", component: BrandsComponent, canActivate: [routeGuardGuard]},
-    {path: "cars", component: CarsComponent, canActivate: [routeGuardGuard]},
+    {path: "cars/:id/:name", component: CarsComponent, canActivate: [routeGuardGuard]},
     {path: "brand_details", component: BrandEntryComponent},
     {path: "car_details", component: CarEntryComponent},
     {path: "**", component: PageNotFoundComponent}

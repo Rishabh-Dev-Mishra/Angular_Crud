@@ -253,6 +253,17 @@ app.post("/car_details", upload.single("image"), async(req, res)=>{
   }
 })
 
+
+app.get("/brands", async(req, res)=>{
+  try{
+    const brands = await pool.query("select * from brands");
+    return res.status(200).json(brands.rows ||  brands);
+  } catch(err){
+    console.log(err);
+    return res.status(300).json({message: "Unknown Error"});
+  }
+})
+
 app.listen(3000, (req, res) => {
   console.log("Server Is Running");
 });

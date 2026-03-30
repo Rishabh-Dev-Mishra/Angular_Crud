@@ -1,6 +1,6 @@
 <app-navbar></app-navbar>
 <main class="brands-container">
-    <a routerLink="/home" class="back-btn">
+  <a routerLink="/home" class="back-btn">
     <span class="icon">←</span>
     <span class="label">Home</span>
   </a>
@@ -9,42 +9,35 @@
     <h1>World-Class <span class="text-gradient">Manufacturers</span></h1>
     <div class="search-wrapper">
       <!-- <i class="fa fa-search"></i> -->
-      <input type="text" placeholder="Search brands (e.g. Porsche, Ferrari...)">
+      <input
+        type="text"
+        placeholder="Search brands (e.g. Porsche, Ferrari...)"
+      />
     </div>
   </header>
 
-  <div class="brands-grid">
-    <a routerLink="/cars/porsche" class="brand-card">
-      <div class="brand-logo">
-        <img src="https://images.unsplash.com/photo-1616340791790-e35e524b827c?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Porsche">
-      </div>
-      <div class="brand-info">
-        <h3>Porsche</h3>
-        <p>12 Models Available</p>
-      </div>
-    </a>
-
-    <a routerLink="/cars/ferrari" class="brand-card">
-      <div class="brand-logo">
-        <img src="https://images.unsplash.com/photo-1583121274602-3e2820c69888?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Ferrari">
-      </div>
-      <div class="brand-info">
-        <h3>Ferrari</h3>
-        <p>8 Models Available</p>
-      </div>
-    </a>
-
-    <a routerLink="/cars" class="brand-card">
-      <div class="brand-logo">
-        <img src="https://images.unsplash.com/photo-1630312465536-5c6b1f76dc3f?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Lamborghini">
-      </div>
-      <div class="brand-info">
-        <h3>Lamborghini</h3>
-        <p>6 Models Available</p>
-      </div>
-    </a>
-
+  <div class="empty" *ngIf="brandList.length == 0; else has">
+    No Brands Found!!
+  </div>
+  <ng-template #has>
+    <div class="brands-grid" >
+      <ul>
+        <li *ngFor="let brand of brandList">
+          <a [routerLink]="['/cars',brand.brand_id, brand.brand_name]" class="brand-card">
+            <div class="brand-logo">
+              <img
+                [src]="'http://localhost:3000/uploads/' + brand.brand_logo"
+                alt="{{ brand.brand_name }} logo"
+              />
+            </div>
+            <div class="brand-info">
+              <h3>{{ brand.brand_name }}</h3>
+            </div>
+          </a>
+        </li>
+      </ul>
     </div>
+  </ng-template>
 </main>
 
 <app-footer></app-footer>

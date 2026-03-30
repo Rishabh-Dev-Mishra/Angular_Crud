@@ -103,7 +103,7 @@
     display: flex;
     width: 800%;
     height: 100%;
-    animation: scroll 30s infinite linear;
+    animation: scroll 15s infinite linear;
 }
 
 .slide{

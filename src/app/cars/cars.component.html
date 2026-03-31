@@ -15,31 +15,33 @@
 
     <div class="controls-container">
       <div class="search-bar">
-        <input type="text" placeholder="Search by model, brand, or engine..." />
+        <input type="text" placeholder="Search by model, brand, or engine..."[(ngModel)]="searchText" />
       </div>
 
       <div class="filter-group">
-        <select class="filter-select">
-          <option value="">Category: All</option>
+        <p>Category</p>
+        <select class="filter-select" [(ngModel)]="selectedCategory">
+          <option value="none" >Category: All</option>
           <option value="Sports">Sports</option>
           <option value="SUV">SUV</option>
           <option value="Electric">Electric</option>
+          <option value="Luxury">Luxury</option>
         </select>
-        <select class="filter-select">
-          <option value="">Engine: All</option>
+        <p>Engine Type</p>
+        <select class="filter-select" [(ngModel)]="selectedEngine" >
+          <option value="none">Engine: All</option>
           <option value="v8">V8</option>
           <option value="v12">V12</option>
         </select>
       </div>
+      <button (click)="filterCars()">Search</button>
     </div>
   </section>
 
-  <!-- Car Grid Section -->
-  <section class="car-box" *ngIf="carList.length > 0; else noData">
+  <section class="car-box" *ngIf="filteredCar.length > 0; else noData">
     <ul class="car-grid-list">
-      <li *ngFor="let car of carList; trackBy: trackByCarId">
+      <li *ngFor="let car of filteredCar; trackBy: trackByCarId">
         <div class="car-card">
-          <!-- Image Section -->
           <div class="image-container">
             <img 
               [src]="'http://localhost:3000/uploads/' + car.car_logo" 

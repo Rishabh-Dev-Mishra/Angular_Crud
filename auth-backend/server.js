@@ -369,6 +369,65 @@ app.get("/cars/:id", async (req, res) => {
   }
 });
 
+app.get("/brands/search/:name", async (req, res) => {
+  try {
+    const { name } = req.params;
+    console.log(req);
+    
+
+    if (!name) {
+      return res.status(400).json({ message: "Brand name is required" });
+    }
+
+   
+    const brands = await pool.query(
+      "SELECT * FROM brands WHERE brand_name ILIKE $1",
+      [`%${name}%`]
+    );
+
+    return res.status(200).json(brands.rows);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+app.get("/cars/search/:id/:name/:category/:engine", async(req, res)=>{
+  try{
+    const {id, name, category, engine} = req.params;
+    const ID = parseInt(id, 10);
+    const SQLQuery = (`
+      SELECT 
+        c.car_id AS car_id, 
+        c.model_name, 
+        c.category, 
+        c.car_logo,
+        cd.price, 
+        cd.description, 
+        cd.engine_type, 
+        cd.horsepower, 
+        cd.torque, 
+        cd.top_speed
+      FROM cars c 
+      JOIN car_details cd ON c.car_id = cd.car_id where (c.model_name ILIKE $1 OR $1 = 'all' ) and(c.category ILIKE $2 OR $2 = 'all') and (cd.engine_type ILIKE $3 or $3='all') and c.brand_id = $4
+    `);
+
+    const values = [
+      name==='none'?'all':`%${name}%`,
+      category==='none'?'all':`%${category}%`,
+      engine==='none'?'all':`%${engine}%`,
+      ID
+    ]
+
+    const result = await pool.query(SQLQuery, values);
+    return res.status(200).json(result.rows);
+  }
+  catch(err){
+    console.log(err);
+    
+  }
+})
+
 app.listen(3000, (req, res) => {
   console.log("Server Is Running");
 });

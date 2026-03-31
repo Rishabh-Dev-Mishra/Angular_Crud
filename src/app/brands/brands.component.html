@@ -1,29 +1,30 @@
 <app-navbar></app-navbar>
+
 <main class="brands-container">
   <a routerLink="/home" class="back-btn">
     <span class="icon">←</span>
     <span class="label">Home</span>
   </a>
+
   <header class="brands-header">
     <span class="eyebrow">Select Your Heritage</span>
     <h1>World-Class <span class="text-gradient">Manufacturers</span></h1>
     <div class="search-wrapper">
-      <!-- <i class="fa fa-search"></i> -->
       <input
         type="text"
+        [(ngModel)]="searchQuery"
+        (keyup.enter)="filterBrands()"
         placeholder="Search brands (e.g. Porsche, Ferrari...)"
       />
+      <i class="fas fa-arrow-right" (click)="filterBrands()"></i>
     </div>
   </header>
 
-  <div class="empty" *ngIf="brandList.length == 0; else has">
-    No Brands Found!!
-  </div>
-  <ng-template #has>
-    <div class="brands-grid" >
+  <div class="brands-grid-wrapper" *ngIf="filteredBrands.length > 0; else noBrands">
+    <div class="brands-grid">
       <ul>
-        <li *ngFor="let brand of brandList">
-          <a [routerLink]="['/cars',brand.brand_id, brand.brand_name]" class="brand-card">
+        <li *ngFor="let brand of filteredBrands">
+          <a [routerLink]="['/cars', brand.brand_id, brand.brand_name]" class="brand-card">
             <div class="brand-logo">
               <img
                 [src]="'http://localhost:3000/uploads/' + brand.brand_logo"
@@ -36,6 +37,12 @@
           </a>
         </li>
       </ul>
+    </div>
+  </div>
+
+  <ng-template #noBrands>
+    <div class="empty-state">
+      <p>No Brands Found!!</p>
     </div>
   </ng-template>
 </main>

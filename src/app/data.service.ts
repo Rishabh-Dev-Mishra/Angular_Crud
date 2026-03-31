@@ -41,12 +41,21 @@ export class DataService {
   }
 
   addCar(data: any){
-    // console.log(data);
     return this.http.post(this.url+"/car_details", data)
   }
 
   getBrands(){
     return this.http.get(this.url+"/brands");
+  }
+
+  filteredBrands(data: any){
+    console.log("Sendng data");
+    
+    return this.http.get(`${this.url}/brands/search/${data}`);
+  }
+
+  filteredCars(id: string, name:string, category:string, engine:string){
+    return this.http.get(`${this.url}/cars/search/${id}/${name}/${category}/${engine}`);
   }
 
   getCars(id:string, name:string){

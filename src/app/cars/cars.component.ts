@@ -4,11 +4,13 @@ import { FooterComponent } from '../footer/footer.component';
 import { DataService } from '../data.service';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { identifierName } from '@angular/compiler';
 
 @Component({
   selector: 'app-cars',
   standalone: true,
-  imports: [NavbarComponent, FooterComponent, CommonModule, RouterLink],
+  imports: [NavbarComponent, FooterComponent, CommonModule, FormsModule, RouterLink],
   templateUrl: './cars.component.html',
   styleUrl: './cars.component.css'
 })
@@ -17,18 +19,21 @@ export class CarsComponent implements OnInit {
   private dataservice = inject(DataService);
   
   carList: any[] = [];
+  filteredCar: any[] = [];
   trackByCarId(index: number, car: any) {
   return car.car_id; 
 }
 
-  ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get("id");
+
+allCars(){
+  const id = this.route.snapshot.paramMap.get("id");
     const name = this.route.snapshot.paramMap.get("name");
 
     if (id && name) {
       this.dataservice.getCars(id, name).subscribe({
         next: (data: any) => {
           this.carList = data;
+          this.filteredCar = data;
         },
         error: (err) => {
           console.error('Error fetching cars:', err);
@@ -36,6 +41,40 @@ export class CarsComponent implements OnInit {
       });
     } else {
       console.warn("Missing route parameters: id or name");
+    }
+}
+
+  ngOnInit(): void {
+    this.allCars();
+  }
+
+  searchText: string = '';
+  selectedCategory: string = 'none';
+  selectedEngine: string = 'none';
+
+  combine = this.searchText+this.selectedCategory+this.selectedEngine;
+
+  filterCars(){
+    const hasSearch = this.searchText.trim().length > 0;
+    const hasCategory = this.selectedCategory !== 'none' && this.selectedCategory !== '';
+    const hasEngine = this.selectedEngine !== 'none' && this.selectedEngine !== '';
+
+    if (hasSearch || hasCategory || hasEngine) {
+      const term = this.searchText.trim() || 'none';
+      const cat = this.selectedCategory || 'none';
+      const eng = this.selectedEngine || 'none';
+      const id = this.route.snapshot.paramMap.get("id") || "";
+      this.dataservice.filteredCars(id,term, cat, eng).subscribe({
+        next:(data:any)=>{
+          this.filteredCar = data;
+        },
+        error:(err)=>{
+          console.log(err);
+        }
+      })
+    }
+    else{
+      this.filteredCar = this.carList;
     }
   }
 }

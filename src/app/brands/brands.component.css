@@ -62,6 +62,7 @@
 
 /* Search Bar */
 .search-wrapper {
+    position: relative;
     max-width: 550px;
     margin: 0 auto;
 }
@@ -85,6 +86,19 @@
     box-shadow: 0 0 30px rgba(255, 0, 76, 0.1);
 }
 
+
+.search-wrapper i {
+    position: absolute;
+    right: -40px; 
+    top: 50%;
+    padding: 15px;
+    border-radius: 50%;
+    background-color: azure;
+    transform: translateY(-50%); /* Perfectly centers it vertically */
+    color: #c83186; /* Your brand accent color */
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
 /* Grid & List Handling */
 .brands-grid ul {
     display: grid;

@@ -8,7 +8,7 @@ import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-car-entry',
-  imports: [FooterComponent, NavbarComponent, FormsModule],
+  imports: [FooterComponent, NavbarComponent, FormsModule, RouterLink],
   templateUrl: './car-entry.component.html',
   styleUrl: './car-entry.component.css'
 })

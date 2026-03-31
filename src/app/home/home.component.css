@@ -129,3 +129,102 @@
         transform: translateX(-50%); 
     }
 }
+
+/* Stats Section */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    padding: 80px 10%;
+    background: #050505;
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.stat-item .number {
+    display: block;
+    font-size: 3rem;
+    font-weight: 800;
+    color: #ff004c; /* Match your brand color */
+    margin-bottom: 5px;
+}
+
+.stat-item .label {
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 0.8rem;
+}
+
+/* Category Cards */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 40px 10%;
+}
+
+
+/* Container Styling */
+.legacy-section {
+    padding: 100px 10%;
+    background: #000;
+    color: white;
+    text-align: center;
+}
+
+.gold-tag {
+    color: #c83186;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    margin-top: 50px;
+}
+
+/* Feature Card Styling */
+.feature-card {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 40px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: default;
+}
+
+.feature-card:hover {
+    background: rgba(200, 49, 134, 0.05);
+    border-color: #c83186;
+    transform: translateY(-10px);
+}
+
+.feature-card .icon {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    display: block;
+}
+
+.feature-card h3 {
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+    color: #fff;
+}
+
+.feature-card p {
+    color: #888;
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+/* Section Header Line */
+.line {
+    width: 60px;
+    height: 3px;
+    background: #c83186;
+    margin: 20px auto;
+}

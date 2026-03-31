@@ -25,6 +25,21 @@ export class NavbarComponent {
     this.router.navigate(['/']);
   }
 
+  addBrand(){
+    this.router.navigate(['/brand_details']);
+  }
+
+  addCar(){
+    this.router.navigate(['/car_details']);
+  }
+
+  checkUser(){
+    const name = sessionStorage.getItem('userName');
+    const email = sessionStorage.getItem('userEmail');
+    if(name == "Rishabh" && email == 'rd@rd.com')return true;
+    return false;
+  }
+
   get imageURL(): string {
   const path = sessionStorage.getItem('userImage'); 
   if(path !== null && path.length > 0)

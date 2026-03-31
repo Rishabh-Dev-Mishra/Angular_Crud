@@ -5,6 +5,11 @@
   <div class="profile-section"
   (mouseenter)="hoverService.setHover(true)" 
   (mouseleave)="hoverService.setHover(false)">
+  <div class="auth" *ngIf="checkUser()">
+    <button class="addBrand" (click) = "addBrand()">Add Brand</button>
+  <button class="addCar" (click) = "addCar()">Add Car</button>
+  </div>
+  
   <button class="logout" (click) = "logOut()">LogOut</button>
     
     <a routerLink="/profile">
@@ -14,7 +19,6 @@
       </ng-template>
     </a>
 
-    <!-- THE POPUP BOX -->
     @if (hoverService.isHovered()) {
       <div class="hover-modal-nav">
         <div class="modal-content">

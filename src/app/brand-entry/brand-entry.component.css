@@ -124,3 +124,28 @@ input[type="file"]::file-selector-button:hover {
 .submit-btn:active {
     transform: translateY(-1px);
 }
+
+.back-btn {
+    position: absolute; 
+    top: 100px;
+    left: 5%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: #ffffff;  
+    background: #ff004c;
+    border: 1px solid rgba(255, 0, 76, 0.3);
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.back-btn:hover {
+    background: #ff004c;
+    transform: translateX(-5px);
+    box-shadow: 0 0 20px rgba(255, 0, 76, 0.4);
+}

@@ -17,6 +17,9 @@ export class CarsComponent implements OnInit {
   private dataservice = inject(DataService);
   
   carList: any[] = [];
+  trackByCarId(index: number, car: any) {
+  return car.car_id; 
+}
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get("id");

@@ -33,7 +33,7 @@
   <!-- Car Grid Section -->
   <section class="car-box" *ngIf="carList.length > 0; else noData">
     <ul class="car-grid-list">
-      <li *ngFor="let car of carList">
+      <li *ngFor="let car of carList; trackBy: trackByCarId">
         <div class="car-card">
           <!-- Image Section -->
           <div class="image-container">
@@ -42,10 +42,9 @@
               [alt]="car.model_name" 
               class="car-image"
             />
-            <div class="price-tag">${{ car.price | number }}</div>
+            <div class="price-tag">${{ car.price ? (car.price | number) : '0' }}</div>
           </div>
 
-          <!-- Info Section -->
           <div class="car-details">
             <span class="category-label">{{ car.category }}</span>
             <h3>{{ car.model_name }}</h3>
@@ -77,7 +76,6 @@
     </ul>
   </section>
 
-  <!-- Fallback if no cars found -->
   <ng-template #noData>
     <div class="empty-state">
       <p>No masterpiece found in this category.</p>

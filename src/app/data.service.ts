@@ -50,7 +50,9 @@ export class DataService {
   }
 
   getCars(id:string, name:string){
-    return this.http.get(`${this.url}/cars/${id}/${name}`)
+    console.log(name);
+
+    return this.http.get(`${this.url}/cars/${id}`)
   }
 
 }

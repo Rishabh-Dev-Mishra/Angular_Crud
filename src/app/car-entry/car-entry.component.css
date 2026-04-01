@@ -1,45 +1,55 @@
+/* 1. Global Setup - Glassmorphism needs a background to work! */
+:host {
+    display: block;
+    background: radial-gradient(circle at top right, #2c0b1e, #0a0a0a);
+    min-height: 100vh;
+}
+
 /* Container to push content below the sticky navbar */
 .admin-page-wrapper {
+    position: relative; /* Anchors the absolute back-button */
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 85vh;
-    padding: 100px 20px;
+    min-height: 100vh;
+    padding: 120px 20px;
     font-family: 'Inter', sans-serif;
 }
 
 /* The Glass Card */
 .glass-form-card {
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
+    background: rgba(255, 255, 255, 0.05); /* Slightly visible */
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 24px;
-    padding: 50px;
+    padding: 40px;
     width: 100%;
-    max-width: 450px;
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+    max-width: 480px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
     text-align: center;
 }
 
 .main-title {
-    color: #c83186;
-    font-size: 1.8rem;
-    margin-bottom: 5px;
+    color: #ff004c; /* Brighter pink for visibility */
+    font-size: 2rem;
+    margin-bottom: 8px;
     font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .subtitle {
-    color: #888;
+    color: #bbb; /* Lighter gray */
     font-size: 0.9rem;
-    margin-bottom: 40px;
+    margin-bottom: 35px;
 }
 
 /* Form Styling */
 .premium-form {
     display: flex;
     flex-direction: column;
-    gap: 25px;
+    gap: 20px;
     text-align: left;
 }
 
@@ -50,57 +60,76 @@
 }
 
 .input-group label {
-    color: #aaa;
-    font-size: 0.75rem;
+    color: #ff004c; /* Matches brand color */
+    font-size: 0.7rem;
     text-transform: uppercase;
-    letter-spacing: 1.5px;
-    font-weight: 600;
-    margin-left: 5px;
+    letter-spacing: 2px;
+    font-weight: 700;
+    margin-left: 2px;
 }
 
-/* Input Fields */
-input[type="text"] {
-   color: black;
-    background: rgba(255, 255, 255, 0.08);
-    box-shadow: 0 0 15px rgba(255, 0, 76, 0.2);
-    padding: 15px;
+input[type="text"], 
+input[type="number"], 
+textarea,
+select {
+    color: white !important;
+    background: rgba(255, 255, 255, 0.07);
+    padding: 14px;
     border-radius: 12px;
-    border-color: #c83186;
+    border: 1px solid rgba(200, 49, 134, 0.4);
     outline: none;
-    transition: 0.3s;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
 }
 
-input[type="text"]:focus {
+input:focus, select:focus {
     border-color: #ff004c;
-    color: black;
-    background: rgba(255, 255, 255, 0.08);
-    box-shadow: 0 0 15px rgba(255, 0, 76, 0.2);
+    background: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 0 15px rgba(255, 0, 76, 0.3);
 }
+
+
+select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23ff004c' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 16px;
+}
+
+select option {
+    background-color: #1a1a1a; 
+    color: white;
+}
+
 
 input[type="file"] {
-    color: #888;
-    font-size: 0.9rem;
+    color: #ccc;
+    font-size: 0.85rem;
+    padding: 10px 0;
 }
 
 input[type="file"]::file-selector-button {
-    background: #333;
-    color: black;
+    background: #ff004c;
+    color: white;
     border: none;
-    padding: 8px 15px;
+    padding: 8px 16px;
     border-radius: 8px;
     margin-right: 15px;
     cursor: pointer;
+    font-weight: 600;
     transition: 0.3s;
 }
 
 input[type="file"]::file-selector-button:hover {
-    background: #444;
+    background: #d0003e;
 }
 
 /* The Submit Button */
 .submit-btn {
-    margin-top: 10px;
-    background: #ff004c;
+    margin-top: 15px;
+    background: linear-gradient(135deg, #ff004c, #c83186);
     color: white;
     padding: 16px;
     border: none;
@@ -108,74 +137,44 @@ input[type="file"]::file-selector-button:hover {
     font-size: 1rem;
     font-weight: 700;
     cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
     transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 0, 76, 0.3);
 }
 
-.submit-btn:hover {
-    background: #d0003e;
-    transform: translateY(-3px);
-    box-shadow: 0 10px 20px rgba(255, 0, 76, 0.3);
+.submit-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 0, 76, 0.5);
+    filter: brightness(1.1);
 }
 
-.submit-btn:active {
-    transform: translateY(-1px);
+.submit-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
-select {
-    color: black; /* Changed to white for better glassmorphism contrast */
-    background: rgba(255, 255, 255, 0.08);
-    padding: 15px;
-    border-radius: 12px;
-    border: 1px solid #c83186;
-    outline: none;
-    transition: 0.3s;
-    cursor: pointer;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23c83186' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 15px center;
-    background-size: 18px;
-}
-
-select:focus {
-    border-color: #ff004c;
-    box-shadow: 0 0 15px rgba(255, 0, 76, 0.2);
-    background-color: rgba(255, 255, 255, 0.12);
-}
-
-/* Styling the dropdown options */
-select option {
-    background-color: #2f2222; /* Dark background so text is readable */
-    color: white;
-    padding: 10px;
-}
-
-
+/* Back Button Positioning */
 .back-btn {
     position: absolute; 
-    top: 100px;
-    left: 5%;
+    top: 40px;
+    left: 40px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     text-decoration: none;
-    color: #ffffff;  
-    background: #ff004c;
-    border: 1px solid rgba(255, 0, 76, 0.3);
+    color: white;  
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     padding: 10px 20px;
     border-radius: 50px;
     font-size: 0.8rem;
     font-weight: 600;
+    backdrop-filter: blur(10px);
     transition: all 0.3s ease;
-    z-index: 10;
+    z-index: 100;
 }
 
 .back-btn:hover {
     background: #ff004c;
+    border-color: #ff004c;
     transform: translateX(-5px);
-    box-shadow: 0 0 20px rgba(255, 0, 76, 0.4);
 }

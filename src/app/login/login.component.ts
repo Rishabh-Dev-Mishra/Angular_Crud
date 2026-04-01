@@ -44,7 +44,7 @@ export class LoginComponent implements OnInit{
         this.toast.success(res.message || "Login Success");
         console.log(res);
         this.authService.saveToken(res.token);
-        this.dataservice.setInfo(res.name, res.email)
+        this.dataservice.setInfo(res.name, res.email, res.user_id)
         if (res.img_pth.length > 0) { 
           this.dataservice.setProfileImage(res.img_pth);
         }
@@ -65,5 +65,4 @@ export class LoginComponent implements OnInit{
       },
     })
   }
-
 }

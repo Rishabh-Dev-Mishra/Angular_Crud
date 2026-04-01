@@ -11,7 +11,14 @@ import { Router } from '@angular/router';
 })
 export class HomeComponent {
   private router = inject(Router)
-  goToInven(){
-    this.router.navigate(['/brands'])
+  // home.component.ts
+goToInven() {
+  const user_id = sessionStorage.getItem("user_id");
+  if (user_id) {
+    this.router.navigate(['/brands', user_id]); // Results in: /brands/5
+  } else {
+    console.log("error");
+    
   }
+}
 }

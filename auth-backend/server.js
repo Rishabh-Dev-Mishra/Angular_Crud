@@ -343,17 +343,32 @@ app.get("/brands", async (req, res) => {
   }
 });
 
-// app.get("/brands/:user_id", async (req, res) => {
-//   try {
-//     const {user_id} = req.params.user_id
-//     const userID = parseInt(user_id, 10);
-//     const brands = await pool.query("select * from brands where brand_id in (select distinct(brand_id) from cars where user_id=$1", [userID]);
-//     return res.status(200).json(brands.rows || brands);
-//   } catch (err) {
-//     console.log(err);
-//     return res.status(400).json({ message: "Unknown Error" });
-//   }
-// });
+app.get("/brands/:user_id", async (req, res) => {
+  try {
+    const { user_id } = req.params; 
+    const userID = parseInt(user_id, 10);
+
+    if (isNaN(userID)) {
+      return res.status(400).json({ message: "Invalid User ID" });
+    }
+
+    const query = `
+      SELECT * FROM brands 
+      WHERE brand_id IN (
+        SELECT DISTINCT brand_id FROM cars WHERE user_id = $1
+      )
+    `;
+    
+    const brands = await pool.query(query, [userID]);
+
+    // 3. Return only the rows array
+    return res.status(200).json(brands.rows);
+
+  } catch (err) {
+    console.error("Database Error:", err.message);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+});
 
 app.get("/cars/:id/:user_id", async (req, res) => {
   try {

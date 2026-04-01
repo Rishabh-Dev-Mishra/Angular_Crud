@@ -5,10 +5,11 @@ import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { DataService } from '../data.service';
 import { ToastrService } from 'ngx-toastr';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-car-entry',
-  imports: [FooterComponent, NavbarComponent, FormsModule, RouterLink],
+  imports: [FooterComponent, NavbarComponent,CommonModule, FormsModule, RouterLink],
   templateUrl: './car-entry.component.html',
   styleUrl: './car-entry.component.css'
 })
@@ -17,7 +18,20 @@ export class CarEntryComponent {
   private dataservice = inject(DataService);
   private toast = inject(ToastrService);
 
+  availableBrands: any[] = [];
+
   selectedFile: File | null = null;
+
+  ngOnInit(){
+    this.dataservice.getBrandsForEntry().subscribe({
+      next: (data: any) => {
+        this.availableBrands = data;
+      },
+      error: (err) => {
+        console.error('Error fetching all brands:', err);
+      }
+    });
+  }
 
   onFileSelected(event: any){
     const file = event.target.files[0];
@@ -36,7 +50,7 @@ export class CarEntryComponent {
       this.toast.warning('Upload image');
       return;
     }
-
+   
     const formData = new FormData();
     formData.append('brandName', form.value.brandName);
     formData.append('modelName', form.value.modelName);

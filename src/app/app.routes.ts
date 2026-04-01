@@ -18,10 +18,10 @@ export const routes: Routes = [
     {path: "home", component: HomeComponent, canActivate: [routeGuardGuard]},
     {path: "profile", component: ProfileComponent, canActivate: [routeGuardGuard]},
     {path: "edit-profile", component: ProfileEditComponent, canActivate: [routeGuardGuard]},
-    {path: "brands", component: BrandsComponent, canActivate: [routeGuardGuard]},
+    {path: "brands/:id", component: BrandsComponent, canActivate: [routeGuardGuard]},
     {path: "cars/:id/:name", component: CarsComponent, canActivate: [routeGuardGuard]},
     {path: "brand_details", component: BrandEntryComponent},
-    {path: "car_details", component: CarEntryComponent},
+    {path: "car_details/:user_id", component: CarEntryComponent},
     {path: "**", component: PageNotFoundComponent}
 
 ];

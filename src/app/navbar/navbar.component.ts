@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { ProfileHoverService } from '../profile-hover-service.service';
 import { AuthServiceService } from '../auth-service.service';
 import { Router } from '@angular/router';
+import { DataService } from '../data.service';
 
 @Component({
   selector: 'app-navbar',
@@ -13,6 +14,7 @@ import { Router } from '@angular/router';
 })
 export class NavbarComponent {
   public hoverService = inject(ProfileHoverService);
+  private dataservice = inject(DataService)
 
   readonly serverUrl = 'http://localhost:3000/'; 
   protected name = sessionStorage.getItem('userName');
@@ -25,13 +27,27 @@ export class NavbarComponent {
     this.router.navigate(['/']);
   }
 
-  addBrand(){
-    this.router.navigate(['/brand_details']);
-  }
+ // navbar.component.ts
 
-  addCar(){
-    this.router.navigate(['/car_details']);
+addBrand() {
+  const userId = sessionStorage.getItem("user_id");
+  if (userId) {
+    // Navigates to /brand_details/5
+    this.router.navigate(['/brand_details', userId]); 
+  } else {
+    this.router.navigate(['/login']);
   }
+}
+
+addCar() {
+  const userId = sessionStorage.getItem("user_id");
+  if (userId) {
+    // Navigates to /car_details/5
+    this.router.navigate(['/car_details', userId]); 
+  } else {
+    this.router.navigate(['/login']);
+  }
+}
 
   checkUser(){
     const name = sessionStorage.getItem('userName');

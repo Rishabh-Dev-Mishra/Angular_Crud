@@ -20,18 +20,30 @@ export class DataService {
   public img_path: string = sessionStorage.getItem('userImage') || "";
   public userName: string = sessionStorage.getItem('userName') || "(..)";
   public userEmail: string = sessionStorage.getItem('userEmail') || "(..)";
+  public user_id: string = sessionStorage.getItem('user_id') || "(..)";
 
   
   setProfileImage(path: string) {
     this.img_path = path;
     sessionStorage.setItem('userImage', path);
   }
-  setInfo(name: string, email:string){
-    this.userName = name;
-    this.userEmail = email;
+  getUserId(): string | null {
+    return sessionStorage.getItem('user_id');
+  }
+
+  setInfo(name: string, email: string, user_id: any) {
     sessionStorage.setItem('userName', name);
     sessionStorage.setItem('userEmail', email);
+    sessionStorage.setItem('user_id', user_id.toString());
   }
+
+  getBrands() {
+    const id = this.getUserId();
+    console.log(id);
+    
+    return this.http.get(`${this.url}/brands/${id}`);
+  }
+  
   edit(data: any){
     return this.http.post(this.url+"/edit-profile",data);
   }
@@ -40,28 +52,30 @@ export class DataService {
     return this.http.post(this.url+"/brand_details", data)
   }
 
-  addCar(data: any){
-    return this.http.post(this.url+"/car_details", data)
+  addCar(formData: FormData) {
+    const id = this.getUserId();
+    return this.http.post(`${this.url}/car_details/${id}`, formData);
   }
 
-  getBrands(){
-    return this.http.get(this.url+"/brands");
+  getBrandsForEntry(){
+    return this.http.get(`${this.url}/brands`);
   }
+
 
   filteredBrands(data: any){
-    console.log("Sendng data");
-    
-    return this.http.get(`${this.url}/brands/search/${data}`);
+    const id = this.getUserId();
+    return this.http.get(`${this.url}/brands/search/${data}/${id}`);
   }
 
   filteredCars(id: string, name:string, category:string, engine:string){
-    return this.http.get(`${this.url}/cars/search/${id}/${name}/${category}/${engine}`);
+    const user_id = this.getUserId();
+    return this.http.get(`${this.url}/cars/search/${id}/${name}/${category}/${engine}/${user_id}`);
   }
 
   getCars(id:string, name:string){
     console.log(name);
-
-    return this.http.get(`${this.url}/cars/${id}`)
+    const user_id = this.getUserId();
+    return this.http.get(`${this.url}/cars/${id}/${user_id}`)
   }
 
 }

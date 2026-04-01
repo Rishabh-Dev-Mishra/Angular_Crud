@@ -22,7 +22,7 @@
         <div class="car-card">
           <div class="image-container">
             <img 
-              [src]="'http://localhost:3000/uploads/' + car.car_logo" 
+              [src]="'http://localhost:3000/uploads/' + car.car_logo[0]" 
               [alt]="car.model_name" 
               class="car-image"
             />

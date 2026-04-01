@@ -20,7 +20,7 @@ export class CarEntryComponent {
 
   availableBrands: any[] = [];
 
-  selectedFile: File | null = null;
+  selectedFile: FileList | null = null;
 
   ngOnInit(){
     this.dataservice.getBrandsForEntry().subscribe({
@@ -34,17 +34,19 @@ export class CarEntryComponent {
   }
 
   onFileSelected(event: any){
-    const file = event.target.files[0];
-    if (file) {
+    const files:FileList = event.target.files;
     const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
     
-    if (!allowedTypes.includes(file.type)) {
+    for(let i = 0; i < files.length; i++){
+      if (!allowedTypes.includes(files[i].type)) {
       alert("Only .png, .jpg and .jpeg format allowed!");
       event.target.value = ''; 
+      this.selectedFile = null;
       return;
+    
     }
-      this.selectedFile = file;
-    }
+  }
+  this.selectedFile = files;
   }
 
   update(form: any){
@@ -68,8 +70,9 @@ export class CarEntryComponent {
     formData.append('topSpeed', form.value.topSpeed);
     formData.append('price', form.value.price);
     formData.append('description', form.value.description);
-    if(this.selectedFile){
-      formData.append('image', this.selectedFile);
+    if(this.selectedFile && this.selectedFile.length > 0){
+      for(let i = 0; i < this.selectedFile.length; i++)
+      formData.append('image', this.selectedFile[i]);
     }
     this.dataservice.addCar(formData).subscribe({
       next: (res: any)=>{

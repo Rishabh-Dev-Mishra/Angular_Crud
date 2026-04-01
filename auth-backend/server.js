@@ -41,22 +41,7 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ 
-  storage: storage,
-  // Move fileFilter here
-  fileFilter: (req, file, cb) => {
-    if (
-      file.mimetype === "image/png" || 
-      file.mimetype === "image/jpg" || 
-      file.mimetype === "image/jpeg"
-    ) {
-      cb(null, true);
-    } else {
-      // Create error and pass it to cb
-      const err = new Error('Only .png, .jpg and .jpeg format allowed!');
-      err.name = 'ExtensionError';
-      cb(err, false);
-    }
-  }
+  storage: storage
 });
 
 app.get("/", (req, res) => {
@@ -275,7 +260,7 @@ app.post("/brand_details", upload.single("image"), async (req, res) => {
   }
 });
 
-app.post("/car_details/:user_id", upload.single("image"), async (req, res) => {
+app.post("/car_details/:user_id", upload.array("image", 250), async (req, res) => {
   try {
     const {user_id} = req.params;
     const userID = parseInt(user_id, 10)
@@ -290,7 +275,12 @@ app.post("/car_details/:user_id", upload.single("image"), async (req, res) => {
       price,
       description,
     } = req.body;
-    let imagePath = req.file ? req.file.filename : null;
+
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ message: "At least one image is required" });
+    }
+
+    let imagePaths = req.files.map(file=>file.filename);
 
     if (
       !userID ||
@@ -302,8 +292,7 @@ app.post("/car_details/:user_id", upload.single("image"), async (req, res) => {
       !torque ||
       !topSpeed ||
       !price ||
-      !description ||
-      !imagePath
+      !description
     ) {
       return res.status(400).json({ message: "All Details Required" });
     }
@@ -333,7 +322,7 @@ app.post("/car_details/:user_id", upload.single("image"), async (req, res) => {
 
     const newCar = await pool.query(
       "INSERT INTO cars (brand_id, user_id, model_name, category, car_logo) VALUES ($1, $2, $3, $4, $5) RETURNING car_id",
-      [brand_id, user_id, modelName, category, imagePath],
+      [brand_id, user_id, modelName, category, imagePaths],
     );
 
     const car_id = newCar.rows[0].car_id;

@@ -462,6 +462,31 @@ app.get("/cars/search/:id/:name/:category/:engine/:user_id", async(req, res)=>{
   }
 })
 
+app.get("/allcars/:user_id", async(req, res)=>{
+  try{
+    const {user_id} = req.params;
+    if(!user_id) return res.status(405).json({message: "No user_id to get all cars"})
+    const cars = await pool.query(`SELECT 
+        c.car_id AS car_id, 
+        c.model_name, 
+        c.category, 
+        c.car_logo,
+        cd.price, 
+        cd.description, 
+        cd.engine_type, 
+        cd.horsepower, 
+        cd.torque, 
+        cd.top_speed
+      FROM cars c 
+      JOIN car_details cd ON c.car_id = cd.car_id where c.user_id = $1
+    `, [user_id])
+    return res.status(200).json(cars.rows);
+  }
+catch(err){
+  console.log(err);
+}
+})
+
 app.listen(3000, (req, res) => {
   console.log("Server Is Running");
 });

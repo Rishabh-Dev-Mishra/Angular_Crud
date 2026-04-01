@@ -37,6 +37,11 @@ export class DataService {
     sessionStorage.setItem('user_id', user_id.toString());
   }
 
+  allCars(){
+    const user_id = this.getUserId();
+    return this.http.get(`${this.url}/allcars/${user_id}`)
+  }
+
   getBrands() {
     const id = this.getUserId();
     console.log(id);
@@ -77,5 +82,22 @@ export class DataService {
     const user_id = this.getUserId();
     return this.http.get(`${this.url}/cars/${id}/${user_id}`)
   }
+
+
+  private id: string = '';
+  private name: string = '';
+  setIdForNavig(id: string, name: string){
+  this.id = id;
+  this.name = name;
+  sessionStorage.setItem('navigId', id);
+  sessionStorage.setItem('navigName', name);
+}
+
+getIdForNavig(){
+  return { 
+    id: this.id || sessionStorage.getItem('navigId'), 
+    name: this.name || sessionStorage.getItem('navigName') 
+  };
+}
 
 }

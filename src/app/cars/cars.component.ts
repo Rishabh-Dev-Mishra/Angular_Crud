@@ -2,7 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { FooterComponent } from '../footer/footer.component';
 import { DataService } from '../data.service';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { identifierName } from '@angular/compiler';
@@ -17,6 +17,7 @@ import { identifierName } from '@angular/compiler';
 export class CarsComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private dataservice = inject(DataService);
+  private router = inject(Router)
   
   carList: any[] = [];
   filteredCar: any[] = [];
@@ -44,6 +45,8 @@ allCars(){
     }
 }
 
+
+
   ngOnInit(): void {
     this.allCars();
   }
@@ -54,11 +57,17 @@ allCars(){
 
   combine = this.searchText+this.selectedCategory+this.selectedEngine;
 
+  getAllCars(){
+    const id: string = this.route.snapshot.paramMap.get("id") ?? "";
+    const name: string = this.route.snapshot.paramMap.get("name") ?? "Unknown Brand";
+    this.dataservice.setIdForNavig(id, name);
+    this.router.navigate(['/allcars'])
+  }
+
   filterCars(){
     const hasSearch = this.searchText.trim().length > 0;
     const hasCategory = this.selectedCategory !== 'none' && this.selectedCategory !== '';
     const hasEngine = this.selectedEngine !== 'none' && this.selectedEngine !== '';
-
     if (hasSearch || hasCategory || hasEngine) {
       const term = this.searchText.trim() || 'none';
       const cat = this.selectedCategory || 'none';

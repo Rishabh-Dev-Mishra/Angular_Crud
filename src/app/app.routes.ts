@@ -11,6 +11,7 @@ import { BrandsComponent } from './brands/brands.component';
 import { CarsComponent } from './cars/cars.component';
 import { BrandEntryComponent } from './brand-entry/brand-entry.component';
 import { CarEntryComponent } from './car-entry/car-entry.component';
+import { AllCarsComponent } from './allcars/allcars.component';
 
 export const routes: Routes = [
     {path: "", component : LoginComponent},
@@ -22,6 +23,7 @@ export const routes: Routes = [
     {path: "cars/:id/:name", component: CarsComponent, canActivate: [routeGuardGuard]},
     {path: "brand_details", component: BrandEntryComponent},
     {path: "car_details/:user_id", component: CarEntryComponent},
+    {path: "allcars", component:AllCarsComponent},
     {path: "**", component: PageNotFoundComponent}
 
 ];

@@ -103,7 +103,6 @@ app.post("/login", async (req, res) => {
     }
 
     const userImage = ExisitingUser.rows[0].image_path;
-
     const image_path =
       userImage !== null && userImage.length > 0
         ? ExisitingUser.rows[0].image_path
@@ -113,12 +112,14 @@ app.post("/login", async (req, res) => {
       expiresIn: "1h",
     });
     const userName = ExisitingUser.rows[0].firstname;
+    const user_id = ExisitingUser.rows[0].id;
     res.json({
       message: "Login Success",
       token: token,
       img_pth: image_path,
       name: userName,
       email: email,
+      user_id:user_id
     });
   } catch (err) {
     console.error(err.message);
@@ -247,8 +248,10 @@ app.post("/brand_details", upload.single("image"), async (req, res) => {
   }
 });
 
-app.post("/car_details", upload.single("image"), async (req, res) => {
+app.post("/car_details/:user_id", upload.single("image"), async (req, res) => {
   try {
+    const {user_id} = req.params;
+    const userID = parseInt(user_id, 10)
     const {
       brandName,
       modelName,
@@ -263,6 +266,7 @@ app.post("/car_details", upload.single("image"), async (req, res) => {
     let imagePath = req.file ? req.file.filename : null;
 
     if (
+      !userID ||
       !brandName ||
       !modelName ||
       !category ||
@@ -301,8 +305,8 @@ app.post("/car_details", upload.single("image"), async (req, res) => {
     }
 
     const newCar = await pool.query(
-      "INSERT INTO cars (brand_id, model_name, category, car_logo) VALUES ($1, $2, $3, $4) RETURNING car_id",
-      [brand_id, modelName, category, imagePath],
+      "INSERT INTO cars (brand_id, user_id, model_name, category, car_logo) VALUES ($1, $2, $3, $4, $5) RETURNING car_id",
+      [brand_id, user_id, modelName, category, imagePath],
     );
 
     const car_id = newCar.rows[0].car_id;
@@ -335,13 +339,26 @@ app.get("/brands", async (req, res) => {
     return res.status(200).json(brands.rows || brands);
   } catch (err) {
     console.log(err);
-    return res.status(400).json({ message: "Unknown Error" });
+    return res.status(400).json({ message: err });
   }
 });
 
-app.get("/cars/:id", async (req, res) => {
+// app.get("/brands/:user_id", async (req, res) => {
+//   try {
+//     const {user_id} = req.params.user_id
+//     const userID = parseInt(user_id, 10);
+//     const brands = await pool.query("select * from brands where brand_id in (select distinct(brand_id) from cars where user_id=$1", [userID]);
+//     return res.status(200).json(brands.rows || brands);
+//   } catch (err) {
+//     console.log(err);
+//     return res.status(400).json({ message: "Unknown Error" });
+//   }
+// });
+
+app.get("/cars/:id/:user_id", async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id, user_id } = req.params;
+    const userID = parseInt(user_id, 10);
     const brandId = parseInt(id, 10);
     const query = `
       SELECT 
@@ -357,10 +374,10 @@ app.get("/cars/:id", async (req, res) => {
         cd.top_speed
       FROM cars c 
       JOIN car_details cd ON c.car_id = cd.car_id 
-      WHERE c.brand_id = $1
+      WHERE c.brand_id = $1 and c.user_id = $2
     `;
 
-    const cars = await pool.query(query, [brandId]);
+    const cars = await pool.query(query, [brandId, userID]);
 
     return res.status(200).set('Content-Type', 'application/json').json(cars.rows);
   } catch (err) {
@@ -369,9 +386,10 @@ app.get("/cars/:id", async (req, res) => {
   }
 });
 
-app.get("/brands/search/:name", async (req, res) => {
+app.get("/brands/search/:name/:user_id", async (req, res) => {
   try {
-    const { name } = req.params;
+    const { name, user_id } = req.params;
+    const userID = parseInt(user_id, 10);
     console.log(req);
     
 
@@ -379,10 +397,9 @@ app.get("/brands/search/:name", async (req, res) => {
       return res.status(400).json({ message: "Brand name is required" });
     }
 
-   
     const brands = await pool.query(
-      "SELECT * FROM brands WHERE brand_name ILIKE $1",
-      [`%${name}%`]
+      "SELECT * FROM brands WHERE brand_id in(select distinct (brand_id) form cars where user_id = $1) brand_name ILIKE $2",
+      [userID, `%${name}%`]
     );
 
     return res.status(200).json(brands.rows);
@@ -392,10 +409,11 @@ app.get("/brands/search/:name", async (req, res) => {
   }
 });
 
-app.get("/cars/search/:id/:name/:category/:engine", async(req, res)=>{
+app.get("/cars/search/:id/:name/:category/:engine/:user_id", async(req, res)=>{
   try{
-    const {id, name, category, engine} = req.params;
+    const {id, name, category, engine, user_id} = req.params;
     const ID = parseInt(id, 10);
+    const userID = parseInt(user_id, 10);
     const SQLQuery = (`
       SELECT 
         c.car_id AS car_id, 
@@ -409,14 +427,15 @@ app.get("/cars/search/:id/:name/:category/:engine", async(req, res)=>{
         cd.torque, 
         cd.top_speed
       FROM cars c 
-      JOIN car_details cd ON c.car_id = cd.car_id where (c.model_name ILIKE $1 OR $1 = 'all' ) and(c.category ILIKE $2 OR $2 = 'all') and (cd.engine_type ILIKE $3 or $3='all') and c.brand_id = $4
+      JOIN car_details cd ON c.car_id = cd.car_id where (c.model_name ILIKE $1 OR $1 = 'all' ) and(c.category ILIKE $2 OR $2 = 'all') and (cd.engine_type ILIKE $3 or $3='all') and c.brand_id = $4 and c.user_id = $5
     `);
 
     const values = [
       name==='none'?'all':`%${name}%`,
       category==='none'?'all':`%${category}%`,
       engine==='none'?'all':`%${engine}%`,
-      ID
+      ID, 
+      userID
     ]
 
     const result = await pool.query(SQLQuery, values);

@@ -35,7 +35,14 @@ export class CarEntryComponent {
 
   onFileSelected(event: any){
     const file = event.target.files[0];
-    if(file){
+    if (file) {
+    const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+    
+    if (!allowedTypes.includes(file.type)) {
+      alert("Only .png, .jpg and .jpeg format allowed!");
+      event.target.value = ''; 
+      return;
+    }
       this.selectedFile = file;
     }
   }

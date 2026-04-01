@@ -27,10 +27,37 @@ app.use((req, res, next) => {
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, "uploads/"),
+  fileFilter: (req, file, cb) => {
+        if (file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg") {
+            cb(null, true);
+        } else {
+            cb(null, false);
+            const err = new Error('Only .png, .jpg and .jpeg format allowed!')
+            err.name = 'ExtensionError'
+            return cb(err);
+        }
+    },
   filename: (req, file, cb) => cb(null, Date.now() + "-" + file.originalname),
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({ 
+  storage: storage,
+  // Move fileFilter here
+  fileFilter: (req, file, cb) => {
+    if (
+      file.mimetype === "image/png" || 
+      file.mimetype === "image/jpg" || 
+      file.mimetype === "image/jpeg"
+    ) {
+      cb(null, true);
+    } else {
+      // Create error and pass it to cb
+      const err = new Error('Only .png, .jpg and .jpeg format allowed!');
+      err.name = 'ExtensionError';
+      cb(err, false);
+    }
+  }
+});
 
 app.get("/", (req, res) => {
   res.send("Welcome");
@@ -490,3 +517,4 @@ catch(err){
 app.listen(3000, (req, res) => {
   console.log("Server Is Running");
 });
+

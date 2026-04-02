@@ -100,4 +100,10 @@ getIdForNavig(){
   };
 }
 
+
+getImagesOfOne(id:any){
+  const user_id = this.getUserId();
+  return this.http.get(`${this.url}/cars_images/${id}/${user_id}`)
+}
+
 }

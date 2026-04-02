@@ -5,6 +5,7 @@ const pool = require("./db");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const multer = require("multer");
+const { log } = require("@angular-devkit/build-angular/src/builders/ssr-dev-server");
 
 require("dotenv").config({ path: "../.env" });
 app.use(
@@ -500,6 +501,22 @@ app.get("/allcars/:user_id", async(req, res)=>{
   }
 catch(err){
   console.log(err);
+}
+})
+
+
+app.get("/cars_images/:id/:user_id", async(req, res)=>{
+  try{
+    const {id, user_id} = req.params;
+    if(!id || !user_id) return res.status(405).json({message:"Either id or usrid not there for all images"})
+    const allImages = await pool.query(
+        "select car_logo from cars where car_id=$1 and user_id=$2", [id, user_id]
+      )
+    return res.status(200).json(allImages.rows);
+  }
+catch(err){
+  console.log(err);
+  
 }
 })
 

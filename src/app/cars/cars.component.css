@@ -557,3 +557,83 @@ padding: 80px;
 color: #666;
 
 }
+
+/* 1. The Dimmed Background */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.85); /* Darker backdrop for focus */
+  backdrop-filter: blur(8px);      /* Blurs the background content */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;                   /* Ensures it sits above Navbar/Footer */
+}
+
+/* 2. The Popup Box */
+.modal-content {
+  background: #1a1a1a;             /* Dark theme to match your hero section */
+  width: 90%;
+  max-width: 1000px;
+  height: 80vh;
+  border-radius: 24px;
+  border: 1px solid rgba(212, 175, 55, 0.3); /* Subtle gold border */
+  padding: 40px;
+  position: relative;
+  overflow-y: auto;                /* Allows scrolling if many images */
+  box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+}
+
+/* 3. The Back Button inside Modal */
+.modal-content button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: #d4af37;
+  color: #000;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.modal-content button:hover {
+  background: #fff;
+  transform: translateX(-5px);
+}
+
+/* 4. The Image Grid */
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 40px;
+}
+
+.image-grid img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 2px solid transparent;
+  transition: 0.3s;
+}
+
+.image-grid img:hover {
+  border-color: #d4af37;
+  transform: scale(1.02);
+}
+
+/* 5. Title inside Modal */
+.modal-content h3 {
+  color: #fff;
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 10px;
+  font-family: serif;
+}

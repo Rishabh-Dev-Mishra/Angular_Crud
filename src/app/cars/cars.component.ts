@@ -5,7 +5,6 @@ import { DataService } from '../data.service';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { identifierName } from '@angular/compiler';
 
 @Component({
   selector: 'app-cars',
@@ -21,6 +20,9 @@ export class CarsComponent implements OnInit {
   
   carList: any[] = [];
   filteredCar: any[] = [];
+  multiImage: string[] = [];
+
+
   trackByCarId(index: number, car: any) {
   return car.car_id; 
 }
@@ -85,5 +87,27 @@ allCars(){
     else{
       this.filteredCar = this.carList;
     }
+  }
+
+
+  showModal:boolean = false;
+
+  getImages(carData: any){
+  this.dataservice.getImagesOfOne(carData.car_id).subscribe({
+    next:(res: any)=>{
+      this.multiImage = res[0].car_logo.map((img:string)=>
+        `http://localhost:3000/uploads/${img}`
+      )
+      this.showModal = true;
+    },
+    error:(err:any)=>{
+      console.log(err);
+      
+    }
+  })
+  }
+  backToAll(){
+    this.showModal = false;
+    this.multiImage = [];
   }
 }

@@ -76,7 +76,7 @@
             </div>
 
             <p class="description">{{ car.description }}</p>
-            <button class="btn-view">Enquire Now</button>
+            <button class="btn-view" (click)="getImages(car)">Enquire Now</button>
           </div>
         </div>
       </li>
@@ -88,6 +88,17 @@
       <p>No masterpiece found in this category.</p>
     </div>
   </ng-template>
+
+  <div class="modal-overlay" *ngIf="showModal">
+    <div class="modal-content">
+      <button (click)="backToAll()">Back</button>
+      <h3>Images</h3>
+      <div class="image-grid">
+      <img *ngFor="let img of multiImage" [src]="img" alt="Car Image">
+    </div>
+    </div>
+  </div>
+
 </main>
 
 <app-footer></app-footer>

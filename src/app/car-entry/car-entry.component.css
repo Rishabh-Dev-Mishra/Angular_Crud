@@ -178,3 +178,32 @@ input[type="file"]::file-selector-button:hover {
     border-color: #ff004c;
     transform: translateX(-5px);
 }
+
+
+.drag-drop {
+  border: 2px dashed rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 30px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+}
+
+.drag-drop.drag-over {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #fff;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+}
+
+.drag-content .icon {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.file-name {
+  color: #4caf50; 
+  font-weight: bold;
+}

@@ -17,7 +17,17 @@
     >
       <div class="input-group">
         <label for="logo">Car Photo</label>
-        <div class="file-input-wrapper">
+        
+        <div class="drag-drop"
+        [class.drag-over]="isDragging"
+        (dragover)="onDragOver($event)"
+        (dragleave)="onDragLeave($event)"
+        (drop)="onDrop($event)"
+        (click)="fileInput.click()"
+        ><span *ngIf="!selectedFileName">Drag & Drop or Click to Upload</span>
+        <span *ngIf="selectedFileName">Selected:{{selectedFileName}}</span>
+      </div>
+      <div class="file-input-wrapper">
           <input
             type="file"
             #fileInput
@@ -30,8 +40,8 @@
             multiple
           />
         </div>
-      </div>
-
+        </div>
+        
       <div class="input-group">
         <label for="brandName">Brand Name</label>
         <select name="brandName" id="brandName" ngModel>

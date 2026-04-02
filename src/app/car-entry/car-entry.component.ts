@@ -20,7 +20,7 @@ export class CarEntryComponent {
 
   availableBrands: any[] = [];
 
-  selectedFile: FileList | null = null;
+  selectedFile: File[] = [];
 
   ngOnInit(){
     this.dataservice.getBrandsForEntry().subscribe({
@@ -33,21 +33,66 @@ export class CarEntryComponent {
     });
   }
 
-  onFileSelected(event: any){
-    const files:FileList = event.target.files;
-    const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
-    
-    for(let i = 0; i < files.length; i++){
-      if (!allowedTypes.includes(files[i].type)) {
-      alert("Only .png, .jpg and .jpeg format allowed!");
-      event.target.value = ''; 
-      this.selectedFile = null;
-      return;
-    
+
+  isDragging = false;
+  selectedFileName = '';
+
+  onDragOver(event: DragEvent){
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragging = true;
+  }
+
+  onDragLeave(event: DragEvent){
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragging = false;
+  }
+
+  onDrop(event: DragEvent){
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragging = false;
+
+    const files = event.dataTransfer?.files;
+    if(files && files.length > 0){
+      this.handleFiles(files)
     }
   }
-  this.selectedFile = files;
+
+
+
+  onFileSelected(event: any){
+    const files:FileList = event.target.files;
+    if(files && files.length > 0){
+      this.handleFiles(files);
+    }    
+    }
+  
+  handleFiles(files: FileList) {
+  const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+  const newValidFiles: File[] = [];
+
+  for (let i = 0; i < files.length; i++) {
+    if (!allowedTypes.includes(files[i].type)) {
+      this.toast.error(`Format not allowed: ${files[i].name}`);
+      continue;
+    }
+    newValidFiles.push(files[i]);
   }
+
+  if (newValidFiles.length > 0) {
+    // CHANGE: Use the spread operator to APPEND new files to the existing array
+    this.selectedFile = [...this.selectedFile, ...newValidFiles];
+    
+    // CHANGE: Fix logic to show total count correctly
+    this.selectedFileName = this.selectedFile.length > 1 
+      ? `${this.selectedFile.length} files selected` 
+      : this.selectedFile[0].name;
+      
+    console.log('Total files ready for upload:', this.selectedFile.length);
+  }
+}
 
   update(form: any){
     if(form.invalid){
@@ -55,7 +100,7 @@ export class CarEntryComponent {
       return;
     }
 
-    if(this.selectedFile==null){
+    if(this.selectedFile.length===0){
       this.toast.warning('Upload image');
       return;
     }
@@ -78,6 +123,8 @@ export class CarEntryComponent {
       next: (res: any)=>{
         this.toast.success("Added Success")
         form.resetForm();
+        this.selectedFile = []; 
+        this.selectedFileName = '';
       },
       error:(err: any)=>{
         this.toast.error("Wrong!!")

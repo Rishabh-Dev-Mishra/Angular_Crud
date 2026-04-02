@@ -22,6 +22,8 @@ export class CarEntryComponent {
 
   selectedFile: File[] = [];
 
+  previews: string[] = [];
+
   ngOnInit(){
     this.dataservice.getBrandsForEntry().subscribe({
       next: (data: any) => {
@@ -79,13 +81,15 @@ export class CarEntryComponent {
       continue;
     }
     newValidFiles.push(files[i]);
+
+    const reader = new FileReader();
+    const url = URL.createObjectURL(files[i]);
+    this.previews.push(url)
   }
 
   if (newValidFiles.length > 0) {
-    // CHANGE: Use the spread operator to APPEND new files to the existing array
     this.selectedFile = [...this.selectedFile, ...newValidFiles];
     
-    // CHANGE: Fix logic to show total count correctly
     this.selectedFileName = this.selectedFile.length > 1 
       ? `${this.selectedFile.length} files selected` 
       : this.selectedFile[0].name;
@@ -93,6 +97,18 @@ export class CarEntryComponent {
     console.log('Total files ready for upload:', this.selectedFile.length);
   }
 }
+
+  removeImage(index: number){
+    this.selectedFile.splice(index, 1);
+    this.previews.splice(index, 1);
+
+    if(this.selectedFile.length == 0){
+      this.selectedFileName = '';
+    }
+    else{
+      this.selectedFileName = `${this.selectedFile.length} file(s) selected`;
+    }
+  }
 
   update(form: any){
     if(form.invalid){
@@ -125,6 +141,7 @@ export class CarEntryComponent {
         form.resetForm();
         this.selectedFile = []; 
         this.selectedFileName = '';
+        this.previews = [];
       },
       error:(err: any)=>{
         this.toast.error("Wrong!!")

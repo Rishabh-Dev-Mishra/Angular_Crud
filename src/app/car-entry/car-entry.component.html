@@ -27,6 +27,14 @@
         ><span *ngIf="!selectedFileName">Drag & Drop or Click to Upload</span>
         <span *ngIf="selectedFileName">Selected:{{selectedFileName}}</span>
       </div>
+
+      <div class="preview-container" *ngIf="previews.length > 0">
+    <div *ngFor="let url of previews; let i = index" class="preview-card">
+      <img [src]="url" alt="Car preview" />
+      <button type="button" class="remove-img" (click)="removeImage(i)">×</button>
+    </div>
+  </div>
+
       <div class="file-input-wrapper">
           <input
             type="file"

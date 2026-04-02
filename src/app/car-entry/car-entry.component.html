@@ -17,25 +17,29 @@
     >
       <div class="input-group">
         <label for="logo">Car Photo</label>
-        
-        <div class="drag-drop"
-        [class.drag-over]="isDragging"
-        (dragover)="onDragOver($event)"
-        (dragleave)="onDragLeave($event)"
-        (drop)="onDrop($event)"
-        (click)="fileInput.click()"
-        ><span *ngIf="!selectedFileName">Drag & Drop or Click to Upload</span>
-        <span *ngIf="selectedFileName">Selected:{{selectedFileName}}</span>
-      </div>
 
-      <div class="preview-container" *ngIf="previews.length > 0">
-    <div *ngFor="let url of previews; let i = index" class="preview-card">
-      <img [src]="url" alt="Car preview" />
-      <button type="button" class="remove-img" (click)="removeImage(i)">×</button>
-    </div>
-  </div>
+        <div
+          class="drag-drop"
+          [class.drag-over]="isDragging"
+          (dragover)="onDragOver($event)"
+          (dragleave)="onDragLeave($event)"
+          (drop)="onDrop($event)"
+          (click)="fileInput.click()"
+        >
+          <span *ngIf="!selectedFileName">Drag & Drop or Click to Upload</span>
+          <span *ngIf="selectedFileName">Selected:{{ selectedFileName }}</span>
+        </div>
 
-      <div class="file-input-wrapper">
+        <div class="preview-container" *ngIf="previews.length > 0">
+          <div *ngFor="let url of previews; let i = index" class="preview-card">
+            <img [src]="url" alt="Car preview" />
+            <button type="button" class="remove-img" (click)="removeImage(i)">
+              ×
+            </button>
+          </div>
+        </div>
+
+        <div class="file-input-wrapper">
           <input
             type="file"
             #fileInput
@@ -44,12 +48,13 @@
             id="image"
             name="image"
             accept="image/*"
-            accept=".png,.jpg,.jpeg"
+            accept=".png,.jpg,.jpeg".
+            style="display: none;"
             multiple
           />
         </div>
-        </div>
-        
+      </div>
+
       <div class="input-group">
         <label for="brandName">Brand Name</label>
         <select name="brandName" id="brandName" ngModel>
@@ -78,7 +83,7 @@
       <div class="input-group">
         <label for="category">Category</label>
         <select name="category" id="category" ngModel>
-            <option value="" disabled >Select Category</option>
+          <option value="" disabled>Select Category</option>
           <option value="Sports">Sports</option>
           <option value="SUV">SUV</option>
           <option value="Electric">Electric</option>

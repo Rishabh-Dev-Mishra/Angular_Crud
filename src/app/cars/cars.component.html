@@ -40,8 +40,34 @@
   </section>
 
   <section class="car-box" *ngIf="filteredCar.length > 0; else noData">
-    <ul class="car-grid-list">
-      <li *ngFor="let car of filteredCar; trackBy: trackByCarId">
+    <table class="car-table">
+      <tr>
+        <th>Image</th>
+        <th>Price</th>
+        <th>Category</th>
+        <th>Engine</th>
+        <th>Horsepower</th>
+        <th>Torque</th>
+        <th>Top Speed</th>
+        <th>Description</th>
+        <th>Get More Images</th>
+      </tr>
+      <tr *ngFor="let car of filteredCar; trackBy: trackByCarId">
+        <td><img 
+              [src]="'http://localhost:3000/uploads/' + car.car_logo[0]" 
+              [alt]="car.model_name" 
+              class="car-image"
+            /></td>
+        <td>${{ car.price ? (car.price | number) : '0' }}</td>
+        <td>{{ car.category }}</td>
+        <td>{{ car.engine_type }}</td>
+        <td>{{ car.horsepower }} HP</td>
+        <td>{{ car.torque }} Nm</td>
+        <td>{{ car.top_speed }} km/h</td>
+        <td>{{ car.description }}</td>
+        <td><button class="btn-view" (click)="getImages(car)">Enquire Now</button></td>
+      </tr>
+      <!-- <li *ngFor="let car of filteredCar; trackBy: trackByCarId">
         <div class="car-card">
           <div class="image-container">
             <img 
@@ -79,8 +105,8 @@
             <button class="btn-view" (click)="getImages(car)">Enquire Now</button>
           </div>
         </div>
-      </li>
-    </ul>
+      </li> -->
+    </table>
   </section>
 
   <ng-template #noData>

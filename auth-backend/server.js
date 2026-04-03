@@ -603,23 +603,31 @@ app.put("/editCar", upload.array("image", 250), async (req, res) => {
       modelName,
       category,
       engineType,
-      horsePower,
       torque,
       topSpeed,
       price,
+      horsePower,
       description,
-      oldImages
+      oldImages,
     } = req.body;
 
     const carID = parseInt(car_id, 10);
     console.log(car_id);
 
+    const toNum = (val) => {
+    if (val === "null" || val === "" || val === undefined) return null;
+    return parseFloat(val);
+  };
+
+    const cleanTorque = toNum(torque);
+    const cleanTopSpeed = toNum(topSpeed);
+    const cleanPrice = toNum(price);
 
     const brandId = await pool.query(
       "select brand_id from brands where brand_name = $1",
       [brandName],
     );
-    let keepOld = oldImages?JSON.parse(oldImages):[];
+    let keepOld = oldImages ? JSON.parse(oldImages) : [];
 
     let imagePaths = req.files.map((file) => file.filename);
     imagePaths = [...imagePaths, ...keepOld];
@@ -629,8 +637,7 @@ app.put("/editCar", upload.array("image", 250), async (req, res) => {
         cars set brand_id=$1, model_name=$2, category=$3, car_logo=$4 where car_id= $5`,
         [brandId.rows[0].brand_id, modelName, category, imagePaths, carID],
       );
-    }
-     else {
+    } else {
       await pool.query(
         `update
         cars set brand_id=$1, model_name=$2, category=$3 where car_id= $4`,
@@ -640,7 +647,15 @@ app.put("/editCar", upload.array("image", 250), async (req, res) => {
     await pool.query(
       `update
         car_details set engine_type=$1, horsepower=$2, torque=$3, top_speed=$4, price=$5, description= $6 where car_id= $7`,
-      [engineType, horsePower, torque, topSpeed, price, description, carID],
+      [
+        engineType,
+        horsePower,
+        cleanTorque,
+        cleanTopSpeed,
+        cleanPrice,
+        description,
+        carID,
+      ],
     );
     console.log(car_id);
 

@@ -106,4 +106,10 @@ getImagesOfOne(id:any){
   return this.http.get(`${this.url}/cars_images/${id}/${user_id}`)
 }
 
+deleteCar(car:any){
+  const user_id = this.getUserId();
+  const car_id = car.car_id;
+  return this.http.delete(`${this.url}/delete_car/${car_id}/${user_id}`);
+}
+
 }

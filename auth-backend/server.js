@@ -520,6 +520,21 @@ catch(err){
 }
 })
 
+
+
+app.delete("/delete_car/:car_id/:user_id", async(req, res)=>{
+  try{
+    const {car_id, user_id} = req.params;
+    if(!user_id || !car_id) return res.status(400).json({message:"User or car id missing to delete"});
+
+    await pool.query("delete from cars where car_id = $1 and user_id = $2", [car_id, user_id]);
+    return res.status(200).json({message: "Success To delete"})
+  }
+  catch(err){
+    console.log(err);
+  }
+})
+
 app.listen(3000, (req, res) => {
   console.log("Server Is Running");
 });

@@ -5,6 +5,7 @@ import { DataService } from '../data.service';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-cars',
@@ -17,6 +18,7 @@ export class CarsComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private dataservice = inject(DataService);
   private router = inject(Router)
+  private toast = inject(ToastrService)
   
   carList: any[] = [];
   filteredCar: any[] = [];
@@ -110,4 +112,18 @@ allCars(){
     this.showModal = false;
     this.multiImage = [];
   }
+
+  deleteCar(data: any){
+    this.dataservice.deleteCar(data).subscribe({
+      next:(res:any)=>{
+        this.toast.success("Successfully Deleted");
+        this.allCars();
+      },
+      error:(err:any)=>{
+        console.log(err);
+      }
+    })
+  }
+
+ 
 }

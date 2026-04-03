@@ -66,46 +66,9 @@
         <td>{{ car.top_speed }} km/h</td>
         <td>{{ car.description }}</td>
         <td><button class="btn-view" (click)="getImages(car)">Enquire Now</button></td>
+        <td><button class="btn-view" (click)="getImages(car)">Enquire Now</button></td>
+        <td><button class="btn-view" (click)="deleteCar(car)">Delete Car</button></td>
       </tr>
-      <!-- <li *ngFor="let car of filteredCar; trackBy: trackByCarId">
-        <div class="car-card">
-          <div class="image-container">
-            <img 
-              [src]="'http://localhost:3000/uploads/' + car.car_logo[0]" 
-              [alt]="car.model_name" 
-              class="car-image"
-            />
-            <div class="price-tag">${{ car.price ? (car.price | number) : '0' }}</div>
-          </div>
-
-          <div class="car-details">
-            <span class="category-label">{{ car.category }}</span>
-            <h3>{{ car.model_name }}</h3>
-
-            <div class="specs-grid">
-              <div class="spec-item">
-                <span class="label">Engine</span>
-                <span class="value">{{ car.engine_type }}</span>
-              </div>
-              <div class="spec-item">
-                <span class="label">Horsepower</span>
-                <span class="value">{{ car.horsepower }} HP</span>
-              </div>
-              <div class="spec-item">
-                <span class="label">Torque</span>
-                <span class="value">{{ car.torque }} Nm</span>
-              </div>
-              <div class="spec-item">
-                <span class="label">Top Speed</span>
-                <span class="value">{{ car.top_speed }} km/h</span>
-              </div>
-            </div>
-
-            <p class="description">{{ car.description }}</p>
-            <button class="btn-view" (click)="getImages(car)">Enquire Now</button>
-          </div>
-        </div>
-      </li> -->
     </table>
   </section>
 

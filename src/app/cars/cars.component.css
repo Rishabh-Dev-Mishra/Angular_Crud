@@ -1,9 +1,9 @@
-/* --- Global Reset & Foundation --- */
+/* --- Global Foundation --- */
 :host {
   --gold: #b89130; 
   --gold-glow: rgba(184, 145, 48, 0.15);
-  --glass: rgba(255, 255, 255, 0.6);
   --border-light: #e2e8f0;
+  --danger: #ef4444;
 }
 
 .inventory-wrapper {
@@ -11,41 +11,16 @@
   flex-direction: column;
   align-items: center;
   min-height: 100vh;
-  padding: 100px 20px;
+  padding: 120px 40px;
   background: linear-gradient(135deg, #fdfdfb 0%, #e8e6e1 50%, #dcdad4 100%);
   font-family: 'Plus Jakarta Sans', sans-serif;
   color: #1a1a1a;
 }
 
-/* --- Optimized Buttons --- */
-/* Search & Action Buttons */
-.controls-container button, 
-.btn-view, 
-.modal-content button {
-  min-width: 140px; /* Standardized width */
-  height: 48px;     /* Comfortable touch target */
-  padding: 0 24px;
-  border-radius: 12px;
-  font-weight: 700;
-  font-size: 0.9rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.controls-container button {
-  background: #0f172a;
-  color: #fff;
-  margin-top: 5px;
- } /* Alignment fix *//* --- Brands Back Button (Refined Left Alignment) --- */
+/* --- Fixed Back Button (Top Left) --- */
 .back-btn {
-  position: absolute; /* Changed to absolute to sit within the layout flow */
-  top: 140px;
+  position: absolute;
+  top: 40px;
   left: 40px;
   display: flex;
   align-items: center;
@@ -61,157 +36,191 @@
   text-transform: uppercase;
   letter-spacing: 1px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-  transition: all 0.3s ease;
+  transition: 0.3s ease;
   z-index: 10;
-}
-
-.back-btn .icon {
-  font-size: 1.2rem;
-  transition: transform 0.3s ease;
 }
 
 .back-btn:hover {
   background: var(--gold);
   color: #fff;
-  border-color: var(--gold);
   transform: translateX(-5px);
-  box-shadow: 0 8px 20px var(--gold-glow);
 }
 
-.back-btn:hover .icon {
-  transform: translateX(-3px);
-}
-
-/* --- Upper Hero Section (Symmetry Fix) --- */
+/* --- Hero Section --- */
 .upper-section {
   width: 100%;
   max-width: 1200px;
   text-align: center;
-  margin-top: 20px; /* Space for the back button above */
-  margin-bottom: 50px;
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* Center-aligns title and badge */
+  margin-bottom: 60px;
 }
 
-.intro-text {
-  margin-bottom: 40px;
-}
-
-.intro-text h1 {
-  font-size: clamp(2.2rem, 5vw, 3.2rem);
+.badge {
+  display: inline-block;
+  padding: 6px 16px;
+  background: #fff;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  border-radius: 50px;
+  font-size: 0.7rem;
   font-weight: 800;
-  color: #0f172a;
-  letter-spacing: -1px;
-  margin: 15px 0;
-  line-height: 1.2;
+  text-transform: uppercase;
+  margin-bottom: 15px;
 }
 
-/* --- Search & Filter Container Alignment --- */
+.gradient-text {
+  background: linear-gradient(135deg, #1a1a1a 0%, var(--gold) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* --- Filter & Search Bar Alignment (Row Logic) --- */
 .controls-container {
-  width: 100%;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: center; /* Centers all items horizontally */
-  align-items: flex-end;   /* Aligns inputs and buttons to the bottom edge */
-  gap: 20px;
+  justify-content: center;
+  align-items: flex-end; /* Aligns all inputs and buttons to the bottom */
+  gap: 24px;
   background: rgba(255, 255, 255, 0.4);
   backdrop-filter: blur(10px);
-  padding: 35px;
+  padding: 30px 40px;
   border-radius: 24px;
   border: 1px solid #fff;
-  box-shadow: 0 15px 35px rgba(0,0,0,0.03);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.03);
+  margin-top: 40px;
 }
 
-.search-bar {
+/* Labels for Search and Filters */
+.search-bar, .filter-group > div {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-/* Added a pseudo-label for the search bar to match the filters */
-.search-bar::before {
-  content: 'Search';
+.search-bar::before { content: "Search"; }
+.search-bar::before, .filter-group p {
   font-size: 0.7rem;
   color: #64748b;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 1px;
-  margin-left: 5px;
 }
 
 .filter-group {
   display: flex;
-  flex-direction: row;
-  align-items: flex-end; /* Ensures text and select are aligned */
   gap: 20px;
+  align-items: flex-end;
 }
 
-.filter-group div {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.filter-group p {
-  font-size: 0.7rem;
-  color: #64748b;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin: 0 0 0 5px; /* Clean spacing */
-}
-
-/* --- Input & Select Uniformity --- */
+/* Input Fields */
 .search-bar input, 
 .filter-select {
-  height: 50px; /* Standardized Height */
+  height: 50px;
   background: #fff !important;
   border: 1px solid var(--border-light) !important;
   border-radius: 14px;
   padding: 0 20px;
   font-weight: 500;
-  color: #1a1a1a;
-  min-width: 200px;
-  transition: border-color 0.3s;
+  min-width: 220px;
 }
 
-.search-bar input {
-  width: 300px; /* Search bar stays slightly wider */
-}
+.search-bar input { width: 320px; }
 
-/* Button Alignment Fix */
+/* Control Buttons */
 .controls-container button {
-  height: 50px; /* Matches input height */
-  margin: 0;    /* Removes the top margin so it sits flat with inputs */
-  min-width: 140px;
+  height: 50px;
+  padding: 0 28px;
+  border-radius: 14px;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.3s;
+  background: #0f172a;
+  color: #fff;
 }
 
-/* Adjust the second button (Get All Cars) to be secondary style */
 .controls-container button:last-of-type {
   background: #fff;
   color: #0f172a;
   border: 1px solid var(--border-light);
 }
 
-.controls-container button:last-of-type:hover {
-  background: #f1f5f9;
-  border-color: #cbd5e1;
-}
-
-
 .controls-container button:hover {
   background: var(--gold);
+  color: #fff;
   transform: translateY(-2px);
-  box-shadow: 0 10px 20px var(--gold-glow);
 }
 
+/* --- The Modern Table --- */
+.car-box {
+  width: 100%;
+  max-width: 1400px;
+  margin-top: 40px;
+}
+
+.car-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 12px;
+}
+
+.car-table th {
+  color: #64748b;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 10px 20px;
+  text-align: center;
+}
+
+.car-table tr:not(:first-child) {
+  background: #ffffff;
+  transition: 0.3s ease;
+}
+
+.car-table td {
+  padding: 20px;
+  border-top: 1px solid var(--border-light);
+  border-bottom: 1px solid var(--border-light);
+  text-align: center;
+  vertical-align: middle;
+}
+
+.car-table td:first-child { border-left: 1px solid var(--border-light); border-radius: 16px 0 0 16px; }
+.car-table td:last-child { border-right: 1px solid var(--border-light); border-radius: 0 16px 16px 0; }
+
+.car-table tr:not(:first-child):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.car-image {
+  width: 110px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 10px;
+  background: #f8fafc;
+}
+
+/* Action Buttons inside Table */
 .btn-view {
-  background: #f1f5f9;
-  color: #0f172a;
-  min-width: 160px; /* Slightly wider for "Enquire Now" */
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  font-weight: 700;
   border: 1px solid var(--border-light);
+  background: #f8fafc;
+  cursor: pointer;
+  transition: 0.2s;
+  text-transform: uppercase;
+  width: 100%; /* Makes buttons look uniform in cell */
+  margin-bottom: 5px;
+}
+
+/* Specific styling for the Delete button */
+.btn-view:last-of-type {
+  color: var(--danger);
+  border-color: rgba(239, 68, 68, 0.2);
 }
 
 .btn-view:hover {
@@ -220,187 +229,73 @@
   border-color: var(--gold);
 }
 
-/* --- Refined Table Borders --- */
-.car-box {
-  width: 100%;
-  max-width: 1250px;
+.btn-view:last-of-type:hover {
+  background: var(--danger);
+  color: #fff;
 }
 
-.car-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0 12px; /* Gaps between rows */
-}
-
-.car-table th {
-  color: #64748b;
-  font-size: 0.75rem;
-  letter-spacing: 1px;
-  padding: 10px 20px;
-  text-align: center;
-  border: none;
-}
-
-.car-table tr:not(:first-child) {
-  background: #fff;
-  transition: all 0.3s ease;
-}
-
-/* Row-based Border logic */
-.car-table td {
-  padding: 16px 20px;
-  border-top: 1px solid var(--border-light);
-  border-bottom: 1px solid var(--border-light);
-  color: #334155;
-  font-size: 0.95rem;
-}
-
-/* Left-most cell border */
-.car-table td:first-child { 
-  border-left: 1px solid var(--border-light); 
-  border-radius: 16px 0 0 16px; 
-}
-
-/* Right-most cell border */
-.car-table td:last-child { 
-  border-right: 1px solid var(--border-light); 
-  border-radius: 0 16px 16px 0; 
-}
-
-.car-table tr:not(:first-child):hover {
-  transform: scale(1.005);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.04);
-}
-
-/* --- Search & Filter Adjustments --- */
-.controls-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  background: rgba(255, 255, 255, 0.5);
-  padding: 30px;
-  border-radius: 24px;
-  border: 1px solid #fff;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.02);
-}
-
-.search-bar input, .filter-select {
-  height: 48px;
-  background: #fff !important;
-  border: 1px solid var(--border-light) !important;
-  border-radius: 12px;
-  padding: 0 20px;
-  width: 240px;
-}
-
-/* --- Image Scaling --- */
-.car-image {
-  width: 100px;
-  height: 65px;
-  object-fit: cover;
-  border-radius: 8px;
-  border: 1px solid #f1f5f9;
-}
-
-/* --- Modal Button Adjustment --- */
-/* --- Modal Overlay (The Blur Effect) --- */
+/* --- Modal Styling --- */
 .modal-overlay {
   position: fixed;
   inset: 0;
-  /* Darker semi-transparent slate for better focus */
-  background: rgba(15, 23, 42, 0.7); 
-  /* Heavy blur for that premium frosted look */
-  backdrop-filter: blur(12px) saturate(180%);
-  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(12px);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999; /* Higher than navbar and back button */
+  z-index: 1000;
 }
 
-/* --- The Modal Card --- */
 .modal-content {
-  background: #ffffff;
+  background: #fff;
   width: 90%;
   max-width: 1100px;
-  height: 80vh;
+  max-height: 85vh;
   border-radius: 32px;
-  padding: 60px 40px 40px; /* Extra top padding for the back button space */
+  padding: 60px 40px 40px;
   position: relative;
   overflow-y: auto;
-  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  animation: modalFadeIn 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
-@keyframes modalFadeIn {
-  from { opacity: 0; transform: translateY(20px) scale(0.98); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-/* --- Modal Internal Back Button (Specific Fix) --- */
 .modal-content button {
-  position: absolute !important;
+  position: absolute;
   top: 25px;
   left: 25px;
-  background: #f1f5f9 !important; /* Neutral look for "Back" */
-  color: #0f172a !important;
-  min-width: 100px !important;
-  height: 40px !important;
-  border-radius: 50px !important;
-  font-size: 0.8rem !important;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  border: 1px solid #e2e8f0 !important;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  z-index: 10001;
+  height: 38px;
+  padding: 0 20px;
+  border-radius: 50px;
+  background: #f1f5f9;
+  border: 1px solid var(--border-light);
+  font-weight: 700;
+  cursor: pointer;
 }
 
-.modal-content button:hover {
-  background: #0f172a !important;
-  color: #fff !important;
-  transform: translateX(-3px) !important;
-}
-
-/* --- Modal Typography --- */
-.modal-content h3 {
-  color: #0f172a;
-  text-align: center;
-  font-size: 2rem;
-  font-weight: 800;
-  letter-spacing: -1px;
-  margin-bottom: 30px;
-}
-
-/* --- Image Gallery Grid --- */
 .image-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
-  padding: 10px;
+  gap: 24px;
 }
 
 .image-grid img {
   width: 100%;
-  height: 220px;
+  height: 240px;
   object-fit: cover;
   border-radius: 20px;
-  border: 1px solid #f1f5f9;
-  transition: transform 0.4s ease, box-shadow 0.4s ease;
-  cursor: zoom-in;
+  transition: 0.3s;
 }
 
 .image-grid img:hover {
-  transform: translateY(-5px);
+  transform: scale(1.02);
   box-shadow: 0 15px 30px rgba(0,0,0,0.1);
-  border-color: var(--gold);
 }
 
-/* Custom Scrollbar for Modal */
-.modal-content::-webkit-scrollbar {
-  width: 6px;
-}
-.modal-content::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 10px;
+/* --- Empty State --- */
+.empty-state {
+  margin-top: 60px;
+  padding: 60px;
+  text-align: center;
+  background: #fff;
+  border-radius: 24px;
+  border: 2px dashed var(--border-light);
+  color: #64748b;
 }

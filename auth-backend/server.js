@@ -5,7 +5,9 @@ const pool = require("./db");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const multer = require("multer");
-const { log } = require("@angular-devkit/build-angular/src/builders/ssr-dev-server");
+const {
+  log,
+} = require("@angular-devkit/build-angular/src/builders/ssr-dev-server");
 
 require("dotenv").config({ path: "../.env" });
 app.use(
@@ -22,27 +24,31 @@ app.use(express.json());
 app.use("/uploads", express.static("uploads"));
 
 app.use((req, res, next) => {
-  res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+  res.set("Cache-Control", "no-store, no-cache, must-revalidate, private");
   next();
 });
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, "uploads/"),
   fileFilter: (req, file, cb) => {
-        if (file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg") {
-            cb(null, true);
-        } else {
-            cb(null, false);
-            const err = new Error('Only .png, .jpg and .jpeg format allowed!')
-            err.name = 'ExtensionError'
-            return cb(err);
-        }
-    },
+    if (
+      file.mimetype == "image/png" ||
+      file.mimetype == "image/jpg" ||
+      file.mimetype == "image/jpeg"
+    ) {
+      cb(null, true);
+    } else {
+      cb(null, false);
+      const err = new Error("Only .png, .jpg and .jpeg format allowed!");
+      err.name = "ExtensionError";
+      return cb(err);
+    }
+  },
   filename: (req, file, cb) => cb(null, Date.now() + "-" + file.originalname),
 });
 
-const upload = multer({ 
-  storage: storage
+const upload = multer({
+  storage: storage,
 });
 
 app.get("/", (req, res) => {
@@ -132,7 +138,7 @@ app.post("/login", async (req, res) => {
       img_pth: image_path,
       name: userName,
       email: email,
-      user_id:user_id
+      user_id: user_id,
     });
   } catch (err) {
     console.error(err.message);
@@ -261,94 +267,100 @@ app.post("/brand_details", upload.single("image"), async (req, res) => {
   }
 });
 
-app.post("/car_details/:user_id", upload.array("image", 250), async (req, res) => {
-  try {
-    const {user_id} = req.params;
-    const userID = parseInt(user_id, 10)
-    const {
-      brandName,
-      modelName,
-      category,
-      engineType,
-      horsePower,
-      torque,
-      topSpeed,
-      price,
-      description,
-    } = req.body;
-
-    if (!req.files || req.files.length === 0) {
-      return res.status(400).json({ message: "At least one image is required" });
-    }
-
-    let imagePaths = req.files.map(file=>file.filename);
-
-    if (
-      !userID ||
-      !brandName ||
-      !modelName ||
-      !category ||
-      !engineType ||
-      !horsePower ||
-      !torque ||
-      !topSpeed ||
-      !price ||
-      !description
-    ) {
-      return res.status(400).json({ message: "All Details Required" });
-    }
-
-    const cleanHP = parseInt(horsePower.toString().replace(/,/g, ""), 10);
-    const cleanTorque = parseInt(torque.toString().replace(/,/g, ""), 10);
-    const cleanTopSpeed = parseInt(topSpeed.toString().replace(/,/g, ""), 10);
-    const cleanPrice = parseFloat(price.toString().replace(/[$,]/g, ""));
-
-    const brandRes = await pool.query(
-      "SELECT brand_id FROM brands WHERE brand_name = $1",
-      [brandName],
-    );
-    if (brandRes.rows.length === 0) {
-      return res.status(404).json({ message: "Brand not found" });
-    }
-    const brand_id = brandRes.rows[0].brand_id;
-
-    const exists = await pool.query(
-      "SELECT * FROM cars WHERE brand_id = $1 AND model_name = $2 AND category = $3",
-      [brand_id, modelName, category],
-    );
-
-    if (exists.rows.length > 0) {
-      return res.status(400).json({ message: "Already exists" });
-    }
-
-    const newCar = await pool.query(
-      "INSERT INTO cars (brand_id, user_id, model_name, category, car_logo) VALUES ($1, $2, $3, $4, $5) RETURNING car_id",
-      [brand_id, user_id, modelName, category, imagePaths],
-    );
-
-    const car_id = newCar.rows[0].car_id;
-
-    await pool.query(
-      "INSERT INTO car_details (car_id, engine_type, horsepower, torque, top_speed, price, description) VALUES ($1, $2, $3, $4, $5, $6, $7)",
-      [
-        car_id,
+app.post(
+  "/car_details/:user_id",
+  upload.array("image", 250),
+  async (req, res) => {
+    try {
+      const { user_id } = req.params;
+      const userID = parseInt(user_id, 10);
+      const {
+        brandName,
+        modelName,
+        category,
         engineType,
-        cleanHP,
-        cleanTorque,
-        cleanTopSpeed,
-        cleanPrice,
+        horsePower,
+        torque,
+        topSpeed,
+        price,
         description,
-      ],
-    );
+      } = req.body;
 
-    res.status(200).json({ message: "Car details added successfully" });
-  } catch (err) {
-    console.error("Database Error:", err.message);
-    res
-      .status(500)
-      .json({ message: "Internal Server Error", error: err.message });
-  }
-});
+      if (!req.files || req.files.length === 0) {
+        return res
+          .status(400)
+          .json({ message: "At least one image is required" });
+      }
+
+      let imagePaths = req.files.map((file) => file.filename);
+
+      if (
+        !userID ||
+        !brandName ||
+        !modelName ||
+        !category ||
+        !engineType ||
+        !horsePower ||
+        !torque ||
+        !topSpeed ||
+        !price ||
+        !description
+      ) {
+        return res.status(400).json({ message: "All Details Required" });
+      }
+
+      const cleanHP = parseInt(horsePower.toString().replace(/,/g, ""), 10);
+      const cleanTorque = parseInt(torque.toString().replace(/,/g, ""), 10);
+      const cleanTopSpeed = parseInt(topSpeed.toString().replace(/,/g, ""), 10);
+      const cleanPrice = parseFloat(price.toString().replace(/[$,]/g, ""));
+
+      const brandRes = await pool.query(
+        "SELECT brand_id FROM brands WHERE brand_name = $1",
+        [brandName],
+      );
+      if (brandRes.rows.length === 0) {
+        return res.status(404).json({ message: "Brand not found" });
+      }
+      const brand_id = brandRes.rows[0].brand_id;
+
+      const exists = await pool.query(
+        "SELECT * FROM cars WHERE brand_id = $1 AND model_name = $2 AND category = $3",
+        [brand_id, modelName, category],
+      );
+
+      if (exists.rows.length > 0) {
+        return res.status(400).json({ message: "Already exists" });
+      }
+
+      const newCar = await pool.query(
+        "INSERT INTO cars (brand_id, user_id, model_name, category, car_logo) VALUES ($1, $2, $3, $4, $5) RETURNING car_id",
+        [brand_id, user_id, modelName, category, imagePaths],
+      );
+
+      const car_id = newCar.rows[0].car_id;
+
+      await pool.query(
+        "INSERT INTO car_details (car_id, engine_type, horsepower, torque, top_speed, price, description) VALUES ($1, $2, $3, $4, $5, $6, $7)",
+        [
+          car_id,
+          engineType,
+          cleanHP,
+          cleanTorque,
+          cleanTopSpeed,
+          cleanPrice,
+          description,
+        ],
+      );
+
+      res.status(200).json({ message: "Car details added successfully" });
+    } catch (err) {
+      console.error("Database Error:", err.message);
+      res
+        .status(500)
+        .json({ message: "Internal Server Error", error: err.message });
+    }
+  },
+);
 
 app.get("/brands", async (req, res) => {
   try {
@@ -362,7 +374,7 @@ app.get("/brands", async (req, res) => {
 
 app.get("/brands/:user_id", async (req, res) => {
   try {
-    const { user_id } = req.params; 
+    const { user_id } = req.params;
     const userID = parseInt(user_id, 10);
 
     if (isNaN(userID)) {
@@ -375,12 +387,11 @@ app.get("/brands/:user_id", async (req, res) => {
         SELECT DISTINCT brand_id FROM cars WHERE user_id = $1
       )
     `;
-    
+
     const brands = await pool.query(query, [userID]);
 
     // 3. Return only the rows array
     return res.status(200).json(brands.rows);
-
   } catch (err) {
     console.error("Database Error:", err.message);
     return res.status(500).json({ message: "Internal Server Error" });
@@ -411,7 +422,10 @@ app.get("/cars/:id/:user_id", async (req, res) => {
 
     const cars = await pool.query(query, [brandId, userID]);
 
-    return res.status(200).set('Content-Type', 'application/json').json(cars.rows);
+    return res
+      .status(200)
+      .set("Content-Type", "application/json")
+      .json(cars.rows);
   } catch (err) {
     console.error("SQL Error:", err.message);
     return res.status(500).json({ error: err.message });
@@ -423,7 +437,6 @@ app.get("/brands/search/:name/:user_id", async (req, res) => {
     const { name, user_id } = req.params;
     const userID = parseInt(user_id, 10);
     console.log(req);
-    
 
     if (!name) {
       return res.status(400).json({ message: "Brand name is required" });
@@ -431,7 +444,7 @@ app.get("/brands/search/:name/:user_id", async (req, res) => {
 
     const brands = await pool.query(
       "SELECT * FROM brands WHERE brand_id in(select distinct (brand_id) form cars where user_id = $1) brand_name ILIKE $2",
-      [userID, `%${name}%`]
+      [userID, `%${name}%`],
     );
 
     return res.status(200).json(brands.rows);
@@ -441,12 +454,14 @@ app.get("/brands/search/:name/:user_id", async (req, res) => {
   }
 });
 
-app.get("/cars/search/:id/:name/:category/:engine/:user_id", async(req, res)=>{
-  try{
-    const {id, name, category, engine, user_id} = req.params;
-    const ID = parseInt(id, 10);
-    const userID = parseInt(user_id, 10);
-    const SQLQuery = (`
+app.get(
+  "/cars/search/:id/:name/:category/:engine/:user_id",
+  async (req, res) => {
+    try {
+      const { id, name, category, engine, user_id } = req.params;
+      const ID = parseInt(id, 10);
+      const userID = parseInt(user_id, 10);
+      const SQLQuery = `
       SELECT 
         c.car_id AS car_id, 
         c.model_name, 
@@ -460,30 +475,31 @@ app.get("/cars/search/:id/:name/:category/:engine/:user_id", async(req, res)=>{
         cd.top_speed
       FROM cars c 
       JOIN car_details cd ON c.car_id = cd.car_id where (c.model_name ILIKE $1 OR $1 = 'all' ) and(c.category ILIKE $2 OR $2 = 'all') and (cd.engine_type ILIKE $3 or $3='all') and c.brand_id = $4 and c.user_id = $5
-    `);
+    `;
 
-    const values = [
-      name==='none'?'all':`%${name}%`,
-      category==='none'?'all':`%${category}%`,
-      engine==='none'?'all':`%${engine}%`,
-      ID, 
-      userID
-    ]
+      const values = [
+        name === "none" ? "all" : `%${name}%`,
+        category === "none" ? "all" : `%${category}%`,
+        engine === "none" ? "all" : `%${engine}%`,
+        ID,
+        userID,
+      ];
 
-    const result = await pool.query(SQLQuery, values);
-    return res.status(200).json(result.rows);
-  }
-  catch(err){
-    console.log(err);
-    
-  }
-})
+      const result = await pool.query(SQLQuery, values);
+      return res.status(200).json(result.rows);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
 
-app.get("/allcars/:user_id", async(req, res)=>{
-  try{
-    const {user_id} = req.params;
-    if(!user_id) return res.status(405).json({message: "No user_id to get all cars"})
-    const cars = await pool.query(`SELECT 
+app.get("/allcars/:user_id", async (req, res) => {
+  try {
+    const { user_id } = req.params;
+    if (!user_id)
+      return res.status(405).json({ message: "No user_id to get all cars" });
+    const cars = await pool.query(
+      `SELECT 
         c.car_id AS car_id, 
         c.model_name, 
         c.category, 
@@ -496,46 +512,86 @@ app.get("/allcars/:user_id", async(req, res)=>{
         cd.top_speed
       FROM cars c 
       JOIN car_details cd ON c.car_id = cd.car_id where c.user_id = $1
-    `, [user_id])
+    `,
+      [user_id],
+    );
     return res.status(200).json(cars.rows);
-  }
-catch(err){
-  console.log(err);
-}
-})
-
-
-app.get("/cars_images/:id/:user_id", async(req, res)=>{
-  try{
-    const {id, user_id} = req.params;
-    if(!id || !user_id) return res.status(405).json({message:"Either id or usrid not there for all images"})
-    const allImages = await pool.query(
-        "select car_logo from cars where car_id=$1 and user_id=$2", [id, user_id]
-      )
-    return res.status(200).json(allImages.rows);
-  }
-catch(err){
-  console.log(err);
-  
-}
-})
-
-
-
-app.delete("/delete_car/:car_id/:user_id", async(req, res)=>{
-  try{
-    const {car_id, user_id} = req.params;
-    if(!user_id || !car_id) return res.status(400).json({message:"User or car id missing to delete"});
-
-    await pool.query("delete from cars where car_id = $1 and user_id = $2", [car_id, user_id]);
-    return res.status(200).json({message: "Success To delete"})
-  }
-  catch(err){
+  } catch (err) {
     console.log(err);
   }
-})
+});
+
+app.get("/cars_images/:id/:user_id", async (req, res) => {
+  try {
+    const { id, user_id } = req.params;
+    if (!id || !user_id)
+      return res
+        .status(405)
+        .json({ message: "Either id or usrid not there for all images" });
+    const allImages = await pool.query(
+      "select car_logo from cars where car_id=$1 and user_id=$2",
+      [id, user_id],
+    );
+    return res.status(200).json(allImages.rows);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+app.delete("/delete_car/:car_id/:user_id", async (req, res) => {
+  try {
+    const { car_id, user_id } = req.params;
+    if (!user_id || !car_id)
+      return res
+        .status(400)
+        .json({ message: "User or car id missing to delete" });
+
+    await pool.query("delete from cars where car_id = $1 and user_id = $2", [
+      car_id,
+      user_id,
+    ]);
+    return res.status(200).json({ message: "Success To delete" });
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+app.get("/singleCar/:car_id", async (req, res) => {
+  try {
+    const { car_id } = req.params;
+    const car_Id = parseInt(car_id, 10);
+    console.log(car_Id);
+    const car_detail = await pool.query(
+      `
+      SELECT
+      c.brand_id,
+        c.model_name, 
+        c.category,
+        cd.price, 
+        cd.description, 
+        cd.engine_type, 
+        cd.horsepower, 
+        cd.torque, 
+        cd.top_speed,
+        cd.description
+      FROM cars c 
+      JOIN car_details cd ON c.car_id = cd.car_id 
+      WHERE c.car_id = $1
+    `,
+      [car_Id],
+    );
+    console.log(car_detail.rows[0].horsepower);
+    
+    const brandName = await pool.query(
+      "select brand_name from brands where brand_id = $1",
+      [car_detail.rows[0].brand_id],
+    );
+    return res.status(200).json({ cars: car_detail.rows[0], brand: brandName.rows[0] });
+  } catch (err) {
+    console.log(err);
+  }
+});
 
 app.listen(3000, (req, res) => {
   console.log("Server Is Running");
 });
-

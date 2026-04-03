@@ -191,3 +191,28 @@ input:focus, select:focus {
     color: #6366f1;
     transform: translateX(-5px);
 }
+
+
+.input-group {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.error-text {
+  color: #ef4444; /* Red color */
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-top: 4px;
+  display: block;
+}
+
+/* Optional: Turn the input border red when invalid */
+input.ng-invalid.ng-touched, 
+select.ng-invalid.ng-touched {
+  border-color: #ef4444 !important;
+}
+
+.invalid-border {
+  border: 2px dashed #ef4444 !important;
+  background: rgba(239, 68, 68, 0.05);
+}

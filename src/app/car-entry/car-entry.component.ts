@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FooterComponent } from '../footer/footer.component';
 import { NavbarComponent } from '../navbar/navbar.component';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { DataService } from '../data.service';
 import { ToastrService } from 'ngx-toastr';
@@ -17,6 +17,7 @@ export class CarEntryComponent {
 
   private dataservice = inject(DataService);
   private toast = inject(ToastrService);
+  private route = inject(ActivatedRoute)
 
   availableBrands: any[] = [];
 
@@ -24,7 +25,56 @@ export class CarEntryComponent {
 
   previews: string[] = [];
 
+  car_detail= {brandName :"",
+    modelName:"",
+    category:"",
+    engineType:"",
+    horsePower:"",
+    torque:"", 
+    topSpeed:"",
+    price:"", 
+    description:"",
+  }
+
+  allCars(){
+    const car_id  = this.route.snapshot.paramMap.get("car_id");
+    if(!car_id){
+      console.log("car_id is NULL");
+      return;
+    }
+    this.dataservice.getImagesOfOne(car_id).subscribe({
+      next:(res:any)=>{
+        this.previews = res[0].car_logo.map((img:string)=>
+        `http://localhost:3000/uploads/${img}`
+      );
+      },
+      error:(err)=>{
+        console.log(err);
+      }
+    })
+    this.dataservice.getSingleCar(car_id).subscribe({
+      next:(res:any)=>{
+        this.car_detail.brandName = res.brand.brand_name;
+        this.car_detail.modelName = res.cars.model_name;
+        this.car_detail.category = res.cars.category;
+        this.car_detail.engineType = res.cars.engine_type;
+        this.car_detail.horsePower = res.cars.horsepower;
+        this.car_detail.torque = res.cars.torque;
+        this.car_detail.topSpeed = res.cars.top_speed;
+        this.car_detail.price = res.cars.price;
+        this.car_detail.description = res.cars.description;
+        console.log(this.car_detail);
+        
+      },
+      error:(err)=>{
+        console.log(err);
+        
+      }
+    })
+  }
+
   ngOnInit(){
+    this.allCars();
     this.dataservice.getBrandsForEntry().subscribe({
       next: (data: any) => {
         this.availableBrands = data;
@@ -149,4 +199,10 @@ export class CarEntryComponent {
       }
     })
   }
+
+  saveEdits(){
+    
+  }
+
+
 }

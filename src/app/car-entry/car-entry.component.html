@@ -5,6 +5,7 @@
     <span class="icon">←</span>
     <span class="label">Home</span>
   </a>
+
   <div class="glass-form-card">
     <h1 class="main-title">Add New Car</h1>
     <p class="subtitle">Expand the luxury collection</p>
@@ -14,59 +15,63 @@
       (ngSubmit)="update(brandform)"
       *ngIf="availableBrands.length > 0; else noBrand"
       class="premium-form"
+      novalidate
     >
+      
       <div class="input-group">
         <label for="logo">Car Photo</label>
-
         <div
           class="drag-drop"
           [class.drag-over]="isDragging"
+          [class.invalid-border]="brandform.submitted && selectedFile.length === 0"
           (dragover)="onDragOver($event)"
           (dragleave)="onDragLeave($event)"
           (drop)="onDrop($event)"
           (click)="fileInput.click()"
         >
           <span *ngIf="!selectedFileName">Drag & Drop or Click to Upload</span>
-          <span *ngIf="selectedFileName">Selected:{{ selectedFileName }}</span>
+          <span *ngIf="selectedFileName">Selected: {{ selectedFileName }}</span>
         </div>
+        
+        <span class="error-text" *ngIf="brandform.submitted && selectedFile.length === 0">
+          At least one image is required.
+        </span>
 
         <div class="preview-container" *ngIf="previews.length > 0">
           <div *ngFor="let url of previews; let i = index" class="preview-card">
             <img [src]="url" alt="Car preview" />
-            <button type="button" class="remove-img" (click)="removeImage(i)">
-              ×
-            </button>
+            <button type="button" class="remove-img" (click)="removeImage(i)">×</button>
           </div>
         </div>
 
-        <div class="file-input-wrapper">
-          <input
-            type="file"
-            #fileInput
-            (change)="onFileSelected($event)"
-            ngModel
-            id="image"
-            name="image"
-            accept="image/*"
-            accept=".png,.jpg,.jpeg".
-            style="display: none;"
-            multiple
-          />
-        </div>
+        <input
+          type="file"
+          #fileInput
+          (change)="onFileSelected($event)"
+          id="image"
+          name="image"
+          accept=".png,.jpg,.jpeg"
+          style="display: none;"
+          multiple
+        />
       </div>
 
       <div class="input-group">
         <label for="brandName">Brand Name</label>
-        <select name="brandName" id="brandName" ngModel>
+        <select 
+          name="brandName" 
+          [(ngModel)]=car_detail.brandName
+          id="brandName" 
+          required 
+          #brandName="ngModel">
           <option value="" disabled selected>Select a brand</option>
-
-          <option
-            *ngFor="let brand of availableBrands"
-            [value]="brand.brand_name"
-          >
+          <option *ngFor="let brand of availableBrands" [value]="brand.brand_name">
             {{ brand.brand_name }}
           </option>
         </select>
+        <span class="error-text" *ngIf="brandName.invalid && (brandName.touched || brandform.submitted)">
+          Please select a brand.
+        </span>
       </div>
 
       <div class="input-group">
@@ -76,20 +81,29 @@
           name="modelName"
           ngModel
           id="modelName"
+          [(ngModel)]=car_detail.modelName
+          required
+          #modelName="ngModel"
           placeholder="e.g. Martin"
         />
+        <span class="error-text" *ngIf="modelName.invalid && (modelName.touched || brandform.submitted)">
+          Model Name is required.
+        </span>
       </div>
 
       <div class="input-group">
         <label for="category">Category</label>
-        <select name="category" id="category" ngModel>
-          <option value="" disabled>Select Category</option>
+        <select name="category" [(ngModel)]=car_detail.category id="category" ngModel required #category="ngModel">
+          <option value="" disabled selected>Select Category</option>
           <option value="Sports">Sports</option>
           <option value="SUV">SUV</option>
           <option value="Electric">Electric</option>
           <option value="Luxury">Luxury</option>
           <option value="Classic">Classic</option>
         </select>
+        <span class="error-text" *ngIf="category.invalid && (category.touched || brandform.submitted)">
+          Category is required.
+        </span>
       </div>
 
       <div class="input-group">
@@ -97,10 +111,16 @@
         <input
           type="text"
           name="engineType"
+          [(ngModel)]=car_detail.engineType
           ngModel
           id="EngineType"
-          placeholder="e.g. Mhawk"
+          required
+          #engineType="ngModel"
+          placeholder="e.g. V8 Biturbo"
         />
+        <span class="error-text" *ngIf="engineType.invalid && (engineType.touched || brandform.submitted)">
+          Engine type is required.
+        </span>
       </div>
 
       <div class="input-group">
@@ -108,20 +128,27 @@
         <input
           type="text"
           name="horsePower"
+          [(ngModel)]=car_detail.horsePower
           ngModel
           id="horsePower"
-          placeholder="e.g. 200"
+          required
+          #horsePower="ngModel"
+          placeholder="e.g. 500"
         />
+        <span class="error-text" *ngIf="horsePower.invalid && (horsePower.touched || brandform.submitted)">
+          Horse power is required.
+        </span>
       </div>
 
       <div class="input-group">
-        <label for="torque">Torque</label>
+        <label for="torque">Torque (Nm)</label>
         <input
           type="text"
           name="torque"
+          [(ngModel)]=car_detail.torque
           ngModel
           id="torque"
-          placeholder="e.g. 50"
+          placeholder="e.g. 650"
         />
       </div>
 
@@ -131,19 +158,21 @@
           type="text"
           name="topSpeed"
           ngModel
+          [(ngModel)]=car_detail.topSpeed
           id="topSpeed"
-          placeholder="e.g. 200kmph"
+          placeholder="e.g. 320kmph"
         />
       </div>
 
       <div class="input-group">
-        <label for="price">Price</label>
+        <label for="price">Price ($)</label>
         <input
           type="text"
           name="price"
           ngModel
+          [(ngModel)]=car_detail.price
           id="price"
-          placeholder="e.g. $5000"
+          placeholder="e.g. 250000"
         />
       </div>
 
@@ -151,18 +180,26 @@
         <label for="description">Description</label>
         <textarea
           maxlength="100"
-          type="text"
           name="description"
+          [(ngModel)]=car_detail.description
           ngModel
           id="description"
+          placeholder="Brief overview..."
         ></textarea>
       </div>
 
-      <button type="submit" class="submit-btn">
+      <button type="submit" class="submit-btn" *ngIf="car_detail.brandName.length===0">
         <span>Save Car</span>
       </button>
+      <button type="submit" (click)="saveEdits()" class="submit-btn" *ngIf="car_detail.brandName.length>0">
+        <span>Edit Car</span>
+      </button>
+
     </form>
-    <ng-template #noBrand>No Brands Avaiable</ng-template>
+
+    <ng-template #noBrand>
+      <div class="empty-state">No Brands Available. Please add a brand first.</div>
+    </ng-template>
   </div>
 </div>
 

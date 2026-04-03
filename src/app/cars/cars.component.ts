@@ -125,5 +125,8 @@ allCars(){
     })
   }
 
- 
+ editCar(data:any){
+  const car_id = data.car_id;
+  this.router.navigate(["/editCar",car_id]);
+ }
 }

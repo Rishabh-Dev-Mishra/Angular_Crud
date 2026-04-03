@@ -115,4 +115,10 @@ export class DataService {
     
     return this.http.get(`${this.url}/singleCar/${car}`);
   }
+
+  editCar(data:any){
+    console.log("inside service",data.get("car_id"));
+    
+    return this.http.put(`${this.url}/editCar`, data);
+  }
 }

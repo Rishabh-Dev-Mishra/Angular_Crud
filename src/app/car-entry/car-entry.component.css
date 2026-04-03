@@ -124,27 +124,56 @@ input:focus, select:focus {
 }
 
 /* Preview Gallery */
+
+.preview-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+
 .preview-card {
-    border-radius: 20px;
+    position: relative; /* Essential for the button placement */
+    border-radius: 16px;
     background: #ffffff;
-    padding: 6px;
+    padding: 4px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     border: 1px solid #f1f5f9;
+    height: 120px; /* Fixed height for uniformity */
+    overflow: hidden;
+}
+
+.preview-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Prevents image stretching */
+    border-radius: 12px;
 }
 
 .remove-img {
-    background: #0f172a;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    background: #ef4444; /* Standard red for delete */
     color: white;
-    border: none;
+    border: 2px solid white; /* Makes it pop against the image */
     border-radius: 50%;
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
     cursor: pointer;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    z-index: 10;
+    transition: transform 0.2s ease, background 0.2s ease;
 }
 
 .remove-img:hover {
-    background: #ef4444;
+    background: #b91c1c;
+    transform: scale(1.1);
 }
 
 /* The Bold Action Button */

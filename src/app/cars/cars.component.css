@@ -20,7 +20,7 @@
 /* --- Fixed Back Button (Top Left) --- */
 .back-btn {
   position: absolute;
-  top: 40px;
+  top: 100px;
   left: 40px;
   display: flex;
   align-items: center;

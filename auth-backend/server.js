@@ -581,14 +581,73 @@ app.get("/singleCar/:car_id", async (req, res) => {
       [car_Id],
     );
     console.log(car_detail.rows[0].horsepower);
-    
+
     const brandName = await pool.query(
       "select brand_name from brands where brand_id = $1",
       [car_detail.rows[0].brand_id],
     );
-    return res.status(200).json({ cars: car_detail.rows[0], brand: brandName.rows[0] });
+    return res
+      .status(200)
+      .json({ cars: car_detail.rows[0], brand: brandName.rows[0] });
   } catch (err) {
     console.log(err);
+  }
+});
+
+app.put("/editCar", upload.array("image", 250), async (req, res) => {
+  try {
+    console.log("good");
+    const {
+      car_id,
+      brandName,
+      modelName,
+      category,
+      engineType,
+      horsePower,
+      torque,
+      topSpeed,
+      price,
+      description,
+      oldImages
+    } = req.body;
+
+    const carID = parseInt(car_id, 10);
+    console.log(car_id);
+
+
+    const brandId = await pool.query(
+      "select brand_id from brands where brand_name = $1",
+      [brandName],
+    );
+    let keepOld = oldImages?JSON.parse(oldImages):[];
+
+    let imagePaths = req.files.map((file) => file.filename);
+    imagePaths = [...imagePaths, ...keepOld];
+    if (imagePaths && imagePaths.length > 0) {
+      await pool.query(
+        `update
+        cars set brand_id=$1, model_name=$2, category=$3, car_logo=$4 where car_id= $5`,
+        [brandId.rows[0].brand_id, modelName, category, imagePaths, carID],
+      );
+    }
+     else {
+      await pool.query(
+        `update
+        cars set brand_id=$1, model_name=$2, category=$3 where car_id= $4`,
+        [brandId.rows[0].brand_id, modelName, category, carID],
+      );
+    }
+    await pool.query(
+      `update
+        car_details set engine_type=$1, horsepower=$2, torque=$3, top_speed=$4, price=$5, description= $6 where car_id= $7`,
+      [engineType, horsePower, torque, topSpeed, price, description, carID],
+    );
+    console.log(car_id);
+
+    return res.status(200).json({ message: "Edit Success" });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: "Unable to update" });
   }
 });
 

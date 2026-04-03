@@ -12,7 +12,7 @@
 
     <form
       #brandform="ngForm"
-      (ngSubmit)="update(brandform)"
+      (ngSubmit)="onSubmit(brandform)"
       *ngIf="availableBrands.length > 0; else noBrand"
       class="premium-form"
       novalidate
@@ -188,10 +188,10 @@
         ></textarea>
       </div>
 
-      <button type="submit" class="submit-btn" *ngIf="car_detail.brandName.length===0">
+      <button type="submit" class="submit-btn" (click)="forAdd()" *ngIf="car_detail.brandName.length===0">
         <span>Save Car</span>
       </button>
-      <button type="submit" (click)="saveEdits()" class="submit-btn" *ngIf="car_detail.brandName.length>0">
+      <button type="submit" (click)="forEdit()" class="submit-btn" *ngIf="car_detail.brandName.length>0">
         <span>Edit Car</span>
       </button>
 

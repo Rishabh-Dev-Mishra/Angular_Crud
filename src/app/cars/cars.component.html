@@ -55,7 +55,7 @@
         <td><img 
               [src]="'http://localhost:3000/uploads/' + car.car_logo[0]" 
               [alt]="car.model_name" 
-              class="car-image"
+              class="car-image" (click)="getImages(car)"
             /></td>
         <td>${{ car.price ? (car.price | number) : '0' }}</td>
         <td>{{ car.category }}</td>
@@ -64,9 +64,14 @@
         <td>{{ car.torque }} Nm</td>
         <td>{{ car.top_speed }} km/h</td>
         <td>{{ car.description }}</td>
-        <td><button class="btn-view" (click)="getImages(car)">Enquire Now</button></td>
         <td><button class="btn-view" (click)="editCar(car)">Edit</button></td>
-        <td><button class="btn-view" (click)="deleteCar(car)">Delete Car</button></td>
+        <td><button class="btn-view" *ngIf="!confirmDeleteButton" (click)="confirmDelete()">Delete Car</button>
+          <div *ngIf="confirmDeleteButton">
+            <button class="btn-view" *ngIf="confirmDeleteButton" (click)="cancelDelete()">Cancel</button>
+            <button class="btn-view" *ngIf="confirmDeleteButton" (click)="deleteCar(car)">Confirm To Delete</button>
+
+          </div>
+        </td>
       </tr>
     </table>
   </section>

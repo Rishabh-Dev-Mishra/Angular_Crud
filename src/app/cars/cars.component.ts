@@ -113,17 +113,29 @@ allCars(){
     this.multiImage = [];
   }
 
+  confirmDeleteButton: boolean = false;
+
+  confirmDelete(){
+    this.confirmDeleteButton = true;
+  }
+
+  cancelDelete(){
+    this.confirmDeleteButton = false;
+  }
   deleteCar(data: any){
     this.dataservice.deleteCar(data).subscribe({
       next:(res:any)=>{
         this.toast.success("Successfully Deleted");
         this.allCars();
+        this.cancelDelete();
       },
       error:(err:any)=>{
         console.log(err);
+        this.cancelDelete();
       }
     })
-  }
+  
+}
 
  editCar(data:any){
   const car_id = data.car_id;

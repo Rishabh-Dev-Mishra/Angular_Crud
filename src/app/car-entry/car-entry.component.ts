@@ -32,6 +32,10 @@ export class CarEntryComponent {
 
   previews: string[] = [];
 
+
+
+
+
   car_detail = {
     brandName: '',
     modelName: '',

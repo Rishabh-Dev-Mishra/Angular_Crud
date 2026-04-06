@@ -188,10 +188,10 @@
         ></textarea>
       </div>
 
-      <button type="submit" class="submit-btn" (click)="forAdd()" *ngIf="car_detail.brandName.length===0">
+      <button type="submit" class="submit-btn" (click)="forAdd()" *ngIf="!editMode">
         <span>Save Car</span>
       </button>
-      <button type="submit" (click)="forEdit()" class="submit-btn" *ngIf="car_detail.brandName.length>0">
+      <button type="submit" (click)="forEdit()" class="submit-btn" *ngIf="editMode">
         <span>Edit Car</span>
       </button>
 

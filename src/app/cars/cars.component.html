@@ -1,7 +1,7 @@
 <app-navbar></app-navbar>
 
 <main class="inventory-wrapper">
-   <a routerLink="/home" class="back-btn">
+  <a routerLink="/home" class="back-btn">
     <span class="icon">←</span>
     <span class="label">Brands</span>
   </a>
@@ -9,25 +9,32 @@
     <div class="intro-text">
       <span class="badge">The Vault</span>
       <h1>Discover Your <span class="gradient-text">Next Masterpiece</span></h1>
-      <p>Filter through our curated selection of world-class automotive engineering.</p>
+      <p>
+        Filter through our curated selection of world-class automotive
+        engineering.
+      </p>
     </div>
 
     <div class="controls-container">
       <div class="search-bar">
-        <input type="text" placeholder="Search by model, brand, or engine..."[(ngModel)]="searchText" />
+        <input
+          type="text"
+          placeholder="Search by model, brand, or engine..."
+          [(ngModel)]="searchText"
+        />
       </div>
 
       <div class="filter-group">
         <p>Category</p>
         <select class="filter-select" [(ngModel)]="selectedCategory">
-          <option value="none" >Category: All</option>
+          <option value="none">Category: All</option>
           <option value="Sports">Sports</option>
           <option value="SUV">SUV</option>
           <option value="Electric">Electric</option>
           <option value="Luxury">Luxury</option>
         </select>
         <p>Engine Type</p>
-        <select class="filter-select" [(ngModel)]="selectedEngine" >
+        <select class="filter-select" [(ngModel)]="selectedEngine">
           <option value="none">Engine: All</option>
           <option value="v8">V8</option>
           <option value="v12">V12</option>
@@ -51,13 +58,16 @@
         <th>Description</th>
         <th>Get More Images</th>
       </tr>
-      <tr *ngFor="let car of filteredCar; trackBy: trackByCarId">
-        <td><img 
-              [src]="'http://localhost:3000/uploads/' + car.car_logo[0]" 
-              [alt]="car.model_name" 
-              class="car-image" (click)="getImages(car)"
-            /></td>
-        <td>${{ car.price ? (car.price | number) : '0' }}</td>
+      <tr *ngFor="let car of paginatedCars; trackBy: trackByCarId">
+        <td>
+          <img
+            [src]="'http://localhost:3000/uploads/' + car.car_logo[0]"
+            [alt]="car.model_name"
+            class="car-image"
+            (click)="getImages(car)"
+          />
+        </td>
+        <td>${{ car.price ? (car.price | number) : "0" }}</td>
         <td>{{ car.category }}</td>
         <td>{{ car.engine_type }}</td>
         <td>{{ car.horsepower }} HP</td>
@@ -65,14 +75,53 @@
         <td>{{ car.top_speed }} km/h</td>
         <td>{{ car.description }}</td>
         <td><button class="btn-view" (click)="editCar(car)">Edit</button></td>
-        <td><button class="btn-view" *ngIf="!confirmDeleteButton" (click)="confirmDelete()">Delete Car</button>
+        <td>
+          <button
+            class="btn-view"
+            *ngIf="!confirmDeleteButton"
+            (click)="confirmDelete()"
+          >
+            Delete Car
+          </button>
           <div *ngIf="confirmDeleteButton">
-            <button class="btn-view" *ngIf="confirmDeleteButton" (click)="cancelDelete()">Cancel</button>
-            <button class="btn-view" *ngIf="confirmDeleteButton" (click)="deleteCar(car)">Confirm To Delete</button>
-
+            <button
+              class="btn-view"
+              *ngIf="confirmDeleteButton"
+              (click)="cancelDelete()"
+            >
+              Cancel
+            </button>
+            <button
+              class="btn-view"
+              *ngIf="confirmDeleteButton"
+              (click)="deleteCar(car)"
+            >
+              Confirm To Delete
+            </button>
           </div>
         </td>
       </tr>
+      <div
+        class="pagination-controls"
+        *ngIf="filteredCar.length > itemsPerPage"
+      >
+        <button
+          (click)="changePage(currentPage - 1)"
+          [disabled]="currentPage === 1"
+        >
+          Previous
+        </button>
+        <span class="page-info">
+          Page <strong>{{ currentPage }}</strong> of  {{ totalPages }}
+        </span>
+  
+        <button
+          (click)="changePage(currentPage + 1)"
+          [disabled]="currentPage === totalPages"
+        >
+          Next
+        </button>
+      </div>
     </table>
   </section>
 
@@ -87,11 +136,10 @@
       <button (click)="backToAll()">Back</button>
       <h3>Images</h3>
       <div class="image-grid">
-      <img *ngFor="let img of multiImage" [src]="img" alt="Car Image">
-    </div>
+        <img *ngFor="let img of multiImage" [src]="img" alt="Car Image" />
+      </div>
     </div>
   </div>
-
 </main>
 
 <app-footer></app-footer>

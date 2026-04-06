@@ -33,9 +33,6 @@ export class CarEntryComponent {
   previews: string[] = [];
 
 
-
-
-
   car_detail = {
     brandName: '',
     modelName: '',
@@ -270,7 +267,7 @@ export class CarEntryComponent {
       },
       error: (err: any) => {
         console.log(err);
-        this.toast.error('Cant Edit');
+        this.toast.error(err);
       },
     });
   }

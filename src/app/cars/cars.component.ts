@@ -69,6 +69,7 @@ allCars(){
   }
 
   filterCars(){
+    this.currentPage = 1;
     const hasSearch = this.searchText.trim().length > 0;
     const hasCategory = this.selectedCategory !== 'none' && this.selectedCategory !== '';
     const hasEngine = this.selectedEngine !== 'none' && this.selectedEngine !== '';
@@ -141,4 +142,22 @@ allCars(){
   const car_id = data.car_id;
   this.router.navigate(["/editCar",car_id]);
  }
+
+currentPage: number = 1;
+itemsPerPage: number = 2;
+
+get paginatedCars(){
+  const startIndex = (this.currentPage-1)*this.itemsPerPage;
+  return this.filteredCar.slice(startIndex, startIndex+this.itemsPerPage);
+}
+
+get totalPages(){
+  return Math.ceil(this.filteredCar.length/this.itemsPerPage);
+}
+
+changePage(page: number){
+  if(page >= 1 && page <= this.totalPages){
+    this.currentPage = page;
+  }
+}
 }

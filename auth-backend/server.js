@@ -300,19 +300,20 @@ app.post(
         !modelName ||
         !category ||
         !engineType ||
-        !horsePower ||
-        !torque ||
-        !topSpeed ||
-        !price ||
-        !description
+        !horsePower
       ) {
         return res.status(400).json({ message: "All Details Required" });
       }
 
+      const toNum = (val) => {
+        if (val === "null" || val === "" || val === undefined) return null;
+        return parseFloat(val);
+      };
+
       const cleanHP = parseInt(horsePower.toString().replace(/,/g, ""), 10);
-      const cleanTorque = parseInt(torque.toString().replace(/,/g, ""), 10);
-      const cleanTopSpeed = parseInt(topSpeed.toString().replace(/,/g, ""), 10);
-      const cleanPrice = parseFloat(price.toString().replace(/[$,]/g, ""));
+      const cleanTorque = toNum(torque);
+      const cleanTopSpeed = toNum(topSpeed);
+      const cleanPrice = toNum(price);
 
       const brandRes = await pool.query(
         "SELECT brand_id FROM brands WHERE brand_name = $1",
@@ -615,9 +616,9 @@ app.put("/editCar", upload.array("image", 250), async (req, res) => {
     console.log(car_id);
 
     const toNum = (val) => {
-    if (val === "null" || val === "" || val === undefined) return null;
-    return parseFloat(val);
-  };
+      if (val === "null" || val === "" || val === undefined) return null;
+      return parseFloat(val);
+    };
 
     const cleanTorque = toNum(torque);
     const cleanTopSpeed = toNum(topSpeed);

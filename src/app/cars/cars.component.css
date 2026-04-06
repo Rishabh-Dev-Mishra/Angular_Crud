@@ -298,3 +298,29 @@
   border: 2px dashed var(--border-light);
   color: #64748b;
 }
+
+/* Ensure the wrapper is a flex container */
+.pagination-controls {
+  display: flex;
+  flex-direction: row; /* Forces horizontal alignment */
+  justify-content: center; /* Centers the whole group in the page */
+  align-items: center; /* Vertically aligns buttons and text */
+  gap: 15px; /* Space between buttons and info */
+  margin: 30px 0;
+  white-space: nowrap; /* Prevents text from wrapping to a second line */
+}
+
+/* Updated page-info to stay tight */
+.page-info {
+  font-family: 'Inter', sans-serif;
+  color: #666;
+  display: inline-block; /* Ensures it behaves as a single block element */
+  font-size: 0.95rem;
+}
+
+/* Optional: Make the buttons look consistent in height with the text */
+.pagination-controls button {
+  padding: 8px 16px;
+  line-height: 1; /* Helps vertical centering */
+  cursor: pointer;
+}

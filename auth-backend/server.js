@@ -81,7 +81,7 @@ app.post("/register", async (req, res) => {
       [email],
     );
     if (existingUser.rows.length > 0) {
-      return res.status(400).json({ message: "User already exists" });
+      return res.status(400).json({ message: "Email Already Taken" });
     }
 
     const salthash = 10;

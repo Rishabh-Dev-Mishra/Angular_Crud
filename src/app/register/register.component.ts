@@ -28,7 +28,7 @@ export class RegisterComponent {
         this.toast.success("Register Sucess")
       },
       error: (err: any) => {this.message = err.error?.message || 'An error occurred'
-        this.toast.warning("Invalid details")
+        this.toast.warning("Email Already Taken")
       }
     });
   }

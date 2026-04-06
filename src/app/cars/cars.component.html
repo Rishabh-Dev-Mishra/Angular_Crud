@@ -50,6 +50,7 @@
       <tr>
         <th>Image</th>
         <th>Brand</th>
+        <th>Model Name</th>
         <th>Price</th>
         <th>Category</th>
         <th>Engine</th>
@@ -59,7 +60,7 @@
         <th>Description</th>
         <th>Get More Images</th>
       </tr>
-      <tr *ngFor="let car of paginatedCars; trackBy: trackByCarId">
+      <tr *ngFor="let car of carList; trackBy: trackByCarId">
         <td>
           <img
             [src]="'http://localhost:3000/uploads/' + car.car_logo[0]"
@@ -69,6 +70,7 @@
           />
         </td>
         <td>{{ brand_name }}</td>
+        <td>{{car.model_name}}</td>
         <td>${{ car.price ? (car.price | number) : "0" }}</td>
         <td>{{ car.category }}</td>
         <td>{{ car.engine_type }}</td>
@@ -105,23 +107,11 @@
         </div>
       </div>
     </div>
-    <div class="pagination-controls" *ngIf="filteredCar.length > itemsPerPage">
-      <button
-        (click)="changePage(currentPage - 1)"
-        [disabled]="currentPage === 1"
-      >
-        Previous
-      </button>
-      <span class="page-info">
-        Page <strong>{{ currentPage }}</strong> of {{ totalPages }}
-      </span>
 
-      <button
-        (click)="changePage(currentPage + 1)"
-        [disabled]="currentPage === totalPages"
-      >
-        Next
-      </button>
+    <div class="pagination">
+      <button class="previous" (click)="decreasePage()">Previous</button>
+      <span>{{currentPage}} of {{totalPages}}</span>
+      <button class="next" (click)="increasePage()">Next</button>
     </div>
   </section>
 

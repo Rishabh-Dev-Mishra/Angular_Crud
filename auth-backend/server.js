@@ -399,6 +399,43 @@ app.get("/brands/:user_id", async (req, res) => {
   }
 });
 
+app.get("/cars/:id/:user_id/:limit/:offset", async (req, res) => {
+  try {
+    const { id, user_id, limit, offset } = req.params;
+    const userID = parseInt(user_id, 10);
+    const brandId = parseInt(id, 10);
+    const cleanLimit = parseInt(limit,10);
+    const cleanOffset = parseInt(offset,10);
+    const query = `SELECT 
+        b.brand_name,
+        c.car_id AS car_id, 
+        c.brand_id,
+        c.model_name, 
+        c.category, 
+        c.car_logo,
+        cd.price, 
+        cd.description, 
+        cd.engine_type, 
+        cd.horsepower, 
+        cd.torque, 
+        cd.top_speed
+      FROM cars c join brands b on b.brand_id = c.brand_id
+      JOIN car_details cd ON c.car_id = cd.car_id 
+      WHERE c.brand_id = $1 and c.user_id = $2 order by b.brand_name, c.model_name limit $3 offset $4`
+    ;
+
+    const cars = await pool.query(query, [brandId, userID, cleanLimit, cleanOffset]);
+
+    return res
+      .status(200)
+      .set("Content-Type", "application/json")
+      .json(cars.rows);
+  } catch (err) {
+    console.error("SQL Error:", err.message);
+    return res.status(500).json({ error: err.message });
+  }
+});
+
 app.get("/cars/:id/:user_id", async (req, res) => {
   try {
     const { id, user_id } = req.params;
@@ -420,7 +457,6 @@ app.get("/cars/:id/:user_id", async (req, res) => {
       JOIN car_details cd ON c.car_id = cd.car_id 
       WHERE c.brand_id = $1 and c.user_id = $2
     `;
-
     const cars = await pool.query(query, [brandId, userID]);
 
     return res

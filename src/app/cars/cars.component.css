@@ -159,6 +159,7 @@
 
 .car-table {
   width: 100%;
+  overflow-x: auto;
   border-collapse: separate;
   border-spacing: 0 12px;
 }
@@ -168,7 +169,7 @@
   font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
-  padding: 10px 20px;
+  padding: 7px 10px;
   text-align: center;
 }
 
@@ -299,31 +300,46 @@
   color: #64748b;
 }
 
-/* Ensure the wrapper is a flex container */
-.pagination-controls {
-  display: flex;
-  flex-direction: row; /* Forces horizontal alignment */
-  justify-content: center; /* Centers the whole group in the page */
-  align-items: center; /* Vertically aligns buttons and text */
-  gap: 15px; /* Space between buttons and info */
-  margin: 30px 0;
-  white-space: nowrap; /* Prevents text from wrapping to a second line */
+
+.pagination button{
+  margin: 4px;
+  padding: 2px;
 }
 
-/* Updated page-info to stay tight */
-.page-info {
-  font-family: 'Inter', sans-serif;
-  color: #666;
-  display: inline-block; /* Ensures it behaves as a single block element */
-  font-size: 0.95rem;
-}
-
-/* Optional: Make the buttons look consistent in height with the text */
-.pagination-controls button {
+.btn-delete-trigger {
   padding: 8px 16px;
-  line-height: 1; /* Helps vertical centering */
+  background-color: transparent;
+  color: #ef4444; /* Modern Danger Red */
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
   cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
+
+.btn-delete-trigger:hover {
+  background-color: #ef4444;
+  color: white;
+  border-color: #ef4444;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+}
+
+.btn-delete-trigger:active {
+  transform: translateY(0);
+}
+
+/* Optional: Add a small trash icon via CSS if you aren't using FontAwesome */
+.btn-delete-trigger::before {
+  font-size: 10px;
+}
+
 /* The Full Screen Blurred Background */
 .delete-overlay {
   position: fixed;

@@ -41,7 +41,8 @@ export class CarsComponent implements OnInit {
     const name = this.route.snapshot.paramMap.get('name');
 
     if (id && name) {
-      this.dataservice.getCars(id, name).subscribe({
+      const pageToOffset = (this.currentPage-1)*this.itemsPerPage; 
+      this.dataservice.getCars(id, name, this.itemsPerPage, pageToOffset).subscribe({
         next: (data: any) => {
           this.carList = data;
           this.filteredCar = data;
@@ -55,7 +56,28 @@ export class CarsComponent implements OnInit {
     }
   }
 
+  carsPerBrand() {
+    const id = this.route.snapshot.paramMap.get('id');
+    const name = this.route.snapshot.paramMap.get('name');
+
+    if (id && name) {
+      this.dataservice.getCarsPerBrand(id, name).subscribe({
+        next: (data: any) => {
+          this.filteredCar = data;
+          this.calculatePages();
+          this.filteredCar = [];
+        },
+        error: (err) => {
+          console.error('Error fetching cars:', err);
+        },
+      });
+    } else {
+      console.warn('Missing route parameters: id or name');
+    }
+  }
+
   ngOnInit(): void {
+    this.carsPerBrand()
     this.allCars();
   }
 
@@ -88,6 +110,7 @@ export class CarsComponent implements OnInit {
       this.dataservice.filteredCars(id, term, cat, eng).subscribe({
         next: (data: any) => {
           this.filteredCar = data;
+          this.calculatePages();
         },
         error: (err) => {
           console.log(err);
@@ -121,10 +144,9 @@ export class CarsComponent implements OnInit {
   confirmDeleteButton: boolean = false;
   selectedCar: any;
 
-  confirmDelete(car:any) {
+  confirmDelete(car: any) {
     this.confirmDeleteButton = true;
     this.selectedCar = car;
-    
   }
 
   cancelDelete() {
@@ -135,8 +157,9 @@ export class CarsComponent implements OnInit {
     this.dataservice.deleteCar(this.selectedCar).subscribe({
       next: (res: any) => {
         this.toast.success('Successfully Deleted');
-        this.allCars()
         this.cancelDelete();
+        this.calculatePages();
+        this.allCars();
       },
       error: (err: any) => {
         console.log(err);
@@ -152,19 +175,23 @@ export class CarsComponent implements OnInit {
 
   currentPage: number = 1;
   itemsPerPage: number = 2;
+  totalPages: any = 0;
 
-  get paginatedCars() {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    return this.filteredCar.slice(startIndex, startIndex + this.itemsPerPage);
+  calculatePages() {
+    this.totalPages = Math.ceil(this.filteredCar.length / this.itemsPerPage);
   }
 
-  get totalPages() {
-    return Math.ceil(this.filteredCar.length / this.itemsPerPage);
+  decreasePage() {
+    if (this.currentPage > 1) {
+      this.currentPage -= 1;
+      this.allCars();
+    }
   }
 
-  changePage(page: number) {
-    if (page >= 1 && page <= this.totalPages) {
-      this.currentPage = page;
+  increasePage() {
+    if (this.currentPage <= this.totalPages - 1) {
+      this.currentPage += 1;
+      this.allCars();
     }
   }
 }

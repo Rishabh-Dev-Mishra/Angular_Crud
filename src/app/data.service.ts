@@ -75,7 +75,14 @@ export class DataService {
     );
   }
 
-  getCars(id: string, name: string) {
+  getCars(id: string, name: string, limit: any, offset:any) {
+    console.log(id)
+    console.log(name);
+    const user_id = this.getUserId();
+    return this.http.get(`${this.url}/cars/${id}/${user_id}/${limit}/${offset}`);
+  }
+
+  getCarsPerBrand(id: string, name: string) {
     console.log(id)
     console.log(name);
     const user_id = this.getUserId();

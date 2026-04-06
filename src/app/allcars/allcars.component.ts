@@ -23,6 +23,8 @@ export class AllCarsComponent implements OnInit {
   showModal:boolean = false;
   multiImage: string[] = [];
 
+  user_id:string = this.dataservice.getUserId()??"";
+
   ngOnInit() {
     this.userData = this.dataservice.getIdForNavig();
     this.dataservice.allCars().subscribe({

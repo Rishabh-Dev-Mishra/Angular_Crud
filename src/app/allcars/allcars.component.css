@@ -10,7 +10,7 @@
   margin-bottom: 40px;
 }
 
-.back-link {
+.back-link,.upper-section button {
   /* Layout & Positioning */
   display: inline-flex;
   align-items: center;
@@ -35,7 +35,7 @@
   overflow: hidden;
 }
 
-.back-link:hover {
+.back-link:hover, .upper-section button:hover {
   color: #ffffff;
   background: rgba(234, 228, 228, 0.08);
   border-color: #c5a059; /* That accent gold we used earlier */

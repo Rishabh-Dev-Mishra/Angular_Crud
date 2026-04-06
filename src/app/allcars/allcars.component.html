@@ -2,9 +2,9 @@
 
 <main class="inventory-wrapper">
   <div class="navigation-header">
-    <a [routerLink]="['/cars', userData?.id, userData?.name]" class="back-link">
+    <a [routerLink]="['/home']" class="back-link">
       <span class="icon">←</span>
-      <span class="label">Back to Cars</span>
+      <span class="label">Home</span>
     </a>
   </div>
 
@@ -13,6 +13,7 @@
       <span class="badge">Authenticated Collection</span>
       <h1 class="main-title">Your <span class="gradient-text">Masterpiece</span> Vault</h1>
       <p class="subtitle">A complete overview of your registered automotive fleet.</p>
+      <button [routerLink]='["/brands",user_id]'>Brands</button>
     </div>
   </section>
 
@@ -21,6 +22,7 @@
       <thead>
         <tr>
           <th>Vehicle</th>
+          <th>Brand</th>
           <th>Category</th>
           <th>Engine</th>
           <th>Performance</th>
@@ -41,6 +43,7 @@
               <span class="model-name">{{ car.model_name }}</span>
             </div>
           </td>
+          <td><span class="category-tag">{{ car.brand_name }}</span></td>
 
           <td><span class="category-tag">{{ car.category }}</span></td>
 

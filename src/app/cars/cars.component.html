@@ -1,7 +1,7 @@
 <app-navbar></app-navbar>
 
 <main class="inventory-wrapper">
-  <a routerLink="/home" class="back-btn">
+  <a routerLink="/brands/*" class="back-btn">
     <span class="icon">←</span>
     <span class="label">Brands</span>
   </a>
@@ -49,6 +49,7 @@
     <table class="car-table">
       <tr>
         <th>Image</th>
+        <th>Brand</th>
         <th>Price</th>
         <th>Category</th>
         <th>Engine</th>
@@ -67,6 +68,7 @@
             (click)="getImages(car)"
           />
         </td>
+        <td>{{ brand_name }}</td>
         <td>${{ car.price ? (car.price | number) : "0" }}</td>
         <td>{{ car.category }}</td>
         <td>{{ car.engine_type }}</td>
@@ -76,53 +78,51 @@
         <td>{{ car.description }}</td>
         <td><button class="btn-view" (click)="editCar(car)">Edit</button></td>
         <td>
-          <button
-            class="btn-view"
-            *ngIf="!confirmDeleteButton"
-            (click)="confirmDelete()"
-          >
+          <button class="btn-delete-trigger" (click)="confirmDelete(car)">
             Delete Car
           </button>
-          <div *ngIf="confirmDeleteButton">
-            <button
-              class="btn-view"
-              *ngIf="confirmDeleteButton"
-              (click)="cancelDelete()"
-            >
-              Cancel
-            </button>
-            <button
-              class="btn-view"
-              *ngIf="confirmDeleteButton"
-              (click)="deleteCar(car)"
-            >
-              Confirm To Delete
-            </button>
-          </div>
         </td>
+
       </tr>
-      <div
-        class="pagination-controls"
-        *ngIf="filteredCar.length > itemsPerPage"
-      >
-        <button
-          (click)="changePage(currentPage - 1)"
-          [disabled]="currentPage === 1"
-        >
-          Previous
-        </button>
-        <span class="page-info">
-          Page <strong>{{ currentPage }}</strong> of  {{ totalPages }}
-        </span>
-  
-        <button
-          (click)="changePage(currentPage + 1)"
-          [disabled]="currentPage === totalPages"
-        >
-          Next
-        </button>
-      </div>
     </table>
+    <div class="delete-overlay" *ngIf="confirmDeleteButton">
+      <div class="delete-modal">
+        <div class="delete-icon">⚠️</div>
+        <h3>Confirm Deletion</h3>
+        <p>
+          Are you sure you want to remove the
+          <strong>{{ selectedCar?.model_name }}</strong> from the vault? This action
+          cannot be undone.
+        </p>
+
+        <div class="delete-actions">
+          <button class="btn-cancel" (click)="cancelDelete()">
+            Keep Car
+          </button>
+          <button class="btn-confirm" (click)="deleteCar()">
+            Confirm Delete
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="pagination-controls" *ngIf="filteredCar.length > itemsPerPage">
+      <button
+        (click)="changePage(currentPage - 1)"
+        [disabled]="currentPage === 1"
+      >
+        Previous
+      </button>
+      <span class="page-info">
+        Page <strong>{{ currentPage }}</strong> of {{ totalPages }}
+      </span>
+
+      <button
+        (click)="changePage(currentPage + 1)"
+        [disabled]="currentPage === totalPages"
+      >
+        Next
+      </button>
+    </div>
   </section>
 
   <ng-template #noData>

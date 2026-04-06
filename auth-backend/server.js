@@ -501,7 +501,9 @@ app.get("/allcars/:user_id", async (req, res) => {
       return res.status(405).json({ message: "No user_id to get all cars" });
     const cars = await pool.query(
       `SELECT 
+        b.brand_name,
         c.car_id AS car_id, 
+        c.brand_id,
         c.model_name, 
         c.category, 
         c.car_logo,
@@ -511,7 +513,7 @@ app.get("/allcars/:user_id", async (req, res) => {
         cd.horsepower, 
         cd.torque, 
         cd.top_speed
-      FROM cars c 
+      FROM cars c join brands b on b.brand_id = c.brand_id
       JOIN car_details cd ON c.car_id = cd.car_id where c.user_id = $1
     `,
       [user_id],

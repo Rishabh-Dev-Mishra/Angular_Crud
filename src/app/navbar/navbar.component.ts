@@ -23,6 +23,7 @@ export class NavbarComponent {
   private router = inject(Router)
 
   logOut(){
+    this.dataservice.logOut();
     this.authservice.logout();
     this.router.navigate(['/']);
   }

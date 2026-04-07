@@ -34,6 +34,11 @@ export class DataService {
     sessionStorage.setItem('user_id', user_id.toString());
   }
 
+  logOut(){
+    const user_id = this.getUserId();
+    return this.http.put(`${this.url}/logout/${user_id}`,"inactive");
+  }
+
   allCars() {
     const user_id = this.getUserId();
     return this.http.get(`${this.url}/allcars/${user_id}`);

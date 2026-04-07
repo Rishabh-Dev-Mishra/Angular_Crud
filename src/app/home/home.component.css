@@ -278,7 +278,7 @@ table {
 }
 
 th {
-  color: var(--accent-gold);
+  color: white;
   text-transform: uppercase;
   font-size: 0.75rem;
   letter-spacing: 3px;
@@ -326,6 +326,28 @@ tr:hover td img {
   font-size: 0.9rem;
   color: #333;
 }
+
+.btn {
+  background-color: #007bff; /* Primary color */
+  color: white;              /* Text color */
+  padding: 10px 20px;        /* Space inside button */
+  border: none;              /* Remove default border */
+  border-radius: 5px;        /* Rounded corners */
+  font-size: 16px;           /* Text size */
+  cursor: pointer;           /* Pointer cursor on hover */
+  transition: 0.3s;          /* Smooth transition for hover effects */
+}
+
+/* Change style on hover */
+.btn:hover {
+  background-color: #0056b3;
+}
+
+/* Change style when clicked */
+.btn:active {
+  transform: scale(0.98);    /* Slight shrink effect */
+}
+
 
 /* --- ANIMATIONS --- */
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }

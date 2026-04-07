@@ -28,10 +28,15 @@ export class DataService {
     return sessionStorage.getItem('user_id');
   }
 
-  setInfo(name: string, email: string, user_id: any) {
+  getUserRole(): string | null {
+    return sessionStorage.getItem('role');
+  }
+
+  setInfo(name: string, email: string, user_id: any, role:any) {
     sessionStorage.setItem('userName', name);
     sessionStorage.setItem('userEmail', email);
     sessionStorage.setItem('user_id', user_id.toString());
+    sessionStorage.setItem('role', role);
   }
 
   logOut(){
@@ -143,5 +148,13 @@ export class DataService {
 
   getAllCars(){
     return this.http.get(`${this.url}/allCars`);
+  }
+
+  getAllUsers(){
+    return this.http.get(`${this.url}/allUsers`);
+  }
+
+  updateRole(user_id:any, role:any){
+    return this.http.put(`${this.url}/updateUserRole`, {user_id, role});
   }
 }

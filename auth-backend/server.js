@@ -137,6 +137,7 @@ app.post("/login", async (req, res) => {
       name: userName,
       email: email,
       user_id: user_id,
+      role:ExisitingUser.rows[0].role
     });
   } catch (err) {
     console.error(err.message);
@@ -735,6 +736,29 @@ app.get("/allCars", async(req, res)=>{
   try{
     const cars = await pool.query("select c.*, u.* from cars c join users u on u.id = c.user_id");
     return res.status(200).json(cars.rows);
+  }
+  catch(err){
+    console.log(err);
+    
+  }
+})
+
+app.get("/allUsers", async(req, res)=>{
+  try{
+    const users = await pool.query("select * from users");
+    return res.status(200).json(users.rows);
+  }
+  catch(err){
+    console.log(err);
+    
+  }
+})
+
+app.put("/updateUserRole", async(req, res)=>{
+  try{
+    const {user_id, role} = req.body;
+    await pool.query("update users set role=$1 where id = $2",[role, user_id]);
+    return res.status(200).json({message:"updated role"});
   }
   catch(err){
     console.log(err);

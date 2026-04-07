@@ -1,13 +1,13 @@
 import { Component, inject } from '@angular/core';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { FooterComponent } from '../footer/footer.component';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { DataService } from '../data.service';
 
 @Component({
   selector: 'app-home',
-  imports: [NavbarComponent, FooterComponent, CommonModule],
+  imports: [NavbarComponent, FooterComponent, CommonModule, RouterLink],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
@@ -33,7 +33,7 @@ allCarsOfUser() {
 checkUser(){
     const name = sessionStorage.getItem('userName');
     const email = sessionStorage.getItem('userEmail');
-    if(name == "Rishabh" && email == 'rd@rd.com')return true;
+    if(this.role == 'admin')return true;
     return false;
   }
 
@@ -60,8 +60,23 @@ checkUser(){
     this.getCars = false;
   }
 
-  users(){
+  userList: any[] = [];
+  getUsers: boolean = false;
 
+  users(){
+    this.getUsers = true;
+    this.dataservice.getAllUsers().subscribe({
+      next:(res:any)=>{
+        this.userList = res;
+      },
+      error:(err:any)=>{
+        console.log(err);
+      }
+    })
+  }
+
+  backFromUsers(){
+    this.getUsers = false;
   }
 
   brandList: any[] = [];
@@ -82,5 +97,26 @@ checkUser(){
   backFromBrands(){
     this.getBrands = false;
   }
+
+
+  goToBrands(){
+    this.router.navigate
+  }
+  goToCars(){
+    
+  }
+
+  updateUserRole(event: any, user_id: any) {
+  const isAdmin = event.target.checked;
+  const newRole = isAdmin ? 'admin' : 'user';
+
+  this.dataservice.updateRole(user_id, newRole).subscribe({
+    next: (res) => console.log('Database updated successfully'),
+    error: (err) => console.error('Failed to update database', err)
+  });
+}
+
+role = this.dataservice.getUserRole();
+user_id = this.dataservice.getUserId();
 
 }

@@ -132,6 +132,7 @@ app.post("/login", async (req, res) => {
     });
     const userName = ExisitingUser.rows[0].firstname;
     const user_id = ExisitingUser.rows[0].id;
+    await pool.query("update users set status=$1 where id = $2",['active', user_id])
     res.json({
       message: "Login Success",
       token: token,
@@ -193,6 +194,7 @@ app.post(
           hashedpassword,
           emailFromToken,
         ]);
+        await pool.query("update users set updated_at = $1 where email = $2"[now(), emailFromToken])
         return res.json({ message: "Password updated successfully" });
       } else {
         const emailFromToken = req.user.email;
@@ -224,6 +226,7 @@ app.post(
             [firstname, lastname, email, emailFromToken],
           );
         }
+        await pool.query("update users set updated_at = $1 where email = $2"[now(), emailFromToken])
         return res.json({
           message: "Profile updated successfully",
           img_pth: newImagePath,
@@ -237,6 +240,19 @@ app.post(
     }
   },
 );
+
+app.put("/logout/:user_id", async(req, res)=>{
+  try{
+    const user_id = req.params;
+    const status = req.body;
+    await pool.query("update users set status=$1 where id = $2",[status, user_id]);
+    return res.status(200).json({message: "LoggedOut"})
+  }
+  catch(err){
+    console.log(err);
+    
+  }
+})
 
 app.post("/brand_details", upload.single("image"), async (req, res) => {
   try {

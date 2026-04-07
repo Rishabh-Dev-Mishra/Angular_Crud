@@ -135,4 +135,8 @@ export class DataService {
   getAllBrands(){
     return this.http.get(`${this.url}/allbrands`);
   }
+
+  getAllCars(){
+    return this.http.get(`${this.url}/allCars`);
+  }
 }

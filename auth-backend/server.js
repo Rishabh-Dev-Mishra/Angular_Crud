@@ -707,13 +707,22 @@ app.put("/editCar", upload.array("image", 250), async (req, res) => {
 
 app.get("/allbrands", async(req, res)=>{
   try{
-    const brands = await pool.query("Select * from brands");
-    console.log(brands);
-    
+    const brands = await pool.query("Select * from brands");    
     return res.status(200).json(brands.rows);
   }
   catch(err){
     console.log(err);
+  }
+})
+
+app.get("/allCars", async(req, res)=>{
+  try{
+    const cars = await pool.query("select c.*, u.* from cars c join users u on u.id = c.user_id");
+    return res.status(200).json(cars.rows);
+  }
+  catch(err){
+    console.log(err);
+    
   }
 })
 

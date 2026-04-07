@@ -19,7 +19,7 @@ export class HomeComponent {
     return brand.brand_id;
   }
 
-allCars() {
+allCarsOfUser() {
   const user_id = sessionStorage.getItem("user_id");
   if (user_id) {
     this.router.navigate(['/allcars']); 
@@ -37,8 +37,30 @@ checkUser(){
     return false;
   }
 
-  users(){
+  carList: any[] = [];
+  getCars: boolean = false;
 
+  allCars(){
+    this.getCars = true;
+    this.dataservice.getAllCars().subscribe({
+      next:(res:any)=>{
+        this.carList = res;
+        console.log(this.carList);
+        
+      },
+      error:(err:any)=>{
+        console.log(err);
+        
+      }
+    })
+
+  }
+
+  backFromCars(){
+    this.getCars = false;
+  }
+
+  users(){
 
   }
 
@@ -50,7 +72,6 @@ checkUser(){
     this.dataservice.getAllBrands().subscribe({
       next:(res:any)=>{
         this.brandList = res;
-        console.log('Brands Loaded:', this.brandList);
       },
       error:(err:any)=>{
         console.log(err);

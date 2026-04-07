@@ -13,40 +13,91 @@
         track-ready supercars to handcrafted grand tourers.
       </p>
       <div class="cta-group">
-        <button class="btn-primary" (click)="goToInven()">
-          Explore Inventory
+        <button class="btn-primary" *ngIf="checkUser()" (click)="users()">
+          Users
         </button>
+        <button class="btn-primary" *ngIf="checkUser()" (click)="brands()">
+          Brands
+        </button>
+        <button class="btn-primary" *ngIf="checkUser()" (click)="allCars()">
+          Cars
+        </button>
+        <button class="btn-primary" *ngIf="!checkUser()" (click)="allCars()">
+          Cars
+        </button>
+      </div>
+    </div>
+
+    <div class="modal-overlay" *ngIf="getBrands">
+      <div class="modal-content">
+        <div class="fixed-top-bar">
+          <button (click)="backFromBrands()" class="close-btn">Back
+          </button>
+
+          <div class="modal-header-text">
+            <span class="gold-tag">Authorized Manufacturers</span>
+            <h3>The <span class="text-gradient">Collection</span></h3>
+            <div class="line"></div>
+          </div>
+        </div>
+
+        <div class="brand-scroll-area">
+          <div class="brand-grid">
+            <div
+              class="brand-item"
+              *ngFor="let brand of brandList; trackBy: trackByBrandId"
+            >
+              <div class="logo-wrapper">
+                <img
+                  [src]="'http://localhost:3000/uploads/' + brand.brand_logo"
+                  [alt]="brand.brand_name"
+                  class="brand-image"
+                />
+              </div>
+              <span class="brand-name">{{ brand.brand_name }}</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
- <section class="legacy-section">
-  <div class="section-header">
-    <span class="gold-tag">The Standard</span>
-    <h2>Uncompromising Excellence</h2>
-    <div class="line"></div>
-  </div>
-
-  <div class="feature-grid">
-    <div class="feature-card">
-      <div class="icon">🏆</div>
-      <h3>Certified Provenance</h3>
-      <p>Every vehicle in our vault undergoes a 200-point inspection by factory-trained technicians.</p>
+  <section class="legacy-section">
+    <div class="section-header">
+      <span class="gold-tag">The Standard</span>
+      <h2>Uncompromising Excellence</h2>
+      <div class="line"></div>
     </div>
 
-    <div class="feature-card">
-      <div class="icon">🌐</div>
-      <h3>Global Logistics</h3>
-      <p>Seamless, insured, and enclosed transport to any destination worldwide, right to your doorstep.</p>
-    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="icon">🏆</div>
+        <h3>Certified Provenance</h3>
+        <p>
+          Every vehicle in our vault undergoes a 200-point inspection by
+          factory-trained technicians.
+        </p>
+      </div>
 
-    <div class="feature-card">
-      <div class="icon">💎</div>
-      <h3>Private Concierge</h3>
-      <p>Dedicated specialists to manage your collection's maintenance, storage, and future acquisitions.</p>
+      <div class="feature-card">
+        <div class="icon">🌐</div>
+        <h3>Global Logistics</h3>
+        <p>
+          Seamless, insured, and enclosed transport to any destination
+          worldwide, right to your doorstep.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="icon">💎</div>
+        <h3>Private Concierge</h3>
+        <p>
+          Dedicated specialists to manage your collection's maintenance,
+          storage, and future acquisitions.
+        </p>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
   <section class="inventory-preview">
     <div class="section-header">
@@ -56,7 +107,6 @@
 
     <div class="carousel-container">
       <div class="carousel-track">
-        
         <div class="slide">
           <img
             class="car-image"
@@ -120,25 +170,24 @@
             alt="Aston Martin Luxury GT"
           />
         </div>
-
       </div>
     </div>
   </section>
 
   <section class="stats-grid">
-  <div class="stat-item">
-    <span class="number">500+</span>
-    <span class="label">Pristine Deliveries</span>
-  </div>
-  <div class="stat-item">
-    <span class="number">12</span>
-    <span class="label">Global Showrooms</span>
-  </div>
-  <div class="stat-item">
-    <span class="number">24/7</span>
-    <span class="label">Concierge Support</span>
-  </div>
-</section>
+    <div class="stat-item">
+      <span class="number">500+</span>
+      <span class="label">Pristine Deliveries</span>
+    </div>
+    <div class="stat-item">
+      <span class="number">12</span>
+      <span class="label">Global Showrooms</span>
+    </div>
+    <div class="stat-item">
+      <span class="number">24/7</span>
+      <span class="label">Concierge Support</span>
+    </div>
+  </section>
 </main>
 
 <app-footer></app-footer>

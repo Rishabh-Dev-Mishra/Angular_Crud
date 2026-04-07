@@ -5,9 +5,6 @@ const pool = require("./db");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const multer = require("multer");
-const {
-  log,
-} = require("@angular-devkit/build-angular/src/builders/ssr-dev-server");
 
 require("dotenv").config({ path: "../.env" });
 app.use(
@@ -704,6 +701,21 @@ app.put("/editCar", upload.array("image", 250), async (req, res) => {
     return res.status(500).json({ message: "Unable to update" });
   }
 });
+
+
+//Admin Panel
+
+app.get("/allbrands", async(req, res)=>{
+  try{
+    const brands = await pool.query("Select * from brands");
+    console.log(brands);
+    
+    return res.status(200).json(brands.rows);
+  }
+  catch(err){
+    console.log(err);
+  }
+})
 
 app.listen(3000, (req, res) => {
   console.log("Server Is Running");

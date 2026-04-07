@@ -128,4 +128,11 @@ export class DataService {
     
     return this.http.put(`${this.url}/editCar`, data);
   }
+
+
+  //Admin Panel
+
+  getAllBrands(){
+    return this.http.get(`${this.url}/allbrands`);
+  }
 }

@@ -88,32 +88,19 @@
 
         <div class="brand-scroll-area">
           <div class="brand-grid">
-            <div>
-              <table>
-                <th>Image</th>
-                <th>Name</th>
-                <th>User</th>
-                <tr *ngFor="let car of carList; trackBy: trackByBrandId">
-                  <td>
-                    <div>
-                      <img
-                        [src]="
-                          'http://localhost:3000/uploads/' + car.car_logo[0]
-                        "
-                        [alt]="car.model_name"
-                      />
-                    </div>
-                  </td>
-                  <td>
-                    <span class="brand-name">{{ car.model_name }}</span>
-                  </td>
-                  <td>
-                    <div class="brand-name">
-                      User:&nbsp;{{ car.firstname }}&nbsp;{{ car.lastname }}
-                    </div>
-                  </td>
-                </tr>
-              </table>
+            <div
+              class="brand-item"
+              *ngFor="let car of carList; trackBy: trackByBrandId"
+            >
+              <div class="logo-wrapper">
+                <img
+                  [src]="'http://localhost:3000/uploads/' + car.car_logo[0]"
+                  [alt]="car.model_name"
+                  class="brand-image"
+                />
+              </div>
+              <span class="brand-name">{{ car.model_name }}</span>
+              <div class="brand-name">User:&nbsp;{{car.firstname}}&nbsp;{{car.lastname}}</div>
             </div>
           </div>
         </div>

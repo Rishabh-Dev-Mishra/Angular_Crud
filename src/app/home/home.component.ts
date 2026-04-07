@@ -1,13 +1,13 @@
 import { Component, inject } from '@angular/core';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { FooterComponent } from '../footer/footer.component';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { DataService } from '../data.service';
 
 @Component({
   selector: 'app-home',
-  imports: [NavbarComponent, FooterComponent, CommonModule],
+  imports: [NavbarComponent, FooterComponent, CommonModule, RouterLink],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
@@ -60,8 +60,23 @@ checkUser(){
     this.getCars = false;
   }
 
-  users(){
+  userList: any[] = [];
+  getUsers: boolean = false;
 
+  users(){
+    this.getUsers = true;
+    this.dataservice.getAllUsers().subscribe({
+      next:(res:any)=>{
+        this.userList = res;
+      },
+      error:(err:any)=>{
+        console.log(err);
+      }
+    })
+  }
+
+  backFromUsers(){
+    this.getUsers = false;
   }
 
   brandList: any[] = [];

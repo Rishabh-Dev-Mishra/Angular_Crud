@@ -742,6 +742,17 @@ app.get("/allCars", async(req, res)=>{
   }
 })
 
+
+app.get("/allUsers",async(req,res)=>{
+  try{
+    const users = await pool.query("Select * from users");
+    return res.status(200).json(users.rows);
+  }
+  catch(err){
+    console.log(err);
+    
+  }
+})
 app.listen(3000, (req, res) => {
   console.log("Server Is Running");
 });

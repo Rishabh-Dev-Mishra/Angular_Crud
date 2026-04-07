@@ -144,4 +144,8 @@ export class DataService {
   getAllCars(){
     return this.http.get(`${this.url}/allCars`);
   }
+
+  getAllUsers(){
+    return this.http.get(`${this.url}/allUsers`);
+  }
 }

@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { DataService } from './data.service';
 
 
 @Component({
@@ -10,5 +11,12 @@ import { RouterOutlet } from '@angular/router';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
+
+    constructor(private dataservice: DataService) {}
   title = 'Basic';
+   @HostListener('window:beforeunload', ['$event'])
+  unloadHandler(event: Event) {
+      this.dataservice.logOut().subscribe();
+    
+  }
 }

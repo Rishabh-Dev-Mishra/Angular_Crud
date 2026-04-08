@@ -1,5 +1,5 @@
 <app-navbar></app-navbar>
-<a routerLink="/home" class="back-btn">
+<a (click)="goBack()" class="back-btn">
   <i class="fa fa-arrow-left"></i> Back
 </a>
 
@@ -25,7 +25,7 @@
         </div>
         <div class="info-row">
           <span class="label">Status</span>
-          <span class="val ue active">Active</span>
+          <span class="val ue active">{{status}}</span>
         </div>
       </div>
 

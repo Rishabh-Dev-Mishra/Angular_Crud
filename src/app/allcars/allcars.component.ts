@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FooterComponent } from '../footer/footer.component';
 import { NavbarComponent } from '../navbar/navbar.component';
-import { CommonModule } from '@angular/common';
+import { CommonModule,Location } from '@angular/common';
 import { DataService } from '../data.service';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router'; 
 
@@ -13,6 +13,8 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
   styleUrl: './allcars.component.css'
 })
 export class AllCarsComponent implements OnInit {
+
+  constructor (private location: Location){}
   private route = inject(ActivatedRoute);
   private dataservice = inject(DataService);
   private router = inject(Router); 
@@ -24,6 +26,10 @@ export class AllCarsComponent implements OnInit {
   multiImage: string[] = [];
 
   user_id:string = this.dataservice.getUserId()??"";
+
+  goBack(){
+    this.location.back();
+  }
 
   ngOnInit() {
     this.userData = this.dataservice.getIdForNavig();

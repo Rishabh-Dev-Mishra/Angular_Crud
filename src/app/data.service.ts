@@ -47,7 +47,7 @@ export class DataService {
 
   logOut(){
     const user_id = this.getUserId();
-    return this.http.put(`${this.url}/logout/${user_id}`,"inactive");
+    return this.http.put(`${this.url}/logout/${user_id}`,{status:"Inactive"});
   }
 
   allCars() {
@@ -55,8 +55,7 @@ export class DataService {
     return this.http.get(`${this.url}/allcars/${user_id}`);
   }
 
-  getBrands() {
-    const id = this.getUserId();
+  getBrands(id:any) {
     console.log(id);
 
     return this.http.get(`${this.url}/brands/${id}`);
@@ -162,5 +161,9 @@ export class DataService {
 
   updateRole(user_id:any, role:any){
     return this.http.put(`${this.url}/updateUserRole`, {user_id, role});
+  }
+
+  deleteUser(user_id : any){
+    return this.http.put(`${this.url}/deleteUser/${user_id}`, "date");
   }
 }

@@ -140,6 +140,8 @@
                 <th>Brands</th>
                 <th>Make Admin</th>
                 <th>Edit User</th>
+                <th>Delete User</th>
+                <th>Profile</th>
                 <tr *ngFor="let user of userList; trackBy: trackByBrandId">
                   <td>
                     <span class="brand-name">{{ user.firstname }}</span>
@@ -168,6 +170,8 @@
                     />
                   </td>
                   <td><button class="btn" (click)="editUser(user.id)" *ngIf="user.id != user_id" >Edit</button></td>
+                  <td><button class="btn" (click)="deleteUser(user.id)" *ngIf="user.id != user_id" >Remove</button></td>
+                  <td><button class="btn"  [routerLink] ="['/profile', user.id]" *ngIf="user.id != user_id" >Profile</button></td>
                 </tr>
               </table>
             </div>

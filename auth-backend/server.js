@@ -5,7 +5,6 @@ const pool = require("./db");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const multer = require("multer");
-const { timestamp } = require("rxjs");
 
 require("dotenv").config({ path: "../.env" });
 app.use(
@@ -53,18 +52,18 @@ app.get("/", (req, res) => {
   res.send("Welcome");
 });
 
-const verifyToken = (req, res, next) => {
-  const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1];
-  if (!token) {
-    return res.status(401).json({ message: "No token" });
-  }
-  jwt.verify(token, process.env.SECRET, (err, user) => {
-    if (err) return res.status(401).json({ message: "No user" });
-    req.user = user;
-    next();
-  });
-};
+// const verifyToken = (req, res, next) => {
+//   const authHeader = req.headers["authorization"];
+//   const token = authHeader && authHeader.split(" ")[1];
+//   if (!token) {
+//     return res.status(401).json({ message: "No token" });
+//   }
+//   jwt.verify(token, process.env.SECRET, (err, user) => {
+//     if (err) return res.status(401).json({ message: "No user" });
+//     req.user = user;
+//     next();
+//   });
+// };
 
 app.post("/register", async (req, res) => {
   try {
@@ -130,7 +129,7 @@ app.post("/login", async (req, res) => {
     });
     const userName = ExisitingUser.rows[0].firstname;
     const user_id = ExisitingUser.rows[0].id;
-    await pool.query("update users set status=$1 where id = $2",['active', user_id])
+    await pool.query("update users set status=$1 where id = $2",['Active', user_id])
     res.json({
       message: "Login Success",
       token: token,
@@ -161,19 +160,18 @@ app.get("/userInfo/:user_id", async(req, res)=>{
   }
   catch(err){
     console.log(err);
+    return res.status(500).json(err)
   }
 })
 
 app.post(
   "/edit-profile",
-  verifyToken,
   upload.single("image"),
   async (req, res) => {
     try {
       if (req.body.currentpassword) {
         const { confirmpassword, currentpassword, newpassword, user_id} = req.body;
 
-        const emailFromToken = req.user.email;
         if (!confirmpassword || !currentpassword || !newpassword || !user_id)
           return res.status(402).send("Bad Request");
 
@@ -213,10 +211,9 @@ app.post(
           hashedpassword,
           cleanUserId,
         ]);
-        await pool.query("update users set updated_at = $1 where id = $2"[new Date(), cleanUserId])
+        await pool.query("update users set updated_at = $1 where id = $2",[new Date(), cleanUserId])
         return res.json({ message: "Password updated successfully" });
       } else {
-        const emailFromToken = req.user.email;
         const { firstname, lastname, email, user_id } = req.body;
         
         let newImagePath = req.file ? req.file.filename : null;
@@ -224,6 +221,7 @@ app.post(
         if (!firstname || !lastname || !email || !user_id) {
           return res.status(400).json({ message: "All fields are required" });
         }
+        
 
         cleanUserId = parseInt(user_id, 10);
 
@@ -234,6 +232,8 @@ app.post(
         if (existingUser.rows.length == 0) {
           return res.status(400).json({ message: "User does not exist" });
         }
+
+        
 
         if (newImagePath) {
           await pool.query(
@@ -246,7 +246,9 @@ app.post(
             [firstname, lastname, email, cleanUserId],
           );
         }
-        await pool.query("update users set updated_at = $1 where id = $2",[new Date(), cleanUserId])
+        
+        await pool.query("update users set updated_at = NOW() where id = $1",[ cleanUserId])
+        
         return res.json({
           message: "Profile updated successfully",
           img_pth: newImagePath,
@@ -263,14 +265,16 @@ app.post(
 
 app.put("/logout/:user_id", async(req, res)=>{
   try{
-    const user_id = req.params;
-    const status = req.body;
-    await pool.query("update users set status=$1 where id = $2",[status, user_id]);
+    const {user_id} = req.params;
+    const {status} = req.body;
+    
+    const cleanUserId = parseInt(user_id, 10);
+    await pool.query("update users set status=$1 where id = $2",[status, cleanUserId]);
     return res.status(200).json({message: "LoggedOut"})
   }
   catch(err){
     console.log(err);
-    
+    return res.status(500).json(err)
   }
 })
 
@@ -457,7 +461,7 @@ app.get("/cars/:id/:user_id/:limit/:offset", async (req, res) => {
         cd.top_speed
       FROM cars c join brands b on b.brand_id = c.brand_id
       JOIN car_details cd ON c.car_id = cd.car_id 
-      WHERE c.brand_id = $1 and c.user_id = $2 order by b.brand_name, c.model_name limit $3 offset $4`
+      WHERE c.brand_id = $1 and c.user_id = $2 and c.deleted_at is null order by b.brand_name, c.model_name limit $3 offset $4`
     ;
 
     const cars = await pool.query(query, [brandId, userID, cleanLimit, cleanOffset]);
@@ -491,7 +495,7 @@ app.get("/cars/:id/:user_id", async (req, res) => {
         cd.top_speed
       FROM cars c 
       JOIN car_details cd ON c.car_id = cd.car_id 
-      WHERE c.brand_id = $1 and c.user_id = $2
+      WHERE c.brand_id = $1 and c.user_id = $2 and c.deleted_at is null
     `;
     const cars = await pool.query(query, [brandId, userID]);
 
@@ -516,7 +520,7 @@ app.get("/brands/search/:name/:user_id", async (req, res) => {
     }
 
     const brands = await pool.query(
-      "SELECT * FROM brands WHERE brand_id in(select distinct (brand_id) form cars where user_id = $1) brand_name ILIKE $2",
+      "SELECT * FROM brands WHERE brand_id in(select distinct (brand_id) from cars where user_id = $1) and brand_name ILIKE $2",
       [userID, `%${name}%`],
     );
 
@@ -547,7 +551,7 @@ app.get(
         cd.torque, 
         cd.top_speed
       FROM cars c 
-      JOIN car_details cd ON c.car_id = cd.car_id where (c.model_name ILIKE $1 OR $1 = 'all' ) and(c.category ILIKE $2 OR $2 = 'all') and (cd.engine_type ILIKE $3 or $3='all') and c.brand_id = $4 and c.user_id = $5
+      JOIN car_details cd ON c.car_id = cd.car_id where (c.model_name ILIKE $1 OR $1 = 'all' ) and(c.category ILIKE $2 OR $2 = 'all') and (cd.engine_type ILIKE $3 or $3='all') and c.brand_id = $4 and c.user_id = $5 and c.deleted_at is null
     `;
 
       const values = [
@@ -586,7 +590,7 @@ app.get("/allcars/:user_id", async (req, res) => {
         cd.torque, 
         cd.top_speed
       FROM cars c join brands b on b.brand_id = c.brand_id
-      JOIN car_details cd ON c.car_id = cd.car_id where c.user_id = $1
+      JOIN car_details cd ON c.car_id = cd.car_id where c.user_id = $1 and c.deleted_at is null
     `,
       [user_id],
     );
@@ -604,7 +608,7 @@ app.get("/cars_images/:id/:user_id", async (req, res) => {
         .status(405)
         .json({ message: "Either id or usrid not there for all images" });
     const allImages = await pool.query(
-      "select car_logo from cars where car_id=$1 and user_id=$2",
+      "select car_logo from cars where car_id=$1 and user_id=$2 and cars.deleted_at is null",
       [id, user_id],
     );
     return res.status(200).json(allImages.rows);
@@ -621,9 +625,10 @@ app.delete("/delete_car/:car_id/:user_id", async (req, res) => {
         .status(400)
         .json({ message: "User or car id missing to delete" });
 
-    await pool.query("delete from cars where car_id = $1 and user_id = $2", [
+    await pool.query("update cars set deleted_at=$3 where car_id = $1 and user_id = $2", [
       car_id,
       user_id,
+      new Date()
     ]);
     return res.status(200).json({ message: "Success To delete" });
   } catch (err) {
@@ -651,7 +656,7 @@ app.get("/singleCar/:car_id", async (req, res) => {
         cd.description
       FROM cars c 
       JOIN car_details cd ON c.car_id = cd.car_id 
-      WHERE c.car_id = $1
+      WHERE c.car_id = $1 and c.deleted_at is null
     `,
       [car_Id],
     );
@@ -751,28 +756,29 @@ app.get("/allbrands", async(req, res)=>{
   }
   catch(err){
     console.log(err);
+    return res.status(500).json(err)
   }
 })
 
 app.get("/allCars", async(req, res)=>{
   try{
-    const cars = await pool.query("select c.*, u.* from cars c join users u on u.id = c.user_id");
+    const cars = await pool.query("select c.*, u.* from cars c join users u on u.id = c.user_id and c.deleted_at is null");
     return res.status(200).json(cars.rows);
   }
   catch(err){
     console.log(err);
-    
+    return res.status(500).json(err)
   }
 })
 
 app.get("/allUsers", async(req, res)=>{
   try{
-    const users = await pool.query("select * from users");
+    const users = await pool.query("select * from users where deleted_at is null order by role , updated_at");
     return res.status(200).json(users.rows);
   }
   catch(err){
     console.log(err);
-    
+    return res.status(500).json(err)
   }
 })
 
@@ -784,7 +790,27 @@ app.put("/updateUserRole", async(req, res)=>{
   }
   catch(err){
     console.log(err);
+    return res.status(500).json(err)
+  }
+})
+
+app.put("/deleteUser/:user_id", async(req, res)=>{
+  
+  try{
+    console.log("Deleting");
     
+    const {user_id} = req.params;
+    console.log(user_id);
+    
+    if(!user_id) return res.status(500).json({message:err})
+    const cleanUserId = parseInt(user_id, 10);
+    await pool.query("update users set deleted_at= NOW() where id = $1",[cleanUserId])
+    
+    return res.status(200).json({message:"Deletion Success"})
+  }
+  catch(err){
+    console.log(err);
+    return res.status(500).json({message:err})
   }
 })
 

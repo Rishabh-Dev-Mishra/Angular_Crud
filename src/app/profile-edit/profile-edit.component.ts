@@ -2,9 +2,8 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { DataService } from '../data.service';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NgIf } from "@angular/common";
-import { getCurrentInjector } from '@angular/core/primitives/di';
 
 @Component({
   selector: 'app-profile-edit',
@@ -18,18 +17,43 @@ import { getCurrentInjector } from '@angular/core/primitives/di';
   private router = inject(Router);
   private toast = inject(ToastrService);
   private dataservice = inject(DataService);
+  private route = inject(ActivatedRoute);
   
   showPasswordFields: boolean = false;
   readonly serverUrl = 'http://localhost:3000/'; 
 
   selectedFile: File | null = null;
   previewUrl: string | null = null;
+  user_id:any = this.route.snapshot.paramMap.get('user_id');
 
   // Updated Getter: Prioritizes the local preview, then the saved path
   get imageURL(): string {
     if (this.previewUrl) return this.previewUrl;
     const path = this.dataservice.img_path || sessionStorage.getItem('userImage'); 
     return path && (path.length > 0) ? `${this.serverUrl}uploads/${path}` : '';
+  }
+
+  firstname: string='';
+  lastname: string ='';
+  email: string='';
+
+  getUserInfo(){
+    this.dataservice.getUserInfo(this.user_id).subscribe({
+      next:(res:any)=>{
+        this.firstname = res.firstname;
+        this.lastname = res.lastname;
+        this.email = res.email;
+      },
+      error:(err:any)=>{
+        this.toast.error("error in fetching info")
+        console.log(err);
+        
+      }
+    })
+  }
+
+  ngOnInit(){
+    this.getUserInfo();
   }
 
   // --- NEW METHOD: CAPTURE THE FILE ---
@@ -46,7 +70,6 @@ import { getCurrentInjector } from '@angular/core/primitives/di';
       reader.readAsDataURL(file);
     }
   }
-
   editform(form: any) {
     if (form.invalid) {
       this.toast.warning('Please fix the errors before submitting', 'Form Invalid');
@@ -57,6 +80,7 @@ import { getCurrentInjector } from '@angular/core/primitives/di';
     const formData = new FormData();
     
     // Append text fields from the form
+    formData.append('user_id', this.user_id);
     formData.append('firstname', form.value.firstname || '');
     formData.append('lastname', form.value.lastname || '');
     formData.append('email', form.value.email);
@@ -90,6 +114,7 @@ import { getCurrentInjector } from '@angular/core/primitives/di';
     }
 
     const payload = {
+      user_id: this.user_id,
       currentpassword: form.value.currentpassword,
       newpassword: form.value.newpassword, 
       confirmpassword: form.value.confirmpassword

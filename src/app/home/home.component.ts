@@ -4,6 +4,7 @@ import { FooterComponent } from '../footer/footer.component';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { DataService } from '../data.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-home',
@@ -14,6 +15,7 @@ import { DataService } from '../data.service';
 export class HomeComponent {
   private router = inject(Router)
   private dataservice= inject(DataService)
+  private toast = inject(ToastrService)
 
  trackByBrandId(index: number, brand: any) {
     return brand.brand_id;
@@ -103,7 +105,7 @@ checkUser(){
     this.router.navigate
   }
   goToCars(){
-    
+
   }
 
   updateUserRole(event: any, user_id: any) {
@@ -114,9 +116,16 @@ checkUser(){
     next: (res) => console.log('Database updated successfully'),
     error: (err) => console.error('Failed to update database', err)
   });
-}
 
+}
 role = this.dataservice.getUserRole();
 user_id = this.dataservice.getUserId();
+
+  editUser(user_id:any){
+    if(this.role != "admin"){
+      this.toast.warning("You are not authorized to do so");
+    }
+    this.router.navigate(['/edit-profile', user_id])
+  }
 
 }

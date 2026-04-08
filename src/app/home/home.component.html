@@ -167,7 +167,7 @@
                       value="Make Admin"
                     />
                   </td>
-                  <td><button class="btn" *ngIf="user.id != user_id">Edit</button></td>
+                  <td><button class="btn" (click)="editUser(user.id)" *ngIf="user.id != user_id" >Edit</button></td>
                 </tr>
               </table>
             </div>

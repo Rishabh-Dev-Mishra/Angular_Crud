@@ -32,12 +32,18 @@ export class DataService {
     return sessionStorage.getItem('role');
   }
 
+  
   setInfo(name: string, email: string, user_id: any, role:any) {
     sessionStorage.setItem('userName', name);
     sessionStorage.setItem('userEmail', email);
     sessionStorage.setItem('user_id', user_id.toString());
     sessionStorage.setItem('role', role);
   }
+  
+  getUserInfo(user_id: any){
+    return this.http.get(`${this.url}/userInfo/${user_id}`);
+  }
+
 
   logOut(){
     const user_id = this.getUserId();

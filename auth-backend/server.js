@@ -5,6 +5,7 @@ const pool = require("./db");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const multer = require("multer");
+const { timestamp } = require("rxjs");
 
 require("dotenv").config({ path: "../.env" });
 app.use(
@@ -145,6 +146,24 @@ app.post("/login", async (req, res) => {
   }
 });
 
+app.get("/userInfo/:user_id", async(req, res)=>{
+  try{
+    const {user_id} = req.params;
+
+    if(!user_id){
+      return res.status(500).json({message: "user_id not found for retrieving information"})
+    }
+
+    const cleanUserId = parseInt(user_id, 10);
+
+    const user = await pool.query("select * from users where id=$1", [cleanUserId]);
+    return res.status(200).json(user.rows[0]);
+  }
+  catch(err){
+    console.log(err);
+  }
+})
+
 app.post(
   "/edit-profile",
   verifyToken,
@@ -152,15 +171,17 @@ app.post(
   async (req, res) => {
     try {
       if (req.body.currentpassword) {
-        const { confirmpassword, currentpassword, newpassword } = req.body;
+        const { confirmpassword, currentpassword, newpassword, user_id} = req.body;
 
         const emailFromToken = req.user.email;
-        if (!confirmpassword || !currentpassword || !newpassword)
+        if (!confirmpassword || !currentpassword || !newpassword || !user_id)
           return res.status(402).send("Bad Request");
 
+        const cleanUserId = parseInt(user_id, 10);
+
         const ExisitingUser = await pool.query(
-          "SELECT * FROM users WHERE email = $1",
-          [emailFromToken],
+          "SELECT * FROM users WHERE id = $1",
+          [cleanUserId],
         );
 
         if (ExisitingUser.rows.length === 0) {
@@ -188,26 +209,27 @@ app.post(
         const salthash = 10;
         const hashedpassword = await bcrypt.hash(newpassword, salthash);
 
-        await pool.query("UPDATE users SET password=$1 WHERE email = $2", [
+        await pool.query("UPDATE users SET password=$1 WHERE id = $2", [
           hashedpassword,
-          emailFromToken,
+          cleanUserId,
         ]);
-        await pool.query("update users set updated_at = $1 where email = $2"[now(), emailFromToken])
+        await pool.query("update users set updated_at = $1 where id = $2"[new Date(), cleanUserId])
         return res.json({ message: "Password updated successfully" });
       } else {
         const emailFromToken = req.user.email;
-        const { firstname, lastname, email } = req.body;
-
-        // 1. Get the new filename if a file was uploaded
+        const { firstname, lastname, email, user_id } = req.body;
+        
         let newImagePath = req.file ? req.file.filename : null;
 
-        if (!firstname || !lastname || !email) {
+        if (!firstname || !lastname || !email || !user_id) {
           return res.status(400).json({ message: "All fields are required" });
         }
 
+        cleanUserId = parseInt(user_id, 10);
+
         const existingUser = await pool.query(
-          "SELECT * FROM users WHERE email = $1",
-          [emailFromToken],
+          "SELECT * FROM users WHERE id = $1",
+          [cleanUserId],
         );
         if (existingUser.rows.length == 0) {
           return res.status(400).json({ message: "User does not exist" });
@@ -215,16 +237,16 @@ app.post(
 
         if (newImagePath) {
           await pool.query(
-            "UPDATE users SET firstname = $1, lastname = $2, email = $3, image_path = $4 WHERE email = $5",
-            [firstname, lastname, email, newImagePath, emailFromToken],
+            "UPDATE users SET firstname = $1, lastname = $2, email = $3, image_path = $4 WHERE id = $5",
+            [firstname, lastname, email, newImagePath, cleanUserId],
           );
         } else {
           await pool.query(
-            "UPDATE users SET firstname = $1, lastname = $2, email = $3 WHERE email = $4",
-            [firstname, lastname, email, emailFromToken],
+            "UPDATE users SET firstname = $1, lastname = $2, email = $3 WHERE id = $4",
+            [firstname, lastname, email, cleanUserId],
           );
         }
-        await pool.query("update users set updated_at = $1 where email = $2"[now(), emailFromToken])
+        await pool.query("update users set updated_at = $1 where id = $2",[new Date(), cleanUserId])
         return res.json({
           message: "Profile updated successfully",
           img_pth: newImagePath,

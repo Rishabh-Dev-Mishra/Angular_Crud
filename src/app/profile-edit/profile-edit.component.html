@@ -54,13 +54,13 @@
         />
 
         <label for="firstname">Firstname</label>
-        <input type="text" name="firstname" ngModel placeholder="Firstname" />
+        <input type="text" name="firstname" [(ngModel)] = 'firstname' placeholder="Firstname" />
 
         <label for="lastname">Lastname</label>
-        <input type="text" name="lastname" ngModel placeholder="Lastname" />
+        <input type="text" name="lastname" [(ngModel)] = 'lastname' placeholder="Lastname" />
 
         <label for="email">Email</label>
-        <input type="email" name="email" ngModel required placeholder="Email" />
+        <input type="email" name="email" [(ngModel)] = 'email' required placeholder="Email" />
       </div>
 
       <ng-template #pass>

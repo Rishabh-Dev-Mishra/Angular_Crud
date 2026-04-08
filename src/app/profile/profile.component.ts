@@ -18,6 +18,8 @@ export class ProfileComponent {
   protected name = sessionStorage.getItem('userName');
   protected email = sessionStorage.getItem('userEmail')
 
+  user_id = this.dataservice.getUserId();
+
   get imageURL(): string {
   const path = sessionStorage.getItem('userImage'); 
   return path && (path.length > 0) ? `${this.serverUrl}uploads/${path}` : '';

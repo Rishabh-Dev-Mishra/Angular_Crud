@@ -52,6 +52,15 @@
           style="display: none"
           accept="image/*"
         />
+        <label for="makeadmin">Make Admin</label>
+        <input
+                      type="checkbox"
+                      name="role"
+                      [checked]="user.role === 'admin'"
+                      (change)="updateUserRole($event, user.id)"
+                      *ngIf="user.id != loggedUser"
+                      value="Make Admin"
+                    />
 
         <label for="firstname">Firstname</label>
         <input type="text" name="firstname" [(ngModel)] = 'firstname' placeholder="Firstname" />

@@ -28,11 +28,14 @@ export class ProfileEditComponent {
   previewUrl: string | null = null;
   user_id: any = this.route.snapshot.paramMap.get('user_id');
 
+  loggedUser: any = this.dataservice.getUserId();
+
   
   firstname: string = '';
   lastname: string = '';
   email: string = '';
   path: string = '';
+  user:any;
   
   getUserInfo() {
     this.dataservice.getUserInfo(this.user_id).subscribe({
@@ -41,6 +44,7 @@ export class ProfileEditComponent {
         this.lastname = res.lastname;
         this.email = res.email;
         this.path = res.image_path;
+        this.user = res;
         console.log(this.path);
         
       },
@@ -141,5 +145,15 @@ export class ProfileEditComponent {
   }
   goBack(){
     this.location.back();
+  }
+
+  updateUserRole(event: any, user_id: any) {
+    const isAdmin = event.target.checked;
+    const newRole = isAdmin ? 'admin' : 'user';
+
+    this.dataservice.updateRole(user_id, newRole).subscribe({
+      next: (res) => console.log('Database updated successfully'),
+      error: (err) => console.error('Failed to update database', err),
+    });
   }
 }

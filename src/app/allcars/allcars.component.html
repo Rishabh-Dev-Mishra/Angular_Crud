@@ -2,9 +2,9 @@
 
 <main class="inventory-wrapper">
   <div class="navigation-header">
-    <a [routerLink]="['/home']" class="back-link">
+    <a (click)="goBack()" class="back-link">
       <span class="icon">←</span>
-      <span class="label">Home</span>
+      <span class="label">Back</span>
     </a>
   </div>
 
@@ -41,6 +41,7 @@
                 (click)="getImages(car)"
               />
               <span class="model-name">{{ car.model_name }}</span>
+      
             </div>
           </td>
           <td><span class="category-tag">{{ car.brand_name }}</span></td>

@@ -3,7 +3,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
 import { FooterComponent } from '../footer/footer.component';
 import { DataService } from '../data.service';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 
@@ -15,12 +15,12 @@ import { ToastrService } from 'ngx-toastr';
     FooterComponent,
     CommonModule,
     FormsModule,
-    RouterLink,
   ],
   templateUrl: './cars.component.html',
   styleUrl: './cars.component.css',
 })
 export class CarsComponent implements OnInit {
+  constructor (private location:Location){}
   private route = inject(ActivatedRoute);
   private dataservice = inject(DataService);
   private router = inject(Router);
@@ -35,6 +35,9 @@ export class CarsComponent implements OnInit {
   }
 
   brand_name = this.route.snapshot.paramMap.get('name') ?? '';
+  goBack(){
+    this.location.back()
+  }
 
   allCars() {
     const id = this.route.snapshot.paramMap.get('id');

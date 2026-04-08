@@ -1,8 +1,9 @@
 import { NgIf } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { DataService } from '../data.service';
 import { NavbarComponent } from '../navbar/navbar.component';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-profile',
@@ -13,13 +14,42 @@ import { NavbarComponent } from '../navbar/navbar.component';
 })
 export class ProfileComponent {
   
+
+  constructor(private location: Location) {}
   private dataservice = inject(DataService);
+  private route = inject(ActivatedRoute);
   readonly serverUrl = 'http://localhost:3000/'; 
-  protected name = sessionStorage.getItem('userName');
-  protected email = sessionStorage.getItem('userEmail')
+  name:string = '';
+  email:string = '';
+
+  user_id = this.route.snapshot.paramMap.get('user_id');
+  path:string = '';
+  status:string ='';
+
+  getUser(){
+    this.dataservice.getUserInfo(this.user_id).subscribe({
+      next:(res:any)=>{
+        this.name = res.firstname;
+        this.email = res.email;
+        this.path = res.image_path;
+        this.status = res.status;
+      },
+      error:(err:any)=>{
+        console.log(err);
+        
+      }
+    })
+  }
+
+  ngOnInit(){
+    this.getUser();
+  }
 
   get imageURL(): string {
-  const path = sessionStorage.getItem('userImage'); 
-  return path && (path.length > 0) ? `${this.serverUrl}uploads/${path}` : '';
+  return this.path && (this.path.length > 0) ? `${this.serverUrl}uploads/${this.path}` : '';
+  }
+
+  goBack(){
+    this.location.back();
   }
 }

@@ -28,10 +28,26 @@ export class DataService {
     return sessionStorage.getItem('user_id');
   }
 
-  setInfo(name: string, email: string, user_id: any) {
+  getUserRole(): string | null {
+    return sessionStorage.getItem('role');
+  }
+
+  
+  setInfo(name: string, email: string, user_id: any, role:any) {
     sessionStorage.setItem('userName', name);
     sessionStorage.setItem('userEmail', email);
     sessionStorage.setItem('user_id', user_id.toString());
+    sessionStorage.setItem('role', role);
+  }
+  
+  getUserInfo(user_id: any){
+    return this.http.get(`${this.url}/userInfo/${user_id}`);
+  }
+
+
+  logOut(){
+    const user_id = this.getUserId();
+    return this.http.put(`${this.url}/logout/${user_id}`,{status:"Inactive"});
   }
 
   allCars() {
@@ -39,8 +55,7 @@ export class DataService {
     return this.http.get(`${this.url}/allcars/${user_id}`);
   }
 
-  getBrands() {
-    const id = this.getUserId();
+  getBrands(id:any) {
     console.log(id);
 
     return this.http.get(`${this.url}/brands/${id}`);
@@ -127,5 +142,28 @@ export class DataService {
     console.log("inside service",data.get("car_id"));
     
     return this.http.put(`${this.url}/editCar`, data);
+  }
+
+
+  //Admin Panel
+
+  getAllBrands(){
+    return this.http.get(`${this.url}/allbrands`);
+  }
+
+  getAllCars(){
+    return this.http.get(`${this.url}/allCars`);
+  }
+
+  getAllUsers(){
+    return this.http.get(`${this.url}/allUsers`);
+  }
+
+  updateRole(user_id:any, role:any){
+    return this.http.put(`${this.url}/updateUserRole`, {user_id, role});
+  }
+
+  deleteUser(user_id : any){
+    return this.http.put(`${this.url}/deleteUser/${user_id}`, "date");
   }
 }

@@ -1,21 +1,29 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { FooterComponent } from '../footer/footer.component';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { DataService } from '../data.service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-brands',
   standalone: true,
-  imports: [NavbarComponent, CommonModule, FormsModule, FooterComponent, RouterLink],
+  imports: [
+    NavbarComponent,
+    CommonModule,
+    FormsModule,
+    FooterComponent,
+    RouterLink,
+  ],
   templateUrl: './brands.component.html',
-  styleUrl: './brands.component.css'
+  styleUrl: './brands.component.css',
 })
 export class BrandsComponent implements OnInit {
+  constructor(private location: Location) {}
   private dataservice = inject(DataService);
-  
+  private route = inject(ActivatedRoute);
+
   brandList: any[] = [];
   filteredBrands: any[] = [];
   searchQuery: string = '';
@@ -23,36 +31,39 @@ export class BrandsComponent implements OnInit {
   ngOnInit() {
     this.allBrands();
   }
-
+  user_id = this.route.snapshot.paramMap.get('id');
   allBrands() {
-    this.dataservice.getBrands().subscribe({
+    this.dataservice.getBrands(this.user_id).subscribe({
       next: (data: any) => {
         this.brandList = data;
-        this.filteredBrands = data; 
+        this.filteredBrands = data;
       },
       error: (err) => {
         console.error('Error fetching all brands:', err);
-      }
-    });
-  }
-
-filterBrands() {
-  const query = this.searchQuery.trim();
-
-  if (query.length > 0) {
-    this.dataservice.filteredBrands(query).subscribe({
-      
-      next: (data: any) => {
-        console.log("get data");
-        this.filteredBrands = data; 
       },
-      error: (err) => {
-        console.error('Search failed', err);
-        this.filteredBrands = [];
-      }
     });
-  } else {
-    this.filteredBrands = this.brandList;
   }
-}
+
+  filterBrands() {
+    const query = this.searchQuery.trim();
+
+    if (query.length > 0) {
+      this.dataservice.filteredBrands(query).subscribe({
+        next: (data: any) => {
+          console.log('get data');
+          this.filteredBrands = data;
+        },
+        error: (err) => {
+          console.error('Search failed', err);
+          this.filteredBrands = [];
+        },
+      });
+    } else {
+      this.filteredBrands = this.brandList;
+    }
+  }
+
+  goBack(){
+    this.location.back();
+  }
 }

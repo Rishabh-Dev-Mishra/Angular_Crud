@@ -2,26 +2,42 @@
 
 <main class="content-wrapper">
   <section class="legacy-section">
-            <div class="section-header">
-              <span class="gold-tag">The Standard</span>
-              <h2>Uncompromising Excellence</h2>
-              <div class="line"></div>
-            </div>
-  <div class="luxury-management-system">
+    <div class="section-header">
+      <span class="gold-tag">The Standard</span>
+      <h2>Uncompromising Excellence</h2>
+      <div class="line"></div>
+    </div>
+    <div class="luxury-management-system">
       <div class="tabs-nav">
-        <button (click)="switchTab('users')" [class.active]="activeTab === 'users'">Users</button>
-        <button (click)="switchTab('cars')" [class.active]="activeTab === 'cars'">Cars</button>
-        <button (click)="switchTab('brands')" [class.active]="activeTab === 'brands'">Brands</button>
+        <button
+          *ngIf="checkUser()"
+          (click)="switchTab('users')"
+          [class.active]="activeTab === 'users'"
+        >
+          Users
+        </button>
+        <button
+          (click)="switchTab('cars')"
+          [class.active]="activeTab === 'cars'"
+        >
+          Cars
+        </button>
+        <button
+          *ngIf="checkUser()"
+          (click)="switchTab('brands')"
+          [class.active]="activeTab === 'brands'"
+        >
+          Brands
+        </button>
       </div>
 
       <div class="tabs-content-area">
-        
-        <div *ngIf="activeTab === 'users'" class="panel-fade-in">
+        <div *ngIf="activeTab === 'users' && checkUser()" class="panel-fade-in">
           <div class="panel-header">
             <span class="gold-tag">Management</span>
             <h3>Registered <span class="text-gradient">Users</span></h3>
           </div>
-          
+
           <table class="luxury-table">
             <thead>
               <tr>
@@ -34,25 +50,69 @@
             </thead>
             <tbody>
               <tr *ngFor="let user of userList; trackBy: trackByBrandId">
-                <td><span class="brand-name">{{ user.firstname }}</span></td>
-                <td><span class="action-link" (click)="goToCars()">View Cars</span></td>
-                <td><a [routerLink]="['/brands', user.id]" class="action-link">View Brands</a></td>
                 <td>
-                  <input type="checkbox" [checked]="user.role === 'admin'" 
-                         (change)="updateUserRole($event, user.id)" *ngIf="user.id != user_id">
+                  <span class="brand-name">{{ user.firstname }}</span>
+                </td>
+                <td>
+                  <span class="action-link" (click)="goToCars()"
+                    >View Cars</span
+                  >
+                </td>
+                <td>
+                  <a [routerLink]="['/brands', user.id]" class="action-link"
+                    >View Brands</a
+                  >
+                </td>
+                <td>
+                  <input
+                    type="checkbox"
+                    [checked]="user.role === 'admin'"
+                    (change)="updateUserRole($event, user.id)"
+                    *ngIf="user.id != user_id"
+                  />
                 </td>
                 <td>
                   <div class="table-actions" *ngIf="user.id != user_id">
-                    <button class="btn" (click)="editUser(user.id)">Edit</button>
-                    <button class="btn-sm btn-danger btn" (click)="deleteUser(user.id)">Remove</button>
+                    <button class="btn" (click)="editUser(user.id)">
+                      Edit
+                    </button>
+                    <button
+                      class="btn-sm btn-danger btn"
+                      (click)="confirmDelete(user)"
+                    >
+                      Delete
+                    </button>
                   </div>
                 </td>
               </tr>
             </tbody>
           </table>
+          <div class="delete-overlay" *ngIf="confirmDeleteButton">
+            <div class="delete-modal">
+              <div class="delete-icon">⚠️</div>
+              <h3>Confirm Deletion</h3>
+              <p>
+                Are you sure you want to remove the
+                <strong>{{ selectedUser?.firstname }}</strong> from the vault?
+                This action cannot be undone.
+              </p>
+
+              <div class="delete-actions">
+                <button class="btn-cancel" (click)="cancelDelete()">
+                  Keep User
+                </button>
+                <button class="btn-confirm" (click)="deleteUser()">
+                  Confirm Delete
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div *ngIf="activeTab === 'brands'" class="panel-fade-in">
+        <div
+          *ngIf="activeTab === 'brands' && checkUser()"
+          class="panel-fade-in"
+        >
           <div class="panel-header">
             <span class="gold-tag">Partners</span>
             <h3>The <span class="text-gradient">Collection</span></h3>
@@ -67,9 +127,15 @@
             <tbody>
               <tr *ngFor="let brand of brandList; trackBy: trackByBrandId">
                 <td>
-                  <img class="car-thumbnail" [src]="'http://localhost:3000/uploads/' + brand.brand_logo" [alt]="brand.brand_name" />
+                  <img
+                    class="car-thumbnail"
+                    [src]="'http://localhost:3000/uploads/' + brand.brand_logo"
+                    [alt]="brand.brand_name"
+                  />
                 </td>
-                <td><span class="brand-name">{{ brand.brand_name }}</span></td>
+                <td>
+                  <span class="brand-name">{{ brand.brand_name }}</span>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -77,32 +143,45 @@
 
         <div *ngIf="activeTab === 'cars'" class="panel-fade-in">
           <div class="panel-header">
-            <span class="gold-tag">Showroom</span>
+            <span class="gold-tag">Collection</span>
             <h3>Available <span class="text-gradient">Inventory</span></h3>
+            <button
+              *ngIf="!checkUser()"
+              [routerLink]="['/brands', user_id]"
+              class="forUser"
+            >
+              All Brands
+            </button>
           </div>
           <table class="luxury-table">
             <thead>
               <tr>
                 <th>Vehicle Image</th>
                 <th>Model</th>
-                <th>Assigned To</th>
+                <th *ngIf="checkUser()">Assigned To</th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let car of carList; trackBy: trackByBrandId">
                 <td>
-                  <img class="car-thumbnail" [src]="'http://localhost:3000/uploads/' + car.car_logo[0]" [alt]="car.model_name" />
+                  <img
+                    class="car-thumbnail"
+                    [src]="'http://localhost:3000/uploads/' + car.car_logo[0]"
+                    [alt]="car.model_name"
+                  />
                 </td>
-                <td><span class="brand-name">{{ car.model_name }}</span></td>
-                <td>{{ car.firstname }} {{ car.lastname }}</td>
+                <td>
+                  <span class="brand-name">{{ car.model_name }}</span>
+                </td>
+                <td *ngIf="checkUser()">
+                  {{ car.firstname }} {{ car.lastname }}
+                </td>
               </tr>
             </tbody>
           </table>
         </div>
-
       </div>
     </div>
-           
 
     <div class="feature-grid">
       <div class="feature-card">

@@ -44,7 +44,7 @@ body {
 
 .text-gradient {
   background: linear-gradient(90deg, #ff004c, #007bff);
-  -webkit-background-clip: text;
+  /* -webkit-background-clip: text; */
   -webkit-text-fill-color: transparent;
 }
 
@@ -68,21 +68,6 @@ body {
   gap: 20px;
 }
 
-/* .btn-primary {
-  padding: 15px 35px;
-  background: white;
-  color: rgb(219, 16, 16);
-  border: none;
-  font-weight: 700;
-  cursor: pointer;
-  transition: 0.3s;
-  box-shadow: 0 10px 20px rgba(255, 0, 76, 0.3);
-}
-
-.btn-primary:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 15px 25px rgba(255, 0, 76, 0.4);
-} */
 
 /* --- LEGACY / FEATURE SECTION --- */
 .legacy-section {
@@ -154,9 +139,19 @@ body {
 
 .carousel-track {
   display: flex;
-  width: calc(300px * 16); /* Based on slide width * total slides */
+  width: calc((400px * 4)*2);
   height: 100%;
-  animation: scroll 30s infinite linear;
+  animation: scroll 7s infinite linear;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100%{
+    transform: translateX(-50%);
+  }
+  
 }
 
 .slide {
@@ -178,11 +173,6 @@ body {
 .slide img:hover {
   filter: brightness(1.1);
   transform: scale(1.02);
-}
-
-@keyframes scroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(calc(-400px * 8)); } /* Scroll half the track */
 }
 
 /* --- STATS SECTION --- */
@@ -317,7 +307,7 @@ tr:hover td img {
   color: #333;
 }
 
-.btn {
+.btn, .forUser{
   background-color: #007bff; /* Primary color */
   color: white;              /* Text color */
   padding: 10px 20px;    
@@ -327,6 +317,15 @@ tr:hover td img {
   font-size: 16px;           /* Text size */
   cursor: pointer;           /* Pointer cursor on hover */
   transition: 0.3s;          /* Smooth transition for hover effects */
+}
+.forUser{
+  background-color: gold;
+  color: black;
+  transform: translateY(0);
+}
+.forUser:hover{
+  background-color: #d4af37;
+  transform: scale(0.98); 
 }
 
 /* Change style on hover */
@@ -394,10 +393,122 @@ tr:hover td img {
 }
 
 /* --- ANIMATIONS --- */
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes slideUp { 
-  from { opacity: 0; transform: translateY(50px); } 
-  to { opacity: 1; transform: translateY(0); } 
+/* --- DELETE OVERLAY (Full Screen Blur) --- */
+.delete-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000; /* Ensure it's above everything else */
+  animation: fadeIn 0.3s ease;
+}
+
+/* --- DELETE MODAL BOX --- */
+.delete-modal {
+  background: #1a1a1a; /* Dark surface */
+  border: 1px solid rgba(255, 0, 76, 0.3); /* Subtle red glow */
+  padding: 40px;
+  border-radius: 30px;
+  max-width: 450px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 0, 76, 0.1);
+  animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* --- ICON & TEXT --- */
+.delete-icon {
+  font-size: 3.5rem;
+  margin-bottom: 20px;
+  filter: drop-shadow(0 0 10px rgba(255, 0, 76, 0.5));
+}
+
+.delete-modal h3 {
+  color: #fff;
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin-bottom: 15px;
+  letter-spacing: -0.5px;
+}
+
+.delete-modal p {
+  color: #b0b0b0;
+  line-height: 1.6;
+  margin-bottom: 30px;
+  font-size: 1.05rem;
+}
+
+.delete-modal strong {
+  color: var(--accent); /* Using your #ff004c red */
+  font-weight: 700;
+}
+
+/* --- ACTION BUTTONS --- */
+.delete-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.btn-cancel, .btn-confirm {
+  padding: 14px 28px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex: 1; /* Makes buttons equal width */
+}
+
+/* Keep User / Cancel */
+.btn-cancel {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.btn-cancel:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+/* Confirm Delete */
+.btn-confirm {
+  background: var(--accent); /* Racing Red #ff004c */
+  border: none;
+  color: #fff;
+  box-shadow: 0 8px 15px rgba(255, 0, 76, 0.3);
+}
+
+.btn-confirm:hover {
+  background: #ff2b6b; /* Slightly lighter red */
+  transform: translateY(-2px);
+  box-shadow: 0 12px 20px rgba(255, 0, 76, 0.4);
+}
+
+/* --- ANIMATIONS --- */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0; 
+    transform: translateY(40px) scale(0.9); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0) scale(1); 
+  }
 }
 
 /* Responsive Fix for Stats */
@@ -405,4 +516,6 @@ tr:hover td img {
   .stats-grid { grid-template-columns: 1fr; gap: 40px; }
   .hero-section { text-align: center; justify-content: center; }
   .cta-group { justify-content: center; }
-}
+}  
+
+

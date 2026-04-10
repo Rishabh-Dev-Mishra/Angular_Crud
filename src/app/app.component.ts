@@ -13,7 +13,7 @@ import { DataService } from './data.service';
 export class AppComponent {
 
     constructor(private dataservice: DataService) {}
-  title = 'Basic';
+  title = 'Car Gallery';
    @HostListener('window:beforeunload', ['$event'])
   unloadHandler(event: Event) {
       this.dataservice.logOut().subscribe();

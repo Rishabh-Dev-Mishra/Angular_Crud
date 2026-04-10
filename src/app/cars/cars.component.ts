@@ -143,10 +143,6 @@ export class CarsComponent implements OnInit {
     this.showModal = false;
     this.multiImage = [];
   }
-
-  confirmDeleteButton: boolean = false;
-  selectedCar: any;
-
   confirmDelete(car: any) {
     this.confirmDeleteButton = true;
     this.selectedCar = car;
@@ -170,6 +166,10 @@ export class CarsComponent implements OnInit {
       },
     });
   }
+
+  confirmDeleteButton: boolean = false;
+  selectedCar: any;
+
 
   editCar(data: any) {
     const car_id = data.car_id;

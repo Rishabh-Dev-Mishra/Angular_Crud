@@ -27,6 +27,9 @@ export class HomeComponent {
     if(this.checkUser()){
       this.switchTab('users');
     }
+    else{
+      this.switchTab('cars')
+    }
   }
 
   switchTab(tab: 'users'|'cars'|'brands'){
@@ -134,8 +137,22 @@ export class HomeComponent {
     }
     this.router.navigate(['/edit-profile', user_id]);
   }
-  deleteUser(user_id: any) {
-    this.dataservice.deleteUser(user_id).subscribe({
+
+
+  confirmDeleteButton: boolean = false;
+  selectedUser: any;
+
+  confirmDelete(user: any) {
+    this.confirmDeleteButton = true;
+    this.selectedUser = user;
+  }
+
+  cancelDelete() {
+    this.confirmDeleteButton = false;
+    this.selectedUser = null;
+  }
+  deleteUser() {
+    this.dataservice.deleteUser(this.selectedUser.id).subscribe({
       next: (res: any) => {
         this.users();
         this.toast.success('Deletion Success');

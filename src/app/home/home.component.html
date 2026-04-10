@@ -1,192 +1,108 @@
 <app-navbar></app-navbar>
 
 <main class="content-wrapper">
-  <section class="hero-section">
-    <div class="hero-content">
-      <span class="subtitle">Exclusivity Redefined</span>
-      <h1>
-        Precision Performance. <br />
-        <span class="text-gradient">Pure Luxury.</span>
-      </h1>
-      <p>
-        Experience the world's most prestigious automotive collection. From
-        track-ready supercars to handcrafted grand tourers.
-      </p>
-      <div class="cta-group">
-        <button class="btn-primary" *ngIf="checkUser()" (click)="users()">
-          Users
-        </button>
-        <button class="btn-primary" *ngIf="checkUser()" (click)="brands()">
-          Brands
-        </button>
-        <button class="btn-primary" *ngIf="checkUser()" (click)="allCars()">
-          Cars
-        </button>
-        <button
-          class="btn-primary"
-          *ngIf="!checkUser()"
-          (click)="allCarsOfUser()"
-        >
-          Cars
-        </button>
-      </div>
-    </div>
-
-    <div class="modal-overlay" *ngIf="getBrands">
-      <div class="modal-content">
-        <div class="fixed-top-bar">
-          <button (click)="backFromBrands()" class="close-btn">Back</button>
-
-          <div class="modal-header-text">
-            <span class="gold-tag">Authorized Manufacturers</span>
-            <h3>The <span class="text-gradient">Collection</span></h3>
-            <div class="line"></div>
-          </div>
-        </div>
-
-        <div class="brand-scroll-area">
-          <div class="brand-grid">
-            <div>
-              <table>
-                <th>Iamge</th>
-                <th>Name</th>
-                <tr
-                  class="brand-item"
-                  *ngFor="let brand of brandList; trackBy: trackByBrandId"
-                >
-                  <td>
-                    <img
-                      [src]="
-                        'http://localhost:3000/uploads/' + brand.brand_logo
-                      "
-                      [alt]="brand.brand_name"
-                      class="brand-image"
-                    />
-                  </td>
-                  <td>
-                    <span class="brand-name">{{ brand.brand_name }}</span>
-                  </td>
-                </tr>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="modal-overlay" *ngIf="getCars">
-      <div class="modal-content">
-        <div class="fixed-top-bar">
-          <button (click)="backFromCars()" class="close-btn">Back</button>
-
-          <div class="modal-header-text">
-            <span class="gold-tag">Authorized Manufacturers</span>
-            <h3>The <span class="text-gradient">Collection</span></h3>
-            <div class="line"></div>
-          </div>
-        </div>
-
-        <div class="brand-scroll-area">
-          <div class="brand-grid">
-            <div>
-              <table>
-                <th>Image</th>
-                <th>Name</th>
-                <th>User</th>
-                <tr *ngFor="let car of carList; trackBy: trackByBrandId">
-                  <td>
-                    <div>
-                      <img
-                        [src]="
-                          'http://localhost:3000/uploads/' + car.car_logo[0]
-                        "
-                        [alt]="car.model_name"
-                      />
-                    </div>
-                  </td>
-                  <td>
-                    <span class="brand-name">{{ car.model_name }}</span>
-                  </td>
-                  <td>
-                    <div class="brand-name">
-                      User:&nbsp;{{ car.firstname }}&nbsp;{{ car.lastname }}
-                    </div>
-                  </td>
-                </tr>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="modal-overlay" *ngIf="getUsers">
-      <div class="modal-content">
-        <div class="fixed-top-bar">
-          <button (click)="backFromUsers()" class="close-btn">Back</button>
-
-          <div class="modal-header-text">
-            <span class="gold-tag">Registered Users</span>
-            <div class="line"></div>
-          </div>
-        </div>
-
-        <div class="brand-scroll-area">
-          <div class="brand-grid">
-            <div>
-              <table>
-                <th>User Name</th>
-                <th>Car</th>
-                <th>Brands</th>
-                <th>Make Admin</th>
-                <th>Edit User</th>
-                <th>Delete User</th>
-                <th>Profile</th>
-                <tr *ngFor="let user of userList; trackBy: trackByBrandId">
-                  <td>
-                    <span class="brand-name">{{ user.firstname }}</span>
-                  </td>
-                  <td>
-                    <div class="brand-name">
-                      <span (click)="goToCars()">Go To Car</span>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="brand-name">
-                      <a [routerLink]="['/brands', user.id]">
-                        Brands
-                      </a>
-                      <span (click)="goToBrands()">Go To Brands</span>
-                    </div>
-                  </td>
-                  <td >
-                    <input
-                      type="checkbox"
-                      name="role"
-                      [checked]="user.role === 'admin'"
-                      (change)="updateUserRole($event, user.id)"
-                      *ngIf="user.id != user_id"
-                      value="Make Admin"
-                    />
-                  </td>
-                  <td><button class="btn" (click)="editUser(user.id)" *ngIf="user.id != user_id" >Edit</button></td>
-                  <td><button class="btn" (click)="deleteUser(user.id)" *ngIf="user.id != user_id" >Remove</button></td>
-                  <td><button class="btn"  [routerLink] ="['/profile', user.id]" *ngIf="user.id != user_id" >Profile</button></td>
-                </tr>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <section class="legacy-section">
-    <div class="section-header">
-      <span class="gold-tag">The Standard</span>
-      <h2>Uncompromising Excellence</h2>
-      <div class="line"></div>
+            <div class="section-header">
+              <span class="gold-tag">The Standard</span>
+              <h2>Uncompromising Excellence</h2>
+              <div class="line"></div>
+            </div>
+  <div class="luxury-management-system">
+      <div class="tabs-nav">
+        <button (click)="switchTab('users')" [class.active]="activeTab === 'users'">Users</button>
+        <button (click)="switchTab('cars')" [class.active]="activeTab === 'cars'">Cars</button>
+        <button (click)="switchTab('brands')" [class.active]="activeTab === 'brands'">Brands</button>
+      </div>
+
+      <div class="tabs-content-area">
+        
+        <div *ngIf="activeTab === 'users'" class="panel-fade-in">
+          <div class="panel-header">
+            <span class="gold-tag">Management</span>
+            <h3>Registered <span class="text-gradient">Users</span></h3>
+          </div>
+          
+          <table class="luxury-table">
+            <thead>
+              <tr>
+                <th>User Name</th>
+                <th>Inventory</th>
+                <th>Manufacturer</th>
+                <th>Admin Access</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let user of userList; trackBy: trackByBrandId">
+                <td><span class="brand-name">{{ user.firstname }}</span></td>
+                <td><span class="action-link" (click)="goToCars()">View Cars</span></td>
+                <td><a [routerLink]="['/brands', user.id]" class="action-link">View Brands</a></td>
+                <td>
+                  <input type="checkbox" [checked]="user.role === 'admin'" 
+                         (change)="updateUserRole($event, user.id)" *ngIf="user.id != user_id">
+                </td>
+                <td>
+                  <div class="table-actions" *ngIf="user.id != user_id">
+                    <button class="btn" (click)="editUser(user.id)">Edit</button>
+                    <button class="btn-sm btn-danger btn" (click)="deleteUser(user.id)">Remove</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div *ngIf="activeTab === 'brands'" class="panel-fade-in">
+          <div class="panel-header">
+            <span class="gold-tag">Partners</span>
+            <h3>The <span class="text-gradient">Collection</span></h3>
+          </div>
+          <table class="luxury-table">
+            <thead>
+              <tr>
+                <th>Brand Image</th>
+                <th>Name</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let brand of brandList; trackBy: trackByBrandId">
+                <td>
+                  <img class="car-thumbnail" [src]="'http://localhost:3000/uploads/' + brand.brand_logo" [alt]="brand.brand_name" />
+                </td>
+                <td><span class="brand-name">{{ brand.brand_name }}</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div *ngIf="activeTab === 'cars'" class="panel-fade-in">
+          <div class="panel-header">
+            <span class="gold-tag">Showroom</span>
+            <h3>Available <span class="text-gradient">Inventory</span></h3>
+          </div>
+          <table class="luxury-table">
+            <thead>
+              <tr>
+                <th>Vehicle Image</th>
+                <th>Model</th>
+                <th>Assigned To</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let car of carList; trackBy: trackByBrandId">
+                <td>
+                  <img class="car-thumbnail" [src]="'http://localhost:3000/uploads/' + car.car_logo[0]" [alt]="car.model_name" />
+                </td>
+                <td><span class="brand-name">{{ car.model_name }}</span></td>
+                <td>{{ car.firstname }} {{ car.lastname }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
     </div>
+           
 
     <div class="feature-grid">
       <div class="feature-card">

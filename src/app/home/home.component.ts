@@ -17,8 +17,23 @@ export class HomeComponent {
   private dataservice = inject(DataService);
   private toast = inject(ToastrService);
 
+  activeTab: 'users' | 'cars' | 'brands' = 'users';
+
   trackByBrandId(index: number, brand: any) {
     return brand.brand_id;
+  }
+
+  ngOnInit(){
+    if(this.checkUser()){
+      this.switchTab('users');
+    }
+  }
+
+  switchTab(tab: 'users'|'cars'|'brands'){
+    this.activeTab = tab;
+    if(tab=='users')this.users()
+      if(tab=='cars')this.allCars()
+        if(tab=='brands')this.brands()
   }
 
   allCarsOfUser() {

@@ -154,8 +154,12 @@ app.get("/userInfo/:user_id", async(req, res)=>{
     }
 
     const cleanUserId = parseInt(user_id, 10);
+    // console.log(cleanUserId);
+    
 
     const user = await pool.query("select * from users where id=$1", [cleanUserId]);
+    // console.log(user);
+    
     return res.status(200).json(user.rows[0]);
   }
   catch(err){
@@ -229,8 +233,15 @@ app.post(
           "SELECT * FROM users WHERE id = $1",
           [cleanUserId],
         );
-        if (existingUser.rows.length == 0) {
+
+        const exsistingemail = await pool.query("select * from users where email=$1 and id <> $2", [email, cleanUserId])
+
+        if (existingUser.rows.length == 0 ) {
           return res.status(400).json({ message: "User does not exist" });
+        }
+
+        if(exsistingemail.rows.length > 0){
+          return res.status(400).json({message: "This email is already taken"})
         }
 
         
@@ -262,6 +273,21 @@ app.post(
     }
   },
 );
+
+
+app.get("/mailCheck/:mail/:user_id", async(req, res)=>{
+  try{
+    const { mail, user_id } = req.params;
+    const cleanId = parseInt(user_id, 10);
+    const exsist = await pool.query("Select * from users where email ILIKE $1 and id <> $2", [`${mail}%`, cleanId]);
+    return res.status(200).json(exsist.rows);
+  }
+  catch(err){
+    console.log(err);
+    res.status(500).json({message: err})
+    
+  }
+})
 
 app.put("/logout/:user_id", async(req, res)=>{
   try{

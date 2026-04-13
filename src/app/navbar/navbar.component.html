@@ -12,7 +12,7 @@
   <button class="logout" (click) = "addCar()">Add Car</button>
   <button class="logout" (click) = "logOut()">LogOut</button>
     
-    <a routerLink="/profile">
+    <a [routerLink]='["/profile", user_id]'>
       <img *ngIf="imageURL; else icons" [src]="imageURL" alt="Profile">
       <ng-template #icons>
         <i class="fa fa-fw fa-user profile-icon"></i>

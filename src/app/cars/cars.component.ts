@@ -92,10 +92,11 @@ export class CarsComponent implements OnInit {
 
   getAllCars() {
     const id: string = this.route.snapshot.paramMap.get('id') ?? '';
+    const user_id : string = this.route.snapshot.paramMap.get('user_id')?? '';
     const name: string =
       this.route.snapshot.paramMap.get('name') ?? 'Unknown Brand';
     this.dataservice.setIdForNavig(id, name);
-    this.router.navigate(['/allcars']);
+    this.router.navigate(['/allcars', user_id]);
   }
 
   filterCars() {

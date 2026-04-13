@@ -42,7 +42,7 @@ export class HomeComponent {
   allCarsOfUser() {
     const user_id = sessionStorage.getItem('user_id');
     if (user_id) {
-      this.router.navigate(['/allcars']);
+      this.router.navigate(['/allcars',user_id]);
     } else {
       console.log('error');
     }
@@ -116,7 +116,6 @@ export class HomeComponent {
   goToBrands() {
     this.router.navigate(["/brands", this.user_id]);
   }
-  goToCars() {}
 
   updateUserRole(event: any, user_id: any) {
     const isAdmin = event.target.checked;

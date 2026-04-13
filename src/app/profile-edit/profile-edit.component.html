@@ -52,27 +52,58 @@
           style="display: none"
           accept="image/*"
         />
-              
 
         <label for="firstname">Firstname</label>
-        <input type="text" name="firstname" [(ngModel)] = 'firstname' placeholder="Firstname" />
+        <input
+          type="text"
+          name="firstname"
+          [(ngModel)]="firstname"
+          placeholder="Firstname"
+        />
 
         <label for="lastname">Lastname</label>
-        <input type="text" name="lastname" [(ngModel)] = 'lastname' placeholder="Lastname" />
+        <input
+          type="text"
+          name="lastname"
+          [(ngModel)]="lastname"
+          placeholder="Lastname"
+        />
 
         <label for="email">Email</label>
-        <input type="email" name="email" [(ngModel)] = 'email' required placeholder="Email" />
-
-        <div class="admin" >
-           <label for="makeadmin">Make Admin</label>
         <input
-                      type="checkbox"
-                      name="role"
-                      [checked]="user.role === 'admin'"
-                      (change)="updateUserRole($event, user.id)"
-                      *ngIf="user.id != loggedUser"
-                      value="Make Admin"
-                    />
+          type="email"
+          [formControl]="emailControl"
+          placeholder="email"
+          id="email"
+          pattern="^(.+)@\1\.[a-zA-Z]{2,}$"
+        />
+
+        <div style="color: red; font-size: 12px; margin-top: 5px">
+          @if (emailExsitsError) {
+            <span>Email already exists in our database.</span>
+          }
+
+          @if ((emailControl.hasError("required") || emailControl.hasError("pattern")) && emailControl.touched) {
+            <span>Email is required.</span>
+          }
+
+          @if (emailControl.hasError("email") && emailControl.touched) {
+            <span>Invalid format: Should be (exmp&#x40;ex.com)</span>
+          }
+        </div>
+
+        <div class="admin" *ngIf="user">
+          <label for="makeadmin" *ngIf="user?.id != loggedUser"
+            >Make Admin</label
+          >
+          <input
+            type="checkbox"
+            name="role"
+            [checked]="user?.role === 'admin'"
+            (change)="updateUserRole($event, user?.id)"
+            *ngIf="user?.id != loggedUser"
+            value="Make Admin"
+          />
         </div>
       </div>
 
@@ -111,7 +142,6 @@
               <span>Must have: A-Z, a-z, 0-9, and symbol.</span>
             }
           </div>
-
 
           <label for="confirmpassword">Confirm Password</label>
           <input

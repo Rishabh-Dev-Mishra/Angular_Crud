@@ -43,15 +43,14 @@ export class DataService {
   getUserInfo(user_id: any){
     return this.http.get(`${this.url}/userInfo/${user_id}`);
   }
-
-
+  
+  
   logOut(){
     const user_id = this.getUserId();
     return this.http.put(`${this.url}/logout/${user_id}`,{status:"Inactive"});
   }
-
-  allCars() {
-    const user_id = this.getUserId();
+  
+  allCars(user_id : any) {
     return this.http.get(`${this.url}/allcars/${user_id}`);
   }
 
@@ -64,6 +63,11 @@ export class DataService {
   edit(data: any) {
     return this.http.post(this.url + '/edit-profile', data);
   }
+  
+  checkMail(mail: string, user_id : any){
+    return this.http.get(`${this.url}/mailCheck/${mail}/${user_id}`);
+  }
+
 
   addBrand(data: any) {
     return this.http.post(this.url + '/brand_details', data);
@@ -166,4 +170,5 @@ export class DataService {
   deleteUser(user_id : any){
     return this.http.put(`${this.url}/deleteUser/${user_id}`, "date");
   }
+
 }

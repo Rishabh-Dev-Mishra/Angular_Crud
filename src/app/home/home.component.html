@@ -54,8 +54,9 @@
                   <span class="brand-name">{{ user.firstname }}</span>
                 </td>
                 <td>
-                  <span class="action-link" (click)="goToCars()"
-                    >View Cars</span
+                  
+                  <a [routerLink]="['/allcars', user.id]" class="action-link"
+                    >View Cars</a
                   >
                 </td>
                 <td>
@@ -290,16 +291,25 @@
 
   <section class="stats-grid">
     <div class="stat-item">
-      <span class="number">500+</span>
-      <span class="label">Pristine Deliveries</span>
+      <span class="number">Spring '26</span>
+      <span class="label"
+        >Now showing: "Shadow & Light" by Elena Rossi. An exploration of
+        contrast.</span
+      >
     </div>
     <div class="stat-item">
-      <span class="number">12</span>
-      <span class="label">Global Showrooms</span>
+      <span class="number">The Vault</span>
+      <span class="label"
+        >Explore 2,000+ digitized archives from our permanent 19th-century
+        collection.</span
+      >
     </div>
     <div class="stat-item">
-      <span class="number">24/7</span>
-      <span class="label">Concierge Support</span>
+      <span class="number">Membership</span>
+      <span class="label"
+        >Join the circle for exclusive early access to monthly private
+        viewings.</span
+      >
     </div>
   </section>
 </main>

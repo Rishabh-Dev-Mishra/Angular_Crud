@@ -20,11 +20,11 @@ export const routes: Routes = [
     {path: "profile/:user_id", component: ProfileComponent, canActivate: [routeGuardGuard]},
     {path: "edit-profile/:user_id", component: ProfileEditComponent, canActivate: [routeGuardGuard]},
     {path: "brands/:id", component: BrandsComponent, canActivate: [routeGuardGuard]},
-    {path: "cars/:id/:name", component: CarsComponent, canActivate: [routeGuardGuard]},
+    {path: "cars/:id/:name/:user_id", component: CarsComponent, canActivate: [routeGuardGuard]},
     {path: "brand_details", component: BrandEntryComponent},
     {path: "car_details/:user_id", component: CarEntryComponent},
     {path: "editCar/:car_id", component: CarEntryComponent},
-    {path: "allcars", component:AllCarsComponent},
+    {path: "allcars/:user_id", component:AllCarsComponent, canActivate: [routeGuardGuard]},
     {path: "**", component: PageNotFoundComponent}
 
 ];

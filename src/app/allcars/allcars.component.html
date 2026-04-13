@@ -13,7 +13,7 @@
       <span class="badge">Authenticated Collection</span>
       <h1 class="main-title">Your <span class="gradient-text">Masterpiece</span> Vault</h1>
       <p class="subtitle">A complete overview of your registered automotive fleet.</p>
-      <button [routerLink]='["/brands",user_id]'>Brands</button>
+      <button [routerLink]='["/brands",user_id]' *ngIf="user_id == loggedUser_id">Brands</button>
     </div>
   </section>
 

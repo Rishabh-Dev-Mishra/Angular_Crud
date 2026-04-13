@@ -30,6 +30,8 @@ export class NavbarComponent {
 
  // navbar.component.ts
 
+ user_id: string = this.dataservice.getUserId()?? '';
+
 addBrand() {
   const userId = sessionStorage.getItem("user_id");
   if (userId) {

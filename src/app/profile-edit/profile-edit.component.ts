@@ -1,13 +1,14 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DataService } from '../data.service';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NgIf } from '@angular/common';
 import { Location } from '@angular/common';
+import { debounceTime, distinctUntilChanged, switchMap, filter, tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-profile-edit',
+  selector: 'app-profile-edit',   
   standalone: true,
   imports: [FormsModule, ReactiveFormsModule, NgIf],
   templateUrl: './profile-edit.component.html',
@@ -24,12 +25,14 @@ export class ProfileEditComponent {
   showPasswordFields: boolean = false;
   readonly serverUrl = 'http://localhost:3000/';
 
+
+  
   selectedFile: File | null = null;
   previewUrl: string | null = null;
   user_id: any = this.route.snapshot.paramMap.get('user_id');
-
+  
   loggedUser: any = this.dataservice.getUserId();
-
+  
   
   firstname: string = '';
   lastname: string = '';
@@ -37,14 +40,19 @@ export class ProfileEditComponent {
   path: string = '';
   user:any;
   
+    emailControl = new FormControl('', [Validators.required, Validators.email, Validators.pattern('^(.+)@\\1\\.[a-zA-Z]{2,}$')]);
+  emailExsitsError: boolean = false;
+
+
   getUserInfo() {
     this.dataservice.getUserInfo(this.user_id).subscribe({
       next: (res: any) => {
         this.firstname = res.firstname;
         this.lastname = res.lastname;
-        this.email = res.email;
+        this.email = res.email;        
         this.path = res.image_path;
         this.user = res;
+        this.emailControl.patchValue(this.email, {emitEvent: false});
         console.log(this.path);
         
       },
@@ -55,15 +63,36 @@ export class ProfileEditComponent {
     });
   }
 
+
+
   ngOnInit() {
     this.getUserInfo();
+    this.emailControl.valueChanges.pipe(
+      tap(() => this.emailExsitsError = false), 
+      debounceTime(400),
+      distinctUntilChanged(),
+      filter(()=>this.emailControl.valid),
+      switchMap(email=> this.dataservice.checkMail(email || "", this.user_id))
+    ).subscribe({
+      next:(res: any)=>{
+        console.log(res);
+        
+        if(res.length > 0)
+        this.emailExsitsError = true;
+        else this.emailExsitsError = false;
+      },
+      error:(err: any)=>{
+        console.log(err);
+      }
+    })
   }
 
   get imageURL(): string {
     if (this.previewUrl) return this.previewUrl;
     return this.path && this.path.length > 0 ? `${this.serverUrl}uploads/${this.path}` : '';
   }
-  // --- NEW METHOD: CAPTURE THE FILE ---
+
+
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {

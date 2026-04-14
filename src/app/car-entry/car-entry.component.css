@@ -245,3 +245,110 @@ select.ng-invalid.ng-touched {
   border: 2px dashed #ef4444 !important;
   background: rgba(239, 68, 68, 0.05);
 }
+
+@media (max-width: 1024px) {
+  .glass-form-card {
+    padding: 40px;
+  }
+
+  .premium-form {
+    gap: 20px;
+  }
+
+  .main-title {
+    font-size: 2.2rem;
+  }
+
+  .subtitle {
+    margin-bottom: 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-page-wrapper {
+    padding: 40px 15px;
+  }
+
+  .glass-form-card {
+    padding: 25px;
+    border-radius: 20px;
+  }
+
+  .premium-form {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  /* Remove forced spanning */
+  .premium-form .input-group:nth-child(1),
+  .premium-form .input-group:nth-child(2),
+  .premium-form .input-group:last-of-type,
+  .submit-btn {
+    grid-column: span 1;
+  }
+
+  .main-title {
+    font-size: 1.8rem;
+    letter-spacing: -0.5px;
+  }
+
+  .subtitle {
+    font-size: 0.9rem;
+    margin-bottom: 25px;
+  }
+
+  input,
+  select,
+  textarea {
+    padding: 14px 16px;
+    font-size: 0.95rem;
+  }
+
+  .submit-btn {
+    padding: 16px;
+    font-size: 1rem;
+    letter-spacing: 1px;
+  }
+
+  /* Drag & drop smaller */
+  .drag-drop {
+    padding: 30px 20px;
+  }
+
+  /* Image preview tighter */
+  .preview-container {
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    gap: 10px;
+  }
+
+  .preview-card {
+    height: 90px;
+  }
+
+  /* Back button reposition */
+  .back-btn {
+    top: 20px;
+    left: 15px;
+    padding: 10px 18px;
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .glass-form-card {
+    padding: 20px 15px;
+  }
+
+  .main-title {
+    font-size: 1.5rem;
+  }
+
+  .subtitle {
+    font-size: 0.85rem;
+  }
+
+  .submit-btn {
+    padding: 14px;
+    font-size: 0.9rem;
+  }
+}

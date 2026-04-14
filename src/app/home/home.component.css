@@ -511,11 +511,138 @@ tr:hover td img {
   }
 }
 
-/* Responsive Fix for Stats */
+/* --- RESPONSIVENESS --- */
+
+@media (max-width: 1024px) {
+  .hero-section {
+    padding: 0 5%;
+    text-align: center;
+    justify-content: center;
+  }
+  
+  .hero-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .cta-group {
+    justify-content: center;
+  }
+}
+
+/* For Mobile Devices */
 @media (max-width: 768px) {
-  .stats-grid { grid-template-columns: 1fr; gap: 40px; }
-  .hero-section { text-align: center; justify-content: center; }
-  .cta-group { justify-content: center; }
-}  
+  /* Hero Adjustments */
+  .hero-section {
+    height: auto;
+    padding: 100px 20px;
+  }
+
+  .hero-content h1 {
+    font-size: 2.5rem; /* Smaller font for mobile */
+  }
+
+  /* Stats Grid: Stack vertically */
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    padding: 60px 5%;
+  }
+
+  /* Feature Grid: Stack vertically */
+  .feature-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Management Tabs: Allow scrolling if many buttons */
+  .tabs-nav {
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: 10px;
+  }
+
+  /* Table to Cards: The most important fix for mobile */
+  thead {
+    display: none;
+  }
+
+  /* 2. STYLE THE ROW AS A SINGLE CARD */
+  tr {
+    display: block;
+    margin-bottom: 30px;
+    border: 2px solid var(--accent); /* Makes the card border clear */
+    border-radius: 15px;
+    overflow: hidden;
+    background: white;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+
+  /* 3. FIX THE CELL ALIGNMENT AND LABEL SPACE */
+  td {
+    display: flex;
+    flex-direction: column; /* Stack Label on top of Data */
+    align-items: center;
+    justify-content: center;
+    padding: 40px 15px 15px 15px; /* Large top padding to make room for label */
+    border: none;
+    border-bottom: 1px solid #eee; /* Light line between rows */
+    position: relative;
+    min-height: 100px;
+  }
+
+  /* 4. FIX THE LABEL (HEADINGS) */
+  td:before {
+    content: attr(data-label);
+    position: absolute;
+    top: 12px; /* Pulls heading to the top of the cell */
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.8;
+  }
+
+  /* 5. IMAGE & BUTTON FIXES */
+  td img {
+    width: 120px !important;
+    height: auto !important;
+    margin: 5px auto;
+  }
+
+  tr td:last-child {
+    border-bottom: none; /* Clean look for the last button cell */
+  }
 
 
+  /* Carousel size fix */
+  .carousel-container {
+    height: 250px;
+  }
+
+  .slide {
+    width: 280px;
+  }
+}
+
+/* Extra Small Devices */
+@media (max-width: 480px) {
+  .hero-content h1 {
+    font-size: 2rem;
+  }
+
+  .cta-group {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .btn, .forUser {
+    width: 100%;
+    margin: 2px;
+    margin-left: 0;
+  }
+}

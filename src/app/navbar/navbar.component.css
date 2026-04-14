@@ -99,3 +99,90 @@
 .auth button{
     margin: 10px;
 }
+
+
+@media (max-width: 1024px) {
+  .navbar {
+    padding: 10px 20px;
+  }
+
+  .profile-section {
+    gap: 15px;
+  }
+
+  .profile-icon,
+  .profile-section img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .hover-modal-nav {
+    width: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: row;
+    padding: 10px 15px;
+  }
+
+  .profile-section {
+    gap: 10px;
+  }
+
+  /* Smaller profile icon */
+  .profile-icon,
+  .profile-section img {
+    width: 35px;
+    height: 35px;
+  }
+
+  /* Dropdown fix */
+  .hover-modal-nav {
+    top: 50px;
+    right: 0;
+    width: 180px;
+    padding: 12px;
+  }
+
+  .hover-modal-nav p {
+    font-size: 12px;
+  }
+
+  .hover-modal-nav strong {
+    font-size: 14px;
+  }
+
+  /* Buttons smaller */
+  .logout,
+  .auth button {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .profile-section {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  /* Make dropdown full-width feel */
+  .hover-modal-nav {
+    right: 0;
+    width: 100%;
+    max-width: 250px;
+  }
+
+  /* Fix arrow position */
+  .hover-modal-nav::before {
+    right: 20px;
+  }
+}

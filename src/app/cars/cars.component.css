@@ -1,6 +1,6 @@
 /* --- Global Foundation --- */
 :host {
-  --gold: #b89130; 
+  --gold: #b89130;
   --gold-glow: rgba(184, 145, 48, 0.15);
   --border-light: #e2e8f0;
   --danger: #ef4444;
@@ -11,10 +11,11 @@
   flex-direction: column;
   align-items: center;
   min-height: 100vh;
-  padding: 120px 40px;
+  padding: 120px 20px; /* Reduced side padding for mobile */
   background: linear-gradient(135deg, #fdfdfb 0%, #e8e6e1 50%, #dcdad4 100%);
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: "Plus Jakarta Sans", sans-serif;
   color: #1a1a1a;
+  box-sizing: border-box;
 }
 
 .back-btn {
@@ -34,7 +35,7 @@
   font-size: 0.85rem;
   text-transform: uppercase;
   letter-spacing: 1px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
   transition: 0.3s ease;
   z-index: 10;
 }
@@ -78,26 +79,34 @@
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
-  align-items: flex-end; /* Aligns all inputs and buttons to the bottom */
-  gap: 24px;
+  align-items: flex-end;
+  gap: 16px;
   background: rgba(255, 255, 255, 0.4);
   backdrop-filter: blur(10px);
-  padding: 30px 40px;
+  padding: 24px;
   border-radius: 24px;
   border: 1px solid #fff;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.03);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.03);
   margin-top: 40px;
+  width: 100%;
+  max-width: 1200px;
+  box-sizing: border-box;
 }
 
 /* Labels for Search and Filters */
-.search-bar, .filter-group > div {
+.search-bar,
+.filter-group > div {
   display: flex;
+  width: 100%;
   flex-direction: column;
   gap: 8px;
 }
 
-.search-bar::before { content: "Search"; }
-.search-bar::before, .filter-group p {
+.search-bar::before {
+  content: "Search";
+}
+.search-bar::before,
+.filter-group p {
   font-size: 0.7rem;
   color: #64748b;
   font-weight: 800;
@@ -107,12 +116,13 @@
 
 .filter-group {
   display: flex;
+  flex-wrap: wrap;
   gap: 20px;
   align-items: flex-end;
 }
 
 /* Input Fields */
-.search-bar input, 
+.search-bar input,
 .filter-select {
   height: 50px;
   background: #fff !important;
@@ -120,10 +130,13 @@
   border-radius: 14px;
   padding: 0 20px;
   font-weight: 500;
+  width: 100%;
   min-width: 220px;
 }
 
-.search-bar input { width: 320px; }
+.search-bar input {
+  width: 320px;
+}
 
 /* Control Buttons */
 .controls-container button {
@@ -153,6 +166,7 @@
 /* --- The Modern Table --- */
 .car-box {
   width: 100%;
+  overflow-x: auto;
   max-width: 1400px;
   margin-top: 40px;
 }
@@ -171,6 +185,7 @@
   text-transform: uppercase;
   padding: 7px 10px;
   text-align: center;
+  min-width: 800px;
 }
 
 .car-table tr:not(:first-child) {
@@ -186,12 +201,18 @@
   vertical-align: middle;
 }
 
-.car-table td:first-child { border-left: 1px solid var(--border-light); border-radius: 16px 0 0 16px; }
-.car-table td:last-child { border-right: 1px solid var(--border-light); border-radius: 0 16px 16px 0; }
+.car-table td:first-child {
+  border-left: 1px solid var(--border-light);
+  border-radius: 16px 0 0 16px;
+}
+.car-table td:last-child {
+  border-right: 1px solid var(--border-light);
+  border-radius: 0 16px 16px 0;
+}
 
 .car-table tr:not(:first-child):hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
 
 .car-image {
@@ -272,8 +293,8 @@
 
 .image-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
 }
 
 .image-grid img {
@@ -286,7 +307,7 @@
 
 .image-grid img:hover {
   transform: scale(1.02);
-  box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
 }
 
 /* --- Empty State --- */
@@ -300,8 +321,7 @@
   color: #64748b;
 }
 
-
-.pagination button{
+.pagination button {
   margin: 4px;
   padding: 2px;
 }
@@ -348,7 +368,7 @@
   width: 100vw;
   height: 100vh;
   background: rgba(15, 23, 42, 0.4); /* Dark translucent tint */
-  backdrop-filter: blur(8px);       /* The Blur Effect */
+  backdrop-filter: blur(8px); /* The Blur Effect */
   -webkit-backdrop-filter: blur(8px); /* Safari Support */
   display: flex;
   justify-content: center;
@@ -395,7 +415,8 @@
   gap: 12px;
 }
 
-.btn-cancel, .btn-confirm {
+.btn-cancel,
+.btn-confirm {
   flex: 1;
   padding: 12px;
   border-radius: 12px;
@@ -428,11 +449,177 @@
 
 /* Animations */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideUp {
-  from { transform: translateY(20px) scale(0.95); opacity: 0; }
-  to { transform: translateY(0) scale(1); opacity: 1; }
+  from {
+    transform: translateY(20px) scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* ============================================================
+   STRICT TABLE RESPONSIVENESS (1024px and below)
+   ============================================================ */
+
+@media (max-width: 1024px) {
+  /* 1. Reset Table Layout */
+
+  .search-bar{
+    width: 85%;
+    align-items: center;
+  }
+
+  .car-box {
+    overflow-x: visible; 
+  }
+
+  .controls-container p {
+  display: none;
+}
+
+  .car-table {
+    display: block;
+    width: 100%;
+    border-spacing: 0;
+  }
+
+  .car-table th {
+    display: none;
+    min-width: auto;
+  }
+
+  .car-table tbody,
+  .car-table tr,
+  .car-table td {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* 2. Transform Row into a Card */
+  .car-table tr:not(:first-child) {
+    background: #ffffff;
+    margin-bottom: 25px;
+    border: 1px solid var(--border-light);
+    border-radius: 20px;
+    padding: 15px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.02);
+    transition: transform 0.2s;
+  }
+
+  /* 3. Style Cells as Rows within the Card */
+  .car-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 10px;
+    text-align: right;
+    border: none !important; /* Remove desktop borders */
+    border-bottom: 1px solid #f8fafc !important;
+    border-radius: 0 !important;
+  }
+
+  /* Remove bottom border from last cell */
+  .car-table td:last-child {
+    border-bottom: none !important;
+  }
+
+  /* 4. The "Magic" Labels */
+  /* This pulls the text from your HTML: <td data-label="Price"> */
+  .car-table td::before {
+    content: attr(data-label);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.65rem;
+    color: #94a3b8;
+    text-align: left;
+    letter-spacing: 0.5px;
+  }
+
+  /* 5. Special Handling for Image and Actions */
+  /* We want the image and buttons to be centered and full-width */
+  .car-table td[data-label="Image"],
+  .car-table td[data-label="Actions"],
+  .car-table td:first-child,
+  .car-table td:last-child {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 10px;
+  }
+
+  .car-table td[data-label="Image"]::before,
+  .car-table td[data-label="Actions"]::before {
+    margin-bottom: 8px;
+    text-align: center;
+    width: 100%;
+  }
+
+  .car-table td[data-label="Edit"]::before,
+  .car-table td[data-label="Delete"]::before {
+    display: none;
+  }
+
+  .car-image {
+    width: 100%;
+    max-width: 280px;
+    height: 160px;
+    margin: 0 auto;
+  }
+
+  .btn-view,
+  .btn-delete-trigger {
+    width: 100%;
+    max-width: 300px;
+    display: flex;
+    justify-content: center;
+    margin: 4px 0;
+  }
+
+}
+
+/* Small Tablets & Phones */
+@media (max-width: 767px) {
+  .inventory-wrapper {
+    padding: 100px 15px 40px;
+  }
+
+  .back-btn {
+    top: 30px;
+    left: 15px;
+    padding: 8px 16px;
+    font-size: 0.7rem;
+  }
+
+  .controls-container {
+    padding: 20px;
+    margin-top: 20px;
+  }
+
+  .upper-section h1 {
+    font-size: 1.75rem;
+  }
+
+  .filter-group {
+    width: 100%;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .search-bar input,
+  .filter-select {
+    width: 100% !important;
+    min-width: 0;
+  }
 }

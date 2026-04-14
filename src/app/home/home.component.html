@@ -50,21 +50,20 @@
             </thead>
             <tbody>
               <tr *ngFor="let user of userList; trackBy: trackByBrandId">
-                <td>
+                <td data-label="User Name">
                   <span class="brand-name">{{ user.firstname }}</span>
                 </td>
-                <td>
-                  
+                <td data-label="Cars">
                   <a [routerLink]="['/allcars', user.id]" class="action-link"
                     >View Cars</a
                   >
                 </td>
-                <td>
+                <td data-label="Brands">
                   <a [routerLink]="['/brands', user.id]" class="action-link"
                     >View Brands</a
                   >
                 </td>
-                <td>
+                <td data-label="Make Admin">
                   <input
                     type="checkbox"
                     [checked]="user.role === 'admin'"
@@ -72,7 +71,7 @@
                     *ngIf="user.id != user_id"
                   />
                 </td>
-                <td>
+                <td data-label="Edit or Delete User">
                   <div class="table-actions" *ngIf="user.id != user_id">
                     <button class="btn" (click)="editUser(user.id)">
                       Edit
@@ -127,14 +126,14 @@
             </thead>
             <tbody>
               <tr *ngFor="let brand of brandList; trackBy: trackByBrandId">
-                <td>
+                <td data-label="Brand">
                   <img
                     class="car-thumbnail"
                     [src]="'http://localhost:3000/uploads/' + brand.brand_logo"
                     [alt]="brand.brand_name"
                   />
                 </td>
-                <td>
+                <td data-label="Brand Name">
                   <span class="brand-name">{{ brand.brand_name }}</span>
                 </td>
               </tr>
@@ -164,17 +163,17 @@
             </thead>
             <tbody>
               <tr *ngFor="let car of carList; trackBy: trackByBrandId">
-                <td>
+                <td data-label="Car">
                   <img
                     class="car-thumbnail"
                     [src]="'http://localhost:3000/uploads/' + car.car_logo[0]"
                     [alt]="car.model_name"
                   />
                 </td>
-                <td>
+                <td data-label="Model Name">
                   <span class="brand-name">{{ car.model_name }}</span>
                 </td>
-                <td *ngIf="checkUser()">
+                <td *ngIf="checkUser()" data-label="User Name">
                   {{ car.firstname }} {{ car.lastname }}
                 </td>
               </tr>

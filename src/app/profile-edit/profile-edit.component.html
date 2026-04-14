@@ -14,7 +14,7 @@
     <button
       type="button"
       [class.active]="showPasswordFields"
-      (click)="showPasswordFields = true"
+      (click)="showPasswordFields = true" *ngIf="user?.role != 'admin'"
     >
       Change Password
     </button>

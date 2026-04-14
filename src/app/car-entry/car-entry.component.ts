@@ -5,7 +5,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { DataService } from '../data.service';
 import { ToastrService } from 'ngx-toastr';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 
 @Component({
   selector: 'app-car-entry',
@@ -20,6 +20,9 @@ import { CommonModule } from '@angular/common';
   styleUrl: './car-entry.component.css',
 })
 export class CarEntryComponent {
+
+  constructor(private location: Location){} 
+
   private dataservice = inject(DataService);
   private toast = inject(ToastrService);
   private route = inject(ActivatedRoute);
@@ -31,6 +34,8 @@ export class CarEntryComponent {
   selectedFile: File[] = [];
 
   previews: string[] = [];
+
+
 
 
   car_detail = {
@@ -270,5 +275,9 @@ export class CarEntryComponent {
         this.toast.error(err);
       },
     });
+  }
+
+  goBack(){
+    this.location.back();
   }
 }

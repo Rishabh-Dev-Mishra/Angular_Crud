@@ -74,6 +74,66 @@
         </span>
       </div>
 
+     <div class="input-group" *ngIf="role == 'user'">
+  <label>Request Brand</label>
+  <button type="button" (click)="requestBrand()" class="submit-btn" style="font-size: 12px;">Request</button>
+</div>
+
+<div class="modal-overlay" *ngIf="showRequestModal">
+  <div class="modal-content">
+
+    <button type="button" (click)="closeModal()">×</button>
+
+    <h2>Request a Brand</h2>
+
+    <form #requestForm="ngForm" (ngSubmit)="onSubmitRequest(requestForm)">
+
+      <div class="input-group">
+        <label for="logo">Brand Logo / Photo</label>
+        <div class="file-input-wrapper">
+          <input
+            type="file"
+            #fileInput
+            (change)="fileForRequest($event)"
+            name="logo"
+            id="logo"
+            accept="image/*"
+          />
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label for="brandName">Official Name</label>
+        <input
+          type="text"
+          name="brandName"
+          ngModel
+          id="brandName"
+          placeholder="e.g. Aston Martin"
+        />
+      </div>
+
+      <button type="submit" class="submit-btn">
+        <span>Save Brand</span>
+      </button>
+
+    </form>
+
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
       <div class="input-group">
         <label for="modelName">Model Name</label>
         <input

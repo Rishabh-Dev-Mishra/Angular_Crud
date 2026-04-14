@@ -171,4 +171,20 @@ export class DataService {
     return this.http.put(`${this.url}/deleteUser/${user_id}`, "date");
   }
 
+  createRequest(data:any){
+    return this.http.post(`${this.url}/createRequest`, data);
+  }
+
+  getRequests(){
+    return this.http.get(`${this.url}/getRequests`);
+  }
+
+  acceptRequest(data:any){
+    return this.http.post(`${this.url}/acceptRequests`, data);
+  }
+
+  rejectRequest(data:any){
+    return this.http.put(`${this.url}/rejectRequests`, data);
+  }
+
 }

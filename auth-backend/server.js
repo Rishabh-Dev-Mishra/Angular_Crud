@@ -840,6 +840,71 @@ app.put("/deleteUser/:user_id", async(req, res)=>{
   }
 })
 
+app.post("/createRequest", upload.single("brand_logo"), async(req, res)=>{
+  try{
+      const{ brand_name, user_id} = req.body;
+
+      const image_path = req.file? req.file.filename : null;
+
+      if(!image_path || !brand_name || !user_id) return res.status(400).json({message: err});
+
+      const cleanUserId = parseInt(user_id, 10);
+
+      const exsisting = await pool.query("select * from brands where brand_name=$1", [brand_name]);
+
+      if(exsisting.rows > 0)return res.status(400).json({message: err});
+      await pool.query("Insert into requests (user_id, brand_logo, brand_name) values ($1, $2, $3)",[cleanUserId, image_path, brand_name])
+      return res.status(200).json({message: "Success request"})
+  }
+  catch(err){
+    console.log(err);
+    return res.status(400).json({message: err});
+  }
+})
+
+app.get("/getRequests", async(req, res)=>{
+  try{
+    const requests = await pool.query("select r.*, u.firstname from requests r join users u on u.id = r.user_id where r.status=$1",['pending']);
+    return res.status(200).json(requests.rows);
+  }
+  catch(err){
+    console.log(err);
+    return res.status(400).json({message: err})
+  }
+})
+
+app.post("/acceptRequests", async(req, res)=>{
+  try{
+    const {request_id, brand_logo, brand_name} = req.body;
+    if(!brand_logo || !brand_name|| !request_id) return res.status(400).json({message: "Error fetching request id"})
+
+    const cleanId = parseInt(request_id, 10);
+
+    await pool.query("insert into brands (brand_name, brand_logo) values ($1, $2)", [brand_name, brand_logo]);
+
+    await pool.query("update requests set status = $1 where request_id=$2", ['accepted', cleanId])
+    return res.status(200).json({message: "Accepted"});
+  }
+  catch(err){
+    console.log(err);
+    return res.status(400).json({message: err})
+  }
+})
+
+app.put("/rejectRequests", async(req, res)=>{
+  try{
+    const {request_id} = req.body;
+    if(!request_id) return res.status(400).json({message: "Error fetching request id"})
+      const cleanId = parseInt(request_id, 10);
+    await pool.query("update requests set status = $1 where request_id=$2", ['rejected', cleanId])
+    return res.status(200).json({message: "Rejceted"});
+  }
+  catch(err){
+    console.log(err);
+    return res.status(400).json({message: err})
+  }
+})
+
 app.listen(3000, (req, res) => {
   console.log("Server Is Running");
 });

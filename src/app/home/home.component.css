@@ -494,6 +494,285 @@ tr:hover td img {
   box-shadow: 0 12px 20px rgba(255, 0, 76, 0.4);
 }
 
+
+
+
+/* 🔔 Notification container (floating bell) */
+.notification {
+  position: fixed;
+  top: 120px; /* moved upward */
+  right: 20px;
+
+  width: 52px;
+  height: 52px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: linear-gradient(145deg, #111, #1a1a1a);
+  border-radius: 50%;
+
+  border: 1px solid rgba(255, 212, 59, 0.25);
+
+  box-shadow:
+    0 10px 25px rgba(0,0,0,0.5),
+    inset 0 0 10px rgba(255,255,255,0.05);
+
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  z-index: 3000;
+  cursor: pointer;
+
+  transition: all 0.3s ease;
+}
+
+/* 🔔 Icon */
+.notification button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+
+  font-size: 1.5rem;
+  color: #ffd43b;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: relative;
+}
+
+/* 🔴 Small glowing dot */
+.notification button::after {
+  content: "";
+  position: absolute;
+  top: 6px;
+  right: 6px;
+
+  width: 8px;
+  height: 8px;
+
+  background: #ff004c;
+  border-radius: 50%;
+
+  box-shadow: 0 0 8px rgba(255, 0, 76, 0.7);
+}
+
+/* 🔢 Badge */
+.notification .badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+
+  background: #ff004c;
+  color: white;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  padding: 3px 6px;
+  border-radius: 50%;
+
+  box-shadow: 0 0 10px rgba(255,0,76,0.5);
+}
+
+/* Hover */
+.notification:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow:
+    0 15px 35px rgba(0,0,0,0.6),
+    0 0 15px rgba(255, 212, 59, 0.3);
+}
+
+/* Hide text (clean look) */
+.notification p {
+  display: none;
+}
+
+
+/* ========================= */
+/* 🌑 MODAL OVERLAY */
+/* ========================= */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 2500;
+  padding: 20px;
+}
+
+
+/* ========================= */
+/* 🔙 BACK BUTTON */
+/* ========================= */
+
+.modal-overlay > button {
+  position: absolute;
+  top: 120px;
+  left: 25px;
+
+  padding: 10px 20px;
+  border-radius: 12px;
+
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.65);
+
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+
+  cursor: pointer;
+
+  backdrop-filter: blur(10px);
+
+  transition: all 0.3s ease;
+}
+
+.modal-overlay > button:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #ffd43b;
+  transform: translateY(-2px);
+}
+
+.modal-overlay > button:active {
+  transform: scale(0.96);
+}
+
+
+/* ========================= */
+/* 🪟 MODAL BOX */
+/* ========================= */
+
+.modal {
+  width: 95%;
+  max-width: 900px;
+  max-height: 85vh;
+
+  overflow-y: auto;
+
+  background: rgba(20, 20, 20, 0.95);
+  border: 1px solid rgba(255, 212, 59, 0.2);
+  border-radius: 18px;
+
+  padding: 25px;
+
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.6),
+    0 0 20px rgba(255, 212, 59, 0.1);
+
+  animation: modalPop 0.25s ease;
+}
+
+
+
+.modal table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Headings */
+.modal th {
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+
+  color: #ffd43b;
+  font-weight: 700;
+
+  padding: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Data (FIXED VISIBILITY) */
+.modal td {
+  padding: 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  text-align: center;
+
+  color: #111; /* FIXED from grey */
+  font-weight: 500;
+}
+
+/* Row hover */
+.modal tr:hover td {
+  background: rgba(255, 212, 59, 0.08);
+}
+
+
+/* ========================= */
+/* 🖼 IMAGE */
+/* ========================= */
+
+.modal img {
+  width: 55px;
+  height: 55px;
+  object-fit: cover;
+
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+
+/* ========================= */
+/* 🎯 BUTTONS */
+/* ========================= */
+
+.modal button {
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: none;
+
+  cursor: pointer;
+  font-weight: 600;
+
+  transition: 0.2s ease;
+}
+
+/* Accept */
+.modal button:first-of-type {
+  background: #00c853;
+  color: white;
+}
+
+/* Reject */
+.modal button:last-of-type {
+  background: #ff004c;
+  color: white;
+}
+
+.modal button:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+
+/* ========================= */
+/* ✨ ANIMATION */
+/* ========================= */
+
+@keyframes modalPop {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
 /* --- ANIMATIONS --- */
 @keyframes fadeIn {
   from { opacity: 0; }
@@ -529,6 +808,10 @@ tr:hover td img {
   .cta-group {
     justify-content: center;
   }
+
+  .modal-overlay th{
+    display: none;
+  }
 }
 
 /* For Mobile Devices */
@@ -541,6 +824,9 @@ tr:hover td img {
 
   .hero-content h1 {
     font-size: 2.5rem; /* Smaller font for mobile */
+  }
+  .modal-overlay th{
+    display: none;
   }
 
   /* Stats Grid: Stack vertically */
@@ -638,6 +924,10 @@ tr:hover td img {
   .cta-group {
     flex-direction: column;
     width: 100%;
+  }
+
+  .modal-overlay th{
+    display: none;
   }
 
   .btn, .forUser {

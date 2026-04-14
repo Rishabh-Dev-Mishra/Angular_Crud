@@ -24,6 +24,7 @@ export class HomeComponent {
   }
 
   ngOnInit(){
+    this.getRequests();
     if(this.checkUser()){
       this.switchTab('users');
     }
@@ -160,5 +161,59 @@ export class HomeComponent {
         this.toast.error(err);
       },
     });
+  }
+
+  requests: any[] = [];
+  showRequests: boolean = false;
+  showRequestIcon: boolean = false;
+
+  getRequests(){
+    this.dataservice.getRequests().subscribe({
+      next:(res:any)=>{
+        this.requests = res;
+        if(this.requests.length > 0) this.showRequestIcon = true;
+        else {this.showRequestIcon = false;
+          this.showRequests = false;
+        }
+
+      },
+      error:(err: any)=>{
+        console.log(err);
+      }
+    })
+  }
+
+  showNotification(){
+    this.showRequests = true;
+    this.showRequestIcon = false;
+  }
+
+  backFromRequests(){
+    this.showRequests = false;
+    if(this.requests.length > 0) this.showRequestIcon = true;
+  }
+
+  acceptRequest(request: any){
+    this.dataservice.acceptRequest(request).subscribe({
+      next: (res: any)=>{
+        this.toast.success("Accepted")
+        this.getRequests();
+      },
+      error: (err: any)=>{
+        console.log(err);
+      }
+    })
+  }
+
+  rejectRequest(request:any){
+    this.dataservice.rejectRequest(request).subscribe({
+      next: (res: any)=>{
+        this.toast.warning("Rejected")
+        this.getRequests();
+      },
+      error: (err: any)=>{
+        console.log(err);
+      }
+    })
   }
 }

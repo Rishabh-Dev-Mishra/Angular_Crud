@@ -1,4 +1,13 @@
 <app-navbar></app-navbar>
+<div class="notification" *ngIf="showRequestIcon" (click)="showNotification()">
+  <button>
+    🔔
+    <span *ngIf="requests.length > 0" class="badge">
+      {{ requests.length }}
+    </span>
+  </button>
+  <p>Requests</p>
+</div>
 
 <main class="content-wrapper">
   <section class="legacy-section">
@@ -7,6 +16,35 @@
       <h2>Uncompromising Excellence</h2>
       <div class="line"></div>
     </div>
+
+
+   <div class="modal-overlay" *ngIf="showRequests == true">
+    <button (click)="backFromRequests()">Back</button>
+  <div class="modal">
+    <table>
+      <tr>
+        <th>User</th>
+        <th>Brand</th>
+        <th>Logo</th>
+        <th>Accept</th>
+        <th>Reject</th>
+      </tr>
+
+      <tr *ngFor="let request of requests">
+        <td>{{ request.firstname }}</td>
+        <td>{{ request.brand_name }}</td>
+        <td>
+          <img [src]="'http://localhost:3000/uploads/' + request.brand_logo" />
+        </td>
+        <td><button (click)="acceptRequest(request)">Accept</button></td>
+        <td><button (click)="rejectRequest(request)">Reject</button></td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+
+
     <div class="luxury-management-system">
       <div class="tabs-nav">
         <button

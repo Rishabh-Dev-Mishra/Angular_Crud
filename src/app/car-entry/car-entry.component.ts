@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { afterNextRender, Component, inject } from '@angular/core';
 import { FooterComponent } from '../footer/footer.component';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -9,23 +9,18 @@ import { CommonModule, Location } from '@angular/common';
 
 @Component({
   selector: 'app-car-entry',
-  imports: [
-    FooterComponent,
-    NavbarComponent,
-    CommonModule,
-    FormsModule,
-    RouterLink,
-  ],
+  imports: [FooterComponent, NavbarComponent, CommonModule, FormsModule],
   templateUrl: './car-entry.component.html',
   styleUrl: './car-entry.component.css',
 })
 export class CarEntryComponent {
-
-  constructor(private location: Location){} 
+  constructor(private location: Location) {}
 
   private dataservice = inject(DataService);
   private toast = inject(ToastrService);
   private route = inject(ActivatedRoute);
+
+  role = this.dataservice.getUserRole();
 
   editMode: boolean = false;
 
@@ -34,9 +29,6 @@ export class CarEntryComponent {
   selectedFile: File[] = [];
 
   previews: string[] = [];
-
-
-
 
   car_detail = {
     brandName: '',
@@ -161,18 +153,15 @@ export class CarEntryComponent {
   }
 
   removeImage(index: number) {
-
     const imageToRemove = this.previews[index];
-    if(imageToRemove.startsWith('blob:')){
-      const blobPreview = this.previews.filter(p=>p.startsWith('blob:'));
-      const indexOriginal = blobPreview.indexOf(imageToRemove)
-      if(indexOriginal != -1){
+    if (imageToRemove.startsWith('blob:')) {
+      const blobPreview = this.previews.filter((p) => p.startsWith('blob:'));
+      const indexOriginal = blobPreview.indexOf(imageToRemove);
+      if (indexOriginal != -1) {
         this.selectedFile.splice(indexOriginal, 1);
       }
-    }
-    else{
-      console.log("removing form views");
-      
+    } else {
+      console.log('removing form views');
     }
     this.previews.splice(index, 1);
 
@@ -184,16 +173,18 @@ export class CarEntryComponent {
   }
 
   getformData(form: any) {
-    console.log("InfoprmData");
-    
+    console.log('InfoprmData');
+
     const formData = new FormData();
     const car_id = this.route.snapshot.paramMap.get('car_id');
     if (this.editMode && car_id) {
       formData.append('car_id', car_id);
-      console.log("CARID",formData.get('car_id'));
+      console.log('CARID', formData.get('car_id'));
     }
-    const existingImages = this.previews.filter(p=>!p.startsWith('blob:')).map(p=>p.split('/').pop());
-    formData.append("oldImages", JSON.stringify(existingImages));
+    const existingImages = this.previews
+      .filter((p) => !p.startsWith('blob:'))
+      .map((p) => p.split('/').pop());
+    formData.append('oldImages', JSON.stringify(existingImages));
     formData.append('brandName', form.value.brandName);
     formData.append('modelName', form.value.modelName);
     formData.append('category', form.value.category);
@@ -237,8 +228,7 @@ export class CarEntryComponent {
       this.toast.warning('Upload image');
       return;
     }
-  
-    
+
     this.dataservice.addCar(forms).subscribe({
       next: (res: any) => {
         this.toast.success('Added Success');
@@ -264,8 +254,8 @@ export class CarEntryComponent {
       return;
     }
     const forms = this.getformData(form);
-       
-    console.log("Before to servie",forms.get("car_id"));
+
+    console.log('Before to servie', forms.get('car_id'));
     this.dataservice.editCar(forms).subscribe({
       next: (res: any) => {
         this.toast.success('Saved Edits');
@@ -277,7 +267,49 @@ export class CarEntryComponent {
     });
   }
 
-  goBack(){
+  goBack() {
     this.location.back();
+  }
+
+  showRequestModal: boolean = false;
+  requestBrand() {
+    this.showRequestModal = true;
+  }
+  closeModal() {
+    this.showRequestModal = false;
+  }
+
+  brandLogoRequest: File | null = null;
+
+  fileForRequest(event: any) {
+    const file: File = event.target.files[0];
+    const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+
+    if (file && allowedTypes.includes(file.type)) {
+      this.brandLogoRequest = file;
+    } else {
+      this.brandLogoRequest = null;
+      this.toast?.error?.('Invalid file type');
+    }
+  }
+
+  user_id = this.dataservice.getUserId();
+
+  onSubmitRequest(form: any) {
+    if (!this.brandLogoRequest || !this.user_id || !form.value.brandName) return;
+    const requestForm = new FormData();
+
+    requestForm.append('brand_logo', this.brandLogoRequest);
+    requestForm.append('brand_name', form.value.brandName);
+    requestForm.append('user_id', this.user_id);
+    this.dataservice.createRequest(requestForm).subscribe({
+      next: (res: any) => {
+        this.toast.success('Request Sent');
+        form.reset();
+      },
+      error: (err: any) => {
+        console.log(err);
+      },
+    });
   }
 }

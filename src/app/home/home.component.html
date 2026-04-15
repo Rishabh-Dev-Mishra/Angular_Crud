@@ -123,7 +123,7 @@
                   </div>
                 </td>
                 <td data-label="Suspend User">
-                  <button class="btn" *ngIf="user.id != user_id" (click)="suspendUser($event, user.id)">Suspend</button>
+                  <button class="btn" *ngIf="user.id != user_id" (click)="suspendUser(user.id)">Suspend</button>
                 </td>
               </tr>
             </tbody>

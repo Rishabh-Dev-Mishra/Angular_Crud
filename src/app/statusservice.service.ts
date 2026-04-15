@@ -22,7 +22,7 @@ export class StatusserviceService {
   startPolling() {
     const userId = this.dataservice.getUserId();
     if (!userId) return;
-    this.pollingSub = timer(0, 30000)
+    this.pollingSub = timer(0, 3000)
       .pipe(
         switchMap(() => this.dataservice.getUserStatus(userId)),
         catchError((err) => {

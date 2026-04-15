@@ -131,9 +131,8 @@ export class HomeComponent {
   user_id = this.dataservice.getUserId();
 
 
-  suspendUser(event :any, user_id: any){
-    const suspend = event.target.checked;
-    const keep = suspend ? 'inactive' : 'active';
+  suspendUser(user_id: any){
+    const keep = 'inactive';
     const payload ={
       "user_id": user_id,
       "Update": keep

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { DataService } from '../data.service';
 import { ToastrService } from 'ngx-toastr';
 
@@ -20,9 +20,27 @@ export class ForgotpasswordComponent {
   private toast = inject(ToastrService)
   
   private router = inject(Router)
+
+  private route = inject(ActivatedRoute)
+
+  token = this.route.snapshot.paramMap.get("token");
+  id = this.route.snapshot.paramMap.get("id")
+
+  ngOnInit(){
+    this.dataservice.validateToken(this.token, this.id).subscribe({
+      next:(res:any)=>{
+        if(!res.valid) this.router.navigate(["/"]);
+      },
+      error:(err:any)=>{
+        this.router.navigate(["/"]);
+        this.toast.warning("You are on Wrong address")
+        return;
+      }
+    })
+  }
+
+
   formData = {
-    email: '',
-    firstname: '',
     password: '',
     confirmPassword: ''
   };
@@ -33,12 +51,10 @@ export class ForgotpasswordComponent {
       
  
       const payload = {
-        email: this.formData.email,
-        firstname: this.formData.firstname,
         newPassword: this.formData.password
       };
-
-      this.dataservice.resetPassword(this.formData).subscribe({
+      const token_number = this.route.snapshot.paramMap.get("id")
+      this.dataservice.resetPassword(this.formData, token_number).subscribe({
         next:(res: any)=>{
           this.toast.success("Password Reset");
           this.router.navigate(["/"])
@@ -47,7 +63,6 @@ export class ForgotpasswordComponent {
 
         }
       })
-
   
     } else {
       console.error('Form is invalid or passwords do not match');

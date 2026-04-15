@@ -195,8 +195,16 @@ export class DataService {
     return this.http.get(`${this.url}/userStatus/${user_id}`);
   }
 
-  resetPassword(data: any){
-    return this.http.put(`${this.url}/resetPassword`, data);
+  sendMail(data: any){
+    return this.http.post(`${this.url}/sendMail`, data);
+  }
+
+  validateToken(token:any, id:any){
+    return this.http.get(`${this.url}/validateToken/${token}/${id}`);
+  }
+
+  resetPassword(data: any, token_number: any){
+    return this.http.put(`${this.url}/resetPassword/${token_number}`, data);
   }
 
 }

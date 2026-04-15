@@ -187,4 +187,12 @@ export class DataService {
     return this.http.put(`${this.url}/rejectRequests`, data);
   }
 
+  updateuserStatus(data :any){
+    return this.http.put(`${this.url}/updateUserStatus`, data);
+  }
+
+  getUserStatus(user_id: any){
+    return this.http.get(`${this.url}/userStatus/${user_id}`);
+  }
+
 }

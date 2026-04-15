@@ -4,6 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { AuthServiceService } from '../auth-service.service';
+import { StatusserviceService } from '../statusservice.service';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +18,8 @@ export class LoginComponent implements OnInit{
   password = '';
   message = '';
 
-  private dataservice = inject(DataService);  
+  private dataservice = inject(DataService); 
+  private statusservice = inject(StatusserviceService) 
   private authService = inject(AuthServiceService)
   private router = inject(Router);  
   private toast = inject(ToastrService)
@@ -51,6 +53,7 @@ export class LoginComponent implements OnInit{
         else{
           this.dataservice.setProfileImage('')
         }
+        this.statusservice.startPolling();
         this.router.navigate(['/home']);
       },
       error:(err:any)=> {

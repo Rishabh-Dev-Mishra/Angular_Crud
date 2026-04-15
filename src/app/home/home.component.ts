@@ -130,6 +130,26 @@ export class HomeComponent {
   role = this.dataservice.getUserRole();
   user_id = this.dataservice.getUserId();
 
+
+  suspendUser(event :any, user_id: any){
+    const suspend = event.target.checked;
+    const keep = suspend ? 'inactive' : 'active';
+    const payload ={
+      "user_id": user_id,
+      "Update": keep
+    };
+    this.dataservice.updateuserStatus(payload).subscribe({
+      next:(res: any)=>{
+        this.toast.success("Changed the status")
+      },
+      error: (err: any)=>{
+        console.log(err);
+        this.toast.error(err)
+      }
+    })
+  }
+
+
   editUser(user_id: any) {
     if (this.role != 'admin') {
       this.toast.warning('You are not authorized to do so');

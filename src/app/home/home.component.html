@@ -17,33 +17,32 @@
       <div class="line"></div>
     </div>
 
+    <div class="modal-overlay" *ngIf="showRequests == true">
+      <button (click)="backFromRequests()">Back</button>
+      <div class="modal">
+        <table>
+          <tr>
+            <th>User</th>
+            <th>Brand</th>
+            <th>Logo</th>
+            <th>Accept</th>
+            <th>Reject</th>
+          </tr>
 
-   <div class="modal-overlay" *ngIf="showRequests == true">
-    <button (click)="backFromRequests()">Back</button>
-  <div class="modal">
-    <table>
-      <tr>
-        <th>User</th>
-        <th>Brand</th>
-        <th>Logo</th>
-        <th>Accept</th>
-        <th>Reject</th>
-      </tr>
-
-      <tr *ngFor="let request of requests">
-        <td>{{ request.firstname }}</td>
-        <td>{{ request.brand_name }}</td>
-        <td>
-          <img [src]="'http://localhost:3000/uploads/' + request.brand_logo" />
-        </td>
-        <td><button (click)="acceptRequest(request)">Accept</button></td>
-        <td><button (click)="rejectRequest(request)">Reject</button></td>
-      </tr>
-    </table>
-  </div>
-</div>
-
-
+          <tr *ngFor="let request of requests">
+            <td>{{ request.firstname }}</td>
+            <td>{{ request.brand_name }}</td>
+            <td>
+              <img
+                [src]="'http://localhost:3000/uploads/' + request.brand_logo"
+              />
+            </td>
+            <td><button (click)="acceptRequest(request)">Accept</button></td>
+            <td><button (click)="rejectRequest(request)">Reject</button></td>
+          </tr>
+        </table>
+      </div>
+    </div>
 
     <div class="luxury-management-system">
       <div class="tabs-nav">
@@ -84,6 +83,7 @@
                 <th>Manufacturer</th>
                 <th>Admin Access</th>
                 <th>Actions</th>
+                <th>Suspend User</th>
               </tr>
             </thead>
             <tbody>
@@ -121,6 +121,9 @@
                       Delete
                     </button>
                   </div>
+                </td>
+                <td data-label="Suspend User">
+                  <button class="btn" *ngIf="user.id != user_id" (click)="suspendUser($event, user.id)">Suspend</button>
                 </td>
               </tr>
             </tbody>

@@ -374,6 +374,137 @@
   padding: 4px;
 }
 
+/* 🌑 FULL SCREEN OVERLAY (BLUR BACKGROUND) */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 3000;
+  padding: 20px;
+
+  animation: fadeIn 0.25s ease;
+}
+
+/* 🪟 MODAL BOX */
+.modal-content {
+  position: relative;
+
+  width: 95%;
+  max-width: 1000px;
+  max-height: 85vh;
+
+  background: #ffffff;
+  border-radius: 24px;
+
+  padding: 60px 30px 30px;
+  overflow-y: auto;
+
+  box-shadow:
+    0 25px 60px rgba(0, 0, 0, 0.25),
+    0 10px 20px rgba(0, 0, 0, 0.08);
+
+  animation: slideUp 0.3s ease;
+}
+
+/* 🔙 BACK BUTTON */
+.modal-content > button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+
+  padding: 8px 18px;
+  border-radius: 999px;
+
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+
+  font-size: 0.8rem;
+  font-weight: 700;
+
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.modal-content > button:hover {
+  background: #0f172a;
+  color: #fff;
+  transform: translateX(-3px);
+}
+
+/* 🧾 TITLE */
+.modal-content h3 {
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: 800;
+  margin-bottom: 25px;
+  color: #0f172a;
+}
+
+/* 🖼️ IMAGE GRID */
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+/* 🖼️ IMAGE STYLE */
+.image-grid img {
+  width: 100%;
+  height: 180px;
+
+  object-fit: cover;
+  border-radius: 16px;
+
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+/* Hover effect */
+.image-grid img:hover {
+  transform: scale(1.03);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* ✨ ANIMATIONS */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(25px) scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* 📱 RESPONSIVE */
+@media (max-width: 768px) {
+  .modal-content {
+    padding: 50px 20px 20px;
+  }
+
+  .image-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .image-grid img {
+    height: 220px;
+  }
+}
+
 /* 📱 MOBILE */
 @media (max-width: 768px) {
   .inventory-wrapper {

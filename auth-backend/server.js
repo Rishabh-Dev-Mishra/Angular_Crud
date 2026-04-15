@@ -905,6 +905,36 @@ app.put("/rejectRequests", async(req, res)=>{
   }
 })
 
+app.put("/updateUserStatus", async(req, res)=>{
+  try{
+    const {user_id, Update} = req.body;
+    if(!user_id) return res.status(400).json({message: "error in updating status user id"})
+
+    const cleanId = parseInt(user_id, 10);
+    await pool.query("update users set status=$1 where id = $2", [Update, cleanId]);
+    return res.status(200).json({message: "Status Update Success", Update})
+  }
+  catch(err){
+    console.log(err);
+    return res.status(400).json({message: `error in updating status`})
+  }
+})
+
+app.get("/userStatus/:user_id", async(req, res)=>{
+  try{
+    const {user_id} = req.params;
+    if(!user_id) return res.status(400).json({message: "error in fetching status user id"})
+
+    const cleanId = parseInt(user_id, 10);
+    const status = await pool.query("select status from users where id=$1", [cleanId]);
+    return res.status(200).json(status.rows[0]);
+  }
+  catch(err){
+    console.log(err);
+    return res.status(400).json({message: `error fetching the user status`})
+  }
+})
+
 app.listen(3000, (req, res) => {
   console.log("Server Is Running");
 });

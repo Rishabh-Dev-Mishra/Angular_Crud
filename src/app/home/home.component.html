@@ -123,7 +123,13 @@
                   </div>
                 </td>
                 <td data-label="Suspend User">
-                  <button class="btn" *ngIf="user.id != user_id" (click)="suspendUser(user.id)">Suspend</button>
+                  <button
+                    class="btn"
+                    *ngIf="user.id != user_id"
+                    (click)="suspendUser(user.id)"
+                  >
+                    Suspend
+                  </button>
                 </td>
               </tr>
             </tbody>
@@ -194,7 +200,7 @@
               All Brands
             </button>
           </div>
-          <table class="luxury-table">
+          <table class="luxury-table" *ngIf="carList.length > 0; else noCars">
             <thead>
               <tr>
                 <th>Vehicle Image</th>
@@ -220,6 +226,11 @@
               </tr>
             </tbody>
           </table>
+          <ng-template #noCars>
+            <div style="font-size: large; color: white">
+              No Cars Available !!
+            </div>
+          </ng-template>
         </div>
       </div>
     </div>

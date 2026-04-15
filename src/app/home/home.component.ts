@@ -23,27 +23,46 @@ export class HomeComponent {
     return brand.brand_id;
   }
 
-  ngOnInit(){
+  role: string | null = '';
+
+  ngOnInit() {
     this.getRequests();
-    if(this.checkUser()){
+    this.role = this.dataservice.getUserRole();
+    if (this.checkUser()) {
       this.switchTab('users');
-    }
-    else{
-      this.switchTab('cars')
+    } else {
+      this.switchTab('cars');
     }
   }
 
-  switchTab(tab: 'users'|'cars'|'brands'){
+  switchTab(tab: 'users' | 'cars' | 'brands') {
     this.activeTab = tab;
-    if(tab=='users')this.users()
-      if(tab=='cars')this.allCars()
-        if(tab=='brands')this.brands()
+    if (tab == 'users') this.users();
+    if (tab == 'cars' && this.role == 'admin') this.allCars();
+    else if (tab == 'cars' && this.role == 'user') this.homeCarsOfUser();
+    if (tab == 'brands') this.brands();
   }
+
+
+
+homeCarsOfUser(){
+  const user_id = sessionStorage.getItem('user_id');
+  this.dataservice.allCars(user_id).subscribe({
+      next: (res: any) => {
+        this.carList = res;
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
+}
+
+
 
   allCarsOfUser() {
     const user_id = sessionStorage.getItem('user_id');
     if (user_id) {
-      this.router.navigate(['/allcars',user_id]);
+      this.router.navigate(['/allcars', user_id]);
     } else {
       console.log('error');
     }
@@ -115,7 +134,7 @@ export class HomeComponent {
   }
 
   goToBrands() {
-    this.router.navigate(["/brands", this.user_id]);
+    this.router.navigate(['/brands', this.user_id]);
   }
 
   updateUserRole(event: any, user_id: any) {
@@ -127,27 +146,25 @@ export class HomeComponent {
       error: (err) => console.error('Failed to update database', err),
     });
   }
-  role = this.dataservice.getUserRole();
+
   user_id = this.dataservice.getUserId();
 
-
-  suspendUser(user_id: any){
+  suspendUser(user_id: any) {
     const keep = 'inactive';
-    const payload ={
-      "user_id": user_id,
-      "Update": keep
+    const payload = {
+      user_id: user_id,
+      Update: keep,
     };
     this.dataservice.updateuserStatus(payload).subscribe({
-      next:(res: any)=>{
-        this.toast.success("Changed the status")
+      next: (res: any) => {
+        this.toast.success('Changed the status');
       },
-      error: (err: any)=>{
+      error: (err: any) => {
         console.log(err);
-        this.toast.error(err)
-      }
-    })
+        this.toast.error(err);
+      },
+    });
   }
-
 
   editUser(user_id: any) {
     if (this.role != 'admin') {
@@ -156,7 +173,6 @@ export class HomeComponent {
     }
     this.router.navigate(['/edit-profile', user_id]);
   }
-
 
   confirmDeleteButton: boolean = false;
   selectedUser: any;
@@ -186,53 +202,53 @@ export class HomeComponent {
   showRequests: boolean = false;
   showRequestIcon: boolean = false;
 
-  getRequests(){
+  getRequests() {
     this.dataservice.getRequests().subscribe({
-      next:(res:any)=>{
+      next: (res: any) => {
         this.requests = res;
-        if(this.requests.length > 0) this.showRequestIcon = true;
-        else {this.showRequestIcon = false;
+        if (this.requests.length > 0) this.showRequestIcon = true;
+        else {
+          this.showRequestIcon = false;
           this.showRequests = false;
         }
-
       },
-      error:(err: any)=>{
+      error: (err: any) => {
         console.log(err);
-      }
-    })
+      },
+    });
   }
 
-  showNotification(){
+  showNotification() {
     this.showRequests = true;
     this.showRequestIcon = false;
   }
 
-  backFromRequests(){
+  backFromRequests() {
     this.showRequests = false;
-    if(this.requests.length > 0) this.showRequestIcon = true;
+    if (this.requests.length > 0) this.showRequestIcon = true;
   }
 
-  acceptRequest(request: any){
+  acceptRequest(request: any) {
     this.dataservice.acceptRequest(request).subscribe({
-      next: (res: any)=>{
-        this.toast.success("Accepted")
+      next: (res: any) => {
+        this.toast.success('Accepted');
         this.getRequests();
       },
-      error: (err: any)=>{
+      error: (err: any) => {
         console.log(err);
-      }
-    })
+      },
+    });
   }
 
-  rejectRequest(request:any){
+  rejectRequest(request: any) {
     this.dataservice.rejectRequest(request).subscribe({
-      next: (res: any)=>{
-        this.toast.warning("Rejected")
+      next: (res: any) => {
+        this.toast.warning('Rejected');
         this.getRequests();
       },
-      error: (err: any)=>{
+      error: (err: any) => {
         console.log(err);
-      }
-    })
+      },
+    });
   }
 }

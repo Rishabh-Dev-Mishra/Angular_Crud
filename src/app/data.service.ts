@@ -195,4 +195,8 @@ export class DataService {
     return this.http.get(`${this.url}/userStatus/${user_id}`);
   }
 
+  resetPassword(data: any){
+    return this.http.put(`${this.url}/resetPassword`, data);
+  }
+
 }

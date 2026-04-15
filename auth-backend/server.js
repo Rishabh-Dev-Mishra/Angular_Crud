@@ -911,6 +911,7 @@ app.put("/updateUserStatus", async(req, res)=>{
     if(!user_id) return res.status(400).json({message: "error in updating status user id"})
 
     const cleanId = parseInt(user_id, 10);
+    
     await pool.query("update users set status=$1 where id = $2", [Update, cleanId]);
     return res.status(200).json({message: "Status Update Success", Update})
   }
@@ -924,7 +925,7 @@ app.get("/userStatus/:user_id", async(req, res)=>{
   try{
     const {user_id} = req.params;
     if(!user_id) return res.status(400).json({message: "error in fetching status user id"})
-
+    
     const cleanId = parseInt(user_id, 10);
     const status = await pool.query("select status from users where id=$1", [cleanId]);
     return res.status(200).json(status.rows[0]);
@@ -932,6 +933,27 @@ app.get("/userStatus/:user_id", async(req, res)=>{
   catch(err){
     console.log(err);
     return res.status(400).json({message: `error fetching the user status`})
+  }
+})
+
+app.put("/resetPassword", async(req, res)=>{
+  try{
+    const {email, firstname, password} = req.body;
+    
+    if(!email || !firstname || !password) return res.status(400).json({message: `error reseting password data missing`})
+
+    const name = await pool.query("Select firstname from users where email=$1", [email]);
+    
+    if(name.rows[0].firstname != firstname)return res.status(400).json({message: `error reseting password name not matched`})
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await pool.query("Update users set password=$1 where email=$2",[hashedPassword, email]);
+    return res.status(200).json({message: `Password Reset success`})
+  }
+  catch(err){
+    console.log(err);
+    return res.status(400).json({message: `error reseting password pata nhi`})
   }
 })
 

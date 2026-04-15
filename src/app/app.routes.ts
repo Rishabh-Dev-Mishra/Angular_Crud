@@ -12,6 +12,7 @@ import { CarsComponent } from './cars/cars.component';
 import { BrandEntryComponent } from './brand-entry/brand-entry.component';
 import { CarEntryComponent } from './car-entry/car-entry.component';
 import { AllCarsComponent } from './allcars/allcars.component';
+import { ForgotpasswordComponent } from './forgotpassword/forgotpassword.component';
 
 export const routes: Routes = [
     {path: "", component : LoginComponent},
@@ -24,6 +25,7 @@ export const routes: Routes = [
     {path: "brand_details", component: BrandEntryComponent},
     {path: "car_details/:user_id", component: CarEntryComponent},
     {path: "editCar/:car_id", component: CarEntryComponent},
+    {path: "forgotPassword", component: ForgotpasswordComponent},
     {path: "allcars/:user_id", component:AllCarsComponent, canActivate: [routeGuardGuard]},
     {path: "**", component: PageNotFoundComponent}
 

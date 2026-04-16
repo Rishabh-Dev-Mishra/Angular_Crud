@@ -27,6 +27,9 @@ export class AppComponent {
     }
   }
   ngOnDestroy(){
+    if(this.auth.isLoggedIn()){
+      this.statusservice.startPolling();
+    }
     this.statusservice.stopPolling();
   }
 }

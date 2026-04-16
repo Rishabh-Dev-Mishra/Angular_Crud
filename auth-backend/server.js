@@ -1019,7 +1019,8 @@ app.post("/sendMail", async (req, res) => {
   try {
     const { email, data } = req.body;
 
-    if (!email) return res.status(400).json({ message: `error sending mail no email` });
+    if (!email)
+      return res.status(400).json({ message: `error sending mail no email` });
 
     const user = await pool.query("Select * from users where email=$1", [
       email,
@@ -1048,8 +1049,7 @@ app.post("/sendMail", async (req, res) => {
 app.get("/validateToken/:token/:id", async (req, res) => {
   try {
     const { token, id } = req.params;
-    if (!token || !id)
-      return res.status(500).json({ message: "no token" });
+    if (!token || !id) return res.status(500).json({ message: "no token" });
 
     const correct = await pool.query(
       "select token_number from users where token_for_password =$1 and token_number=$2",
@@ -1061,8 +1061,6 @@ app.get("/validateToken/:token/:id", async (req, res) => {
     }
 
     return res.status(200).json({ valid: true });
-
-
   } catch (err) {
     console.log(err);
     return res.status(500).json({ message: err });
@@ -1072,13 +1070,12 @@ app.get("/validateToken/:token/:id", async (req, res) => {
 app.put("/resetPassword/:token_number", async (req, res) => {
   try {
     const { password } = req.body;
-    const {token_number} = req.params;
+    const { token_number } = req.params;
 
     if (!password)
       return res
         .status(400)
         .json({ message: `error reseting password data missing` });
-
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -1087,17 +1084,16 @@ app.put("/resetPassword/:token_number", async (req, res) => {
       token_number,
     ]);
 
-      await pool.query(
+    await pool.query(
       "Update users set token_for_password=$1, token_number=$2 where token_number=$3",
       [null, null, token_number],
     );
-
 
     return res.status(200).json({ message: `Password Reset success` });
   } catch (err) {
     console.log(err);
 
-      await pool.query(
+    await pool.query(
       "Update users set token_for_password=$1, token_number=$2 where token_number=$3",
       [null, null, token_number],
     );

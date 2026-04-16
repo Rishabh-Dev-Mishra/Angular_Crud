@@ -11,9 +11,18 @@
   <section class="upper-section">
     <div class="intro-text">
       <span class="badge">Authenticated Collection</span>
-      <h1 class="main-title">Your <span class="gradient-text">Masterpiece</span> Vault</h1>
-      <p class="subtitle">A complete overview of your registered automotive fleet.</p>
-      <button [routerLink]='["/brands",user_id]' *ngIf="user_id == loggedUser_id">Brands</button>
+      <h1 class="main-title">
+        Your <span class="gradient-text">Masterpiece</span> Vault
+      </h1>
+      <p class="subtitle">
+        A complete overview of your registered automotive fleet.
+      </p>
+      <button
+        [routerLink]="['/brands', user_id]"
+        *ngIf="user_id == loggedUser_id"
+      >
+        Brands
+      </button>
     </div>
   </section>
 
@@ -34,19 +43,22 @@
         <tr *ngFor="let car of allCars">
           <td class="vehicle-cell">
             <div class="vehicle-info">
-              <img 
-                [src]="'http://localhost:3000/uploads/' + car.car_logo[0]" 
-                [alt]="car.model_name" 
+              <img
+                [src]="'http://localhost:3000/uploads/' + car.car_logo[0]"
+                [alt]="car.model_name"
                 class="table-image"
                 (click)="getImages(car)"
               />
               <span class="model-name">{{ car.model_name }}</span>
-      
             </div>
           </td>
-          <td><span class="category-tag">{{ car.brand_name }}</span></td>
+          <td>
+            <span class="category-tag">{{ car.brand_name }}</span>
+          </td>
 
-          <td><span class="category-tag">{{ car.category }}</span></td>
+          <td>
+            <span class="category-tag">{{ car.category }}</span>
+          </td>
 
           <td class="engine-cell">{{ car.engine_type }}</td>
 
@@ -59,11 +71,13 @@
           </td>
 
           <td class="price-cell">
-            ${{ car.price ? (car.price | number) : '0' }}
+            ${{ car.price ? (car.price | number) : "0" }}
           </td>
 
           <td class="desc-cell">
-            <p class="truncate" [title]="car.description">{{ car.description }}</p>
+            <p class="truncate" [title]="car.description">
+              {{ car.description }}
+            </p>
           </td>
         </tr>
       </tbody>
@@ -80,8 +94,8 @@
       <button (click)="backToAll()">Back</button>
       <h3>Images</h3>
       <div class="image-grid">
-      <img *ngFor="let img of multiImage" [src]="img" alt="Car Image">
-    </div>
+        <img *ngFor="let img of multiImage" [src]="img" alt="Car Image" />
+      </div>
     </div>
   </div>
 </main>

@@ -8,7 +8,7 @@
         <input type="email" name="email" [(ngModel)]="formData.email" required email #emailRef="ngModel">
         <span class="error-msg" *ngIf="emailRef.invalid && emailRef.touched">Valid email is required.</span>
       </div>
-      <button type="submit">Submit</button>
+      <button [disabled]="!formData.email" type="submit">Submit</button>
     </form>
     <div *ngIf="showmssg" class="mssg"><a href="/">Go for Login</a></div>
   </div>

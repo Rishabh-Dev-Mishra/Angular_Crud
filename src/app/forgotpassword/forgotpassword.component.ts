@@ -1,19 +1,18 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from '../data.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-forgotpassword',
   standalone: true,
-  imports: [FormsModule, CommonModule, RouterLink],
+  imports: [FormsModule, CommonModule],
   templateUrl: './forgotpassword.component.html',
   styleUrl: './forgotpassword.component.css'
 })
 export class ForgotpasswordComponent {
-
 
   private dataservice= inject(DataService);
 

@@ -382,6 +382,41 @@ select.ng-invalid.ng-touched {
   transform: translateY(-2px);
 }
 
+.custom-multiselect {
+  position: relative;
+  width: 250px;
+}
+
+.select-box {
+  padding: 10px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  background: white;
+}
+
+.dropdown-content {
+  position: absolute;
+  border: 1px solid #ccc;
+  background: white;
+  width: 100%;
+  z-index: 10;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.dropdown-content label {
+  display: block;
+  padding: 8px;
+  cursor: pointer;
+}
+
+.dropdown-content label:hover {
+  background: #f0f0f0;
+}
+
+
 /* =========================
    ANIMATIONS
 ========================= */

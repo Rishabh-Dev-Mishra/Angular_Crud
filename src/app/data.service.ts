@@ -73,8 +73,7 @@ export class DataService {
     return this.http.post(this.url + '/brand_details', data);
   }
 
-  addCar(formData: FormData) {
-    const id = this.getUserId();
+  addCar(formData: FormData, id:any) {
     return this.http.post(`${this.url}/car_details/${id}`, formData);
   }
 

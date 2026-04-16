@@ -26,63 +26,94 @@
     </div>
   </section>
 
-  <section class="table-container" *ngIf="allCars.length > 0; else noData">
-    <table class="vault-table">
-      <thead>
-        <tr>
-          <th>Vehicle</th>
-          <th>Brand</th>
-          <th>Category</th>
-          <th>Engine</th>
-          <th>Performance</th>
-          <th>Price</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let car of allCars">
-          <td class="vehicle-cell">
-            <div class="vehicle-info">
-              <img
-                [src]="'http://localhost:3000/uploads/' + car.car_logo[0]"
-                [alt]="car.model_name"
-                class="table-image"
-                (click)="getImages(car)"
-              />
-              <span class="model-name">{{ car.model_name }}</span>
-            </div>
-          </td>
-          <td>
-            <span class="category-tag">{{ car.brand_name }}</span>
-          </td>
+ <section class="table-container" *ngIf="allCars.length > 0; else noData">
+  <table class="vault-table">
+    <thead>
+      <tr>
+        <th>Vehicle</th>
+        <th>Brand</th>
+        <th>Category</th>
+        <th>Engine</th>
+        <th>Performance</th>
+        <th>Price</th>
+        <th>Description</th>
+        <th>Delete Car</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let car of allCars">
 
-          <td>
-            <span class="category-tag">{{ car.category }}</span>
-          </td>
+        <td class="vehicle-cell" data-label="Vehicle">
+          <div class="vehicle-info">
+            <img
+              [src]="'http://localhost:3000/uploads/' + car.car_logo[0]"
+              [alt]="car.model_name"
+              class="table-image"
+              (click)="getImages(car)"
+            />
+            <span class="model-name">{{ car.model_name }}</span>
+          </div>
+        </td>
 
-          <td class="engine-cell">{{ car.engine_type }}</td>
+        <td data-label="Brand">
+          <span class="category-tag">{{ car.brand_name }}</span>
+        </td>
 
-          <td>
-            <div class="perf-stats">
-              <span><strong>HP:</strong> {{ car.horsepower }}</span>
-              <span><strong>TQ:</strong> {{ car.torque }} Nm</span>
-              <span><strong>Top:</strong> {{ car.top_speed }} km/h</span>
-            </div>
-          </td>
+        <td data-label="Category">
+          <span class="category-tag">{{ car.category }}</span>
+        </td>
 
-          <td class="price-cell">
-            ${{ car.price ? (car.price | number) : "0" }}
-          </td>
+        <td class="engine-cell" data-label="Engine">
+          {{ car.engine_type }}
+        </td>
 
-          <td class="desc-cell">
-            <p class="truncate" [title]="car.description">
-              {{ car.description }}
-            </p>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </section>
+        <td data-label="Performance">
+          <div class="perf-stats">
+            <span><strong>HP:</strong> {{ car.horsepower }}</span>
+            <span><strong>TQ:</strong> {{ car.torque }} Nm</span>
+            <span><strong>Top:</strong> {{ car.top_speed }} km/h</span>
+          </div>
+        </td>
+
+        <td class="price-cell" data-label="Price">
+          ${{ car.price ? (car.price | number) : "0" }}
+        </td>
+
+        <td class="desc-cell" data-label="Description">
+          <p class="truncate" [title]="car.description">
+            {{ car.description }}
+          </p>
+        </td>
+
+        <td data-label="Delete">
+          <button class="back-link" (click)="confirmDelete(car)">
+            Delete Car
+          </button>
+        </td>
+
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="delete-overlay" *ngIf="confirmDeleteButton">
+    <div class="delete-modal">
+      <div class="delete-icon">⚠️</div>
+      <h3>Confirm Deletion</h3>
+      <p>
+        Are you sure you want to remove 
+        <strong>{{ selectedCar?.model_name }}</strong> from the vault? This
+        action cannot be undone.
+      </p>
+
+      <div class="delete-actions">
+        <button class="btn-cancel" (click)="cancelDelete()">Keep Car</button>
+        <button class="btn-confirm" (click)="deleteCar()">
+          Confirm Delete
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
 
   <ng-template #noData>
     <div class="empty-state">

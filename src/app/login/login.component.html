@@ -45,7 +45,7 @@
     
         
       </div>
-      <button type="submit" [disabled] = "loginForm.invalid">Login</button>
+      <button type="submit" (click)="disableButton()" [disabled] = "loginForm.invalid || !showmssg">Login</button>
     </form>
 
     <h6><a routerLink="/mailtoreset">Forgot Password?</a></h6>

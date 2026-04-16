@@ -22,7 +22,7 @@
                 <input type="text" name="brandName" ngModel id="brandName" placeholder="e.g. Aston Martin">
             </div>
 
-            <button type="submit" class="submit-btn">
+            <button type="submit" (click)="disableButton()" [disabled] = "brandform.invalid || !showmssg" class="submit-btn">
                 <span>Save Brand</span>
             </button>
         </form>

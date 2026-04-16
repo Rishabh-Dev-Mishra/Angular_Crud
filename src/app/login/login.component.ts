@@ -28,8 +28,15 @@ export class LoginComponent implements OnInit{
     this.authService.logout();
   }
 
-  login(form: any){
+   showmssg: boolean = true;
 
+  
+  disableButton(){
+    this.showmssg = false;
+  }
+
+  login(form: any){
+    this.showmssg = false;
     if (form.invalid) {
     this.toast.warning('Please fix the errors before logging in', 'Form Invalid');
     return;
@@ -61,6 +68,7 @@ export class LoginComponent implements OnInit{
     ? err.error 
     : (err.error?.message || "An unexpected error occurred");
         this.toast.error(backendMessage);
+        this.showmssg = true
       },
     })
   }

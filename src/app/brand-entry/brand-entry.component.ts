@@ -30,8 +30,17 @@ export class BrandEntryComponent {
       this.selectedFile = file;
     }
   }
+
+  showmssg: boolean = true;
+
+  
+  disableButton(){
+    this.showmssg = false;
+  }
   
   update(form :any){
+        this.showmssg = false;
+
     if (form.invalid) {
       this.toast.warning('Please fix the errors before submitting', 'Form Invalid');
       return;
@@ -50,8 +59,12 @@ export class BrandEntryComponent {
       next: (res:any)=>{
         this.toast.success("Added Successfully")
         form.resetForm();
+        this.showmssg = true;
+
       },
       error: (err:any)=>{
+        this.showmssg = true;
+
         this.toast.error("Wrong!!");
         console.log(err);
       }

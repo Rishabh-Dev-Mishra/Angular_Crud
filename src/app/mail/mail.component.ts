@@ -21,10 +21,12 @@ export class MailComponent {
     data: 'new user'
   };
 
+  
+  user: any[] = [];
+  
   showmssg: boolean = true;
 
-  user: any[] = [];
-
+  
   disableButton(){
     this.showmssg = false;
   }

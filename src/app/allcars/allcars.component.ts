@@ -4,6 +4,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
 import { CommonModule, Location } from '@angular/common';
 import { DataService } from '../data.service';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-allcars',
@@ -17,6 +18,7 @@ export class AllCarsComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private dataservice = inject(DataService);
   private router = inject(Router);
+  private toast = inject(ToastrService)
 
   allCars: any[] = [];
   userData: any;
@@ -30,7 +32,7 @@ export class AllCarsComponent implements OnInit {
     this.location.back();
   }
 
-  ngOnInit() {
+  getAllCars() {
     console.log(this.user_id);
 
     this.dataservice.allCars(this.user_id).subscribe({
@@ -41,6 +43,9 @@ export class AllCarsComponent implements OnInit {
         console.error(err);
       },
     });
+  }
+  ngOnInit() {
+    this.getAllCars();
   }
 
   getImages(carData: any) {
@@ -61,4 +66,29 @@ export class AllCarsComponent implements OnInit {
     this.showModal = false;
     this.multiImage = [];
   }
+
+confirmDeleteButton: boolean = false;
+  confirmDelete(car: any) {
+    this.confirmDeleteButton = true;
+    this.selectedCar = car;
+  }
+
+  cancelDelete() {
+    this.confirmDeleteButton = false;
+    this.selectedCar = null;
+  }
+  deleteCar() {
+    this.dataservice.deleteCar(this.selectedCar).subscribe({
+      next: (res: any) => {
+        this.toast.success('Successfully Deleted');
+        this.cancelDelete();
+        this.getAllCars();
+      },
+      error: (err: any) => {
+        console.log(err);
+        this.cancelDelete();
+      },
+    });
+  }
+  selectedCar: any;
 }

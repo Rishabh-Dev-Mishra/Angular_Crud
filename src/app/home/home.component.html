@@ -125,10 +125,17 @@
                 <td data-label="Suspend User">
                   <button
                     class="btn"
-                    *ngIf="user.id != user_id"
+                    *ngIf="user.id != user_id && user.status=='active'"
                     (click)="suspendUser(user.id)"
                   >
                     Suspend
+                  </button>
+                  <button
+                    class="btn"
+                    *ngIf="user.id != user_id && user.status=='inactive'"
+                    (click)="activateUser(user.id)"
+                  >
+                    Activate
                   </button>
                 </td>
               </tr>

@@ -57,14 +57,10 @@ export class LoginComponent implements OnInit{
         this.router.navigate(['/home']);
       },
       error:(err:any)=> {
-        if (err.status === 401 ) {
-        this.toast.error("Invalid email or password")
-      } else if (err.status === 400) {
-        this.toast.error("User Not Registered");
-      } else {
-        this.toast.error("An unexpected error occurred");
-      }
-        this.message = err.error?.message || "Login failed";
+        const backendMessage = typeof err.error === 'string' 
+    ? err.error 
+    : (err.error?.message || "An unexpected error occurred");
+        this.toast.error(backendMessage);
       },
     })
   }

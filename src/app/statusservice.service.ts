@@ -32,7 +32,7 @@ export class StatusserviceService {
       )
       .subscribe({
         next: (res: any) => {
-          if (res && (res.status === 'inactive' || res.status === 'Inactive')) {
+          if (res && (res.status === 'inactive')) {
             this.logoutAndRedirect();
           }
         },

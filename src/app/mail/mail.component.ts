@@ -21,14 +21,18 @@ export class MailComponent {
     data: 'new user'
   };
 
-  showmssg: boolean = false;
-  ngOnInit(){
+  showmssg: boolean = true;
+
+  user: any[] = [];
+
+  disableButton(){
     this.showmssg = false;
   }
 
   onSubmit(form: any){
+    this.showmssg = false
     this.formData.email = form.value.email;
-    console.log("Sending ema");
+    console.log("Sending email");
     
     this.dataservice.sendMail(this.formData).subscribe({
       next:(res:any)=>{
@@ -37,7 +41,11 @@ export class MailComponent {
         this.showmssg = true;
       },
       error:(err:any)=>{
-        this.toast.error("Enter Your mail again");
+        const backendMessage = err.error?.message || "An unexpected error occurred";
+        this.toast.error(backendMessage);
+                form.reset();
+                this.showmssg = true;
+
         console.log(err)
       }
     })

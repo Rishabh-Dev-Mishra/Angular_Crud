@@ -116,6 +116,7 @@
                   #fileInput
                   (change)="fileForRequest($event)"
                   name="logo"
+                  required
                   id="logo"
                   accept="image/*"
                 />
@@ -126,12 +127,22 @@
               <label for="brandName">Official Name</label>
               <input
                 type="text"
+                required
                 name="brandName"
                 ngModel
                 id="brandName"
                 placeholder="e.g. Aston Martin"
               />
+              <span
+              class="error-text"
+              *ngIf="
+                brandName.invalid && (brandName.dirty || brandName.touched)
+              "
+            >
+              Brand name is required.
+            </span>
             </div>
+            
 
             <button type="submit" class="submit-btn">
               <span>Save Brand</span>
@@ -177,7 +188,6 @@
               (change)="onCheckboxChange($event, user.id)"
             />
             <span *ngIf="user.role != 'admin'"> {{ user.firstname }} </span>
-            
           </label>
         </div>
       </div>

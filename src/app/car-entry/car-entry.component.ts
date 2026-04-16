@@ -355,8 +355,9 @@ export class CarEntryComponent {
   user_id = this.dataservice.getUserId();
 
   onSubmitRequest(form: any) {
-    if (!this.brandLogoRequest || !this.user_id || !form.value.brandName)
-      return;
+    if (!this.brandLogoRequest || !this.user_id || !form.value.brandName){
+      this.toast.warning("All fields required")
+      return;}
     const requestForm = new FormData();
 
     requestForm.append('brand_logo', this.brandLogoRequest);
@@ -368,6 +369,7 @@ export class CarEntryComponent {
         form.reset();
       },
       error: (err: any) => {
+        this.toast.warning("Exsisting Brand")
         console.log(err);
       },
     });

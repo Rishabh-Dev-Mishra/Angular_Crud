@@ -163,7 +163,16 @@ app.post("/login", async (req, res) => {
     );
 
     if (ExisitingUser.rows.length === 0) {
-      return res.status(400).send("User not found");
+      return res.status(400).json("User not found");
+    }
+
+    const userStatus = await pool.query(
+      "SELECT * FROM users WHERE email = $1 and status='active'",
+      [email],
+    );
+
+     if (userStatus.rows.length === 0) {
+      return res.status(400).json("Your Account is Suspended");
     }
 
     const isMatch = await bcrypt.compare(
@@ -172,7 +181,7 @@ app.post("/login", async (req, res) => {
     );
 
     if (!isMatch) {
-      return res.status(401).send("Invalid password");
+      return res.status(401).json("Invalid password");
     }
 
     const userImage = ExisitingUser.rows[0].image_path;
@@ -186,10 +195,6 @@ app.post("/login", async (req, res) => {
     });
     const userName = ExisitingUser.rows[0].firstname;
     const user_id = ExisitingUser.rows[0].id;
-    await pool.query("update users set status=$1 where id = $2", [
-      "Active",
-      user_id,
-    ]);
     res.json({
       message: "Login Success",
       token: token,
@@ -371,10 +376,10 @@ app.put("/logout/:user_id", async (req, res) => {
       return res.status(400).json({ message: "Invalid user_id" });
     }
 
-    await pool.query("update users set status=$1 where id = $2", [
-      status,
-      cleanUserId,
-    ]);
+    // await pool.query("update users set status=$1 where id = $2", [
+    //   status,
+    //   cleanUserId,
+    // ]);
     return res.status(200).json({ message: "LoggedOut" });
   } catch (err) {
     console.log(err);
@@ -936,7 +941,7 @@ app.post("/createRequest", upload.single("brand_logo"), async (req, res) => {
     );
 
     if (exsisting.rows.length > 0)
-      return res.status(400).json({ message: err });
+      return res.status(400).json({ message: "This brand Already exsists" });
     await pool.query(
       "Insert into requests (user_id, brand_logo, brand_name) values ($1, $2, $3)",
       [cleanUserId, image_path, brand_name],
@@ -1055,6 +1060,10 @@ app.post("/sendMail", async (req, res) => {
 
     if (user.rows.length == 0)
       return res.status(400).json({ message: `error sending mail no user` });
+
+    const userStatus = await pool.query("select status from users where email=$1 and status = 'active'",[email])
+
+    if(userStatus.rows.length == 0) return res.status(400).json({ message: `Your account is suspended` });
 
     const token = jwt.sign({ email: email }, process.env.SECRET, {
       expiresIn: "15m",

@@ -14,22 +14,15 @@ import { StatusserviceService } from './statusservice.service';
 })
 export class AppComponent {
 
-    constructor(private dataservice: DataService, private auth:AuthServiceService, private statusservice: StatusserviceService) {}
+  constructor(private dataservice: DataService, private auth:AuthServiceService, private statusservice: StatusserviceService) {}
   title = 'Car Gallery';
-   @HostListener('window:beforeunload', ['$event'])
-  unloadHandler(event: Event) {
-      this.dataservice.logOut().subscribe();
-    
-  }
+
   ngOnInit(){
     if(this.auth.isLoggedIn()){
       this.statusservice.startPolling();
     }
   }
   ngOnDestroy(){
-    if(this.auth.isLoggedIn()){
-      this.statusservice.startPolling();
-    }
     this.statusservice.stopPolling();
   }
 }

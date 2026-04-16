@@ -37,7 +37,9 @@ export class HomeComponent {
 
   switchTab(tab: 'users' | 'cars' | 'brands') {
     this.activeTab = tab;
-    if (tab == 'users') this.users();
+    if (tab == 'users') {
+      this.users();
+    }
     if (tab == 'cars' && this.role == 'admin') this.allCars();
     else if (tab == 'cars' && this.role == 'user') this.homeCarsOfUser();
     if (tab == 'brands') this.brands();
@@ -157,6 +159,25 @@ homeCarsOfUser(){
     };
     this.dataservice.updateuserStatus(payload).subscribe({
       next: (res: any) => {
+        this.users();
+        this.toast.success('Changed the status');
+      },
+      error: (err: any) => {
+        console.log(err);
+        this.toast.error(err);
+      },
+    });
+  }
+
+   activateUser(user_id: any) {
+    const keep = 'active';
+    const payload = {
+      user_id: user_id,
+      Update: keep,
+    };
+    this.dataservice.updateuserStatus(payload).subscribe({
+      next: (res: any) => {
+        this.users();
         this.toast.success('Changed the status');
       },
       error: (err: any) => {

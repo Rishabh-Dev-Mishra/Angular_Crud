@@ -26,10 +26,10 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use((req, res, next) => {
-  console.log("➡️ API HIT:", req.method, req.url);
-  next();
-});
+// app.use((req, res, next) => {
+//   console.log("➡️ API HIT:", req.method, req.url);
+//   next();
+// });
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -45,13 +45,40 @@ const sendMail = async (userEmail, token, id) => {
   const mailOptions = {
     from: '"Car Gallery" <rishumishra3899@gmail.com>',
     to: userEmail,
-    subject: "Reset Password Request",
+    subject: "Reset Your Password - Car Gallery",
     html: `
-            <p>You requested a password reset.</p>
-            <p>Click the link below to set a new password. This link expires in 15 minutes:</p>
-            <a href="${resetUrl}">${resetUrl}</a>
-        `,
-  };
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
+      <div style="background-color: #1a1a1a; padding: 20px; text-align: center;">
+        <h1 style="color: #ffffff; margin: 0; font-size: 24px;">Car Gallery</h1>
+      </div>
+      <div style="padding: 30px; color: #333333; line-height: 1.6;">
+        <h2 style="margin-top: 0;">Password Reset Request</h2>
+        <p>Hi there,</p>
+        <p>We received a request to reset the password for your Car Gallery account. If you didn't make this request, you can safely ignore this email.</p>
+        
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="${resetUrl}" 
+             style="background-color: #007bff; color: white; padding: 12px 25px; text-decoration: none; font-weight: bold; border-radius: 5px; display: inline-block;">
+             Reset My Password
+          </a>
+        </div>
+        
+        <p style="font-size: 0.9em; color: #666666;">
+          This link will <strong>expire in 15 minutes</strong> for your security.
+        </p>
+        <hr style="border: 0; border-top: 1px solid #eeeeee; margin: 20px 0;">
+        <p style="font-size: 0.8em; color: #999999;">
+          If the button above doesn't work, copy and paste this URL into your browser:<br>
+          <span style="color: #007bff;">${resetUrl}</span>
+        </p>
+      </div>
+      <div style="background-color: #f9f9f9; padding: 15px; text-align: center; font-size: 12px; color: #999999;">
+        © ${new Date().getFullYear()} Car Gallery. All rights reserved.
+      </div>
+    </div>
+    `,
+};
+
   return transporter.sendMail(mailOptions);
 };
 

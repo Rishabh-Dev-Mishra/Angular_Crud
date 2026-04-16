@@ -502,7 +502,7 @@ app.get("/brands/:user_id", async (req, res) => {
     const query = `
       SELECT * FROM brands 
       WHERE brand_id IN (
-        SELECT DISTINCT brand_id FROM cars WHERE user_id = $1
+        SELECT DISTINCT brand_id FROM cars WHERE user_id = $1 and cars.deleted_at is null
       )
     `;
 

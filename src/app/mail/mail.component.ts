@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { DataService } from '../data.service';
 import { ToastrService } from 'ngx-toastr';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-mail',
@@ -15,6 +16,7 @@ export class MailComponent {
 
   private dataservice = inject(DataService);
   private toast = inject (ToastrService);
+  private router = inject(Router)
 
   formData = {
     email: '', 
@@ -41,6 +43,7 @@ export class MailComponent {
         this.toast.success("Please check mail for resetting")
         form.reset();
         this.showmssg = true;
+        this.router.navigate(["/"])
       },
       error:(err:any)=>{
         const backendMessage = err.error?.message || "An unexpected error occurred";

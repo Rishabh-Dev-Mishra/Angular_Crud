@@ -35,8 +35,6 @@
           #passRef="ngModel"
           required
           minlength="8"
-          pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*]).*"
-          title="Must contain at least one number, one uppercase, one lowercase letter, and one special character (!@#$%^&*), and be at least 8 characters long"
           placeholder="password"
         />
         @if (passRef.errors?.["required"] && passRef.touched) {
@@ -45,7 +43,7 @@
     
         
       </div>
-      <button type="submit" (click)="disableButton()" [disabled] = "loginForm.invalid || !showmssg">Login</button>
+      <button type="submit" (click)="disableButton()">Login</button>
     </form>
 
     <h6><a routerLink="/mailtoreset">Forgot Password?</a></h6>

@@ -2,7 +2,6 @@
   <i class="fa fa-arrow-left"></i> Back
 </a>
 <div class="container">
-  <!-- Toggle Buttons -->
   <div class="toggle-container">
     <button
       type="button"
@@ -30,9 +29,7 @@
       "
     >
       <div class="cred" *ngIf="!showPasswordFields; else pass">
-        <!-- 1. Profile Image Section -->
         <div class="profile-img-container" (click)="fileInput.click()">
-          <!-- Uses the getter: shows preview if selected, else DB image -->
           <img
             [src]="imageURL"
             alt="Profile"
@@ -44,7 +41,6 @@
           </ng-template>
         </div>
 
-        <!-- 2. Hidden File Input -->
         <input
           type="file"
           #fileInput

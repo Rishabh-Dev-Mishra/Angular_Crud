@@ -1,4 +1,3 @@
-/* Container to push content below the sticky navbar */
 .admin-page-wrapper {
     display: flex;
     justify-content: center;
@@ -8,7 +7,6 @@
     font-family: 'Inter', sans-serif;
 }
 
-/* The Glass Card */
 .glass-form-card {
     background: rgba(255, 255, 255, 0.03);
     backdrop-filter: blur(15px);
@@ -35,7 +33,6 @@
     margin-bottom: 40px;
 }
 
-/* Form Styling */
 .premium-form {
     display: flex;
     flex-direction: column;
@@ -58,7 +55,6 @@
     margin-left: 5px;
 }
 
-/* Input Fields */
 input[type="text"] {
    color: black;
     background: rgba(255, 255, 255, 0.08);
@@ -97,7 +93,6 @@ input[type="file"]::file-selector-button:hover {
     background: #444;
 }
 
-/* The Submit Button */
 .submit-btn {
     margin-top: 10px;
     background: #ff004c;

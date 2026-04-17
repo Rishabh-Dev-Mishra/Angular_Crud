@@ -38,13 +38,13 @@ input {
 .admin {
     display: flex;
     align-items: center;
-    gap: 12px; /* Gap between text and checkbox */
+    gap: 12px; 
     padding: 10px 0;
     cursor: pointer;
 }
 
 .admin h5 {
-    margin: 0; /* Remove default margins */
+    margin: 0; 
 }
 
 .admin input[type="checkbox"] {
@@ -52,7 +52,7 @@ input {
     height: 20px;
     margin-left: 90px;
     cursor: pointer;
-    accent-color: #f6ef3b; /* Matches button color */
+    accent-color: #f6ef3b; 
 }
 
 
@@ -74,7 +74,6 @@ input:focus {
     gap: 10px;
 }
 
-/* Labels */
 .cred h5 {
     font-size: 0.9rem;
     color: #666;
@@ -99,10 +98,9 @@ button:hover {
     transform: scale(1.03);
 }
 
-/* Container for the toggle */
 .toggle-container {
   display: flex;
-  background-color: #f1f3f5; /* Light grey background */
+  background-color: #f1f3f5; 
   padding: 5px;
   margin-top: 40px;
   border-radius: 12px;
@@ -111,7 +109,6 @@ button:hover {
   border: 1px solid #e9ecef;
 }
 
-/* Base button styles */
 .toggle-container button {
   border: none;
   background: none;
@@ -121,23 +118,20 @@ button:hover {
   color: #495057;
   cursor: pointer;
   border-radius: 8px;
-  transition: all 0.3s ease; /* Smooth transition */
+  transition: all 0.3s ease; 
 }
 
-/* Hover state for inactive buttons */
 .toggle-container button:hover:not(.active) {
   background-color: #e9ecef;
   color: #212529;
 }
 
-/* Active state (The selected button) */
 .toggle-container button.active {
-  background-color: #ffffff; /* White card effect */
-  color: #007bff; /* Primary brand color */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+  background-color: #ffffff; 
+  color: #007bff; 
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); 
 }
 
-/* Layout for your existing box */
 .box {
   background: white;
   padding: 30px;
@@ -145,7 +139,7 @@ button:hover {
   box-shadow: 0 10px 25px rgba(0,0,0,0.1);
   display: flex;
   flex-direction: column;
-  align-items: center; /* Center the toggle in the box */
+  align-items: center; 
 }
 
 

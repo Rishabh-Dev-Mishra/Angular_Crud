@@ -1,14 +1,12 @@
-/* Color Palette & Variables */
 :root {
-  --footer-bg: #111827;        /* Deep Midnight */
-  --accent-blue: #3b82f6;      /* Modern Blue */
+  --footer-bg: #111827;        
+  --accent-blue: #3b82f6;      
   --text-main: #ffffff;
-  --text-muted: #9ca3af;       /* Soft Gray */
-  --bottom-bar-bg: #030712;    /* Darker Black */
+  --text-muted: #9ca3af;       
+  --bottom-bar-bg: #030712;   
   --transition: all 0.3s ease;
 }
 
-/* Reset for the footer area */
 .footer {
   background-color: var(--footer-bg);
   color: var(--text-main);
@@ -16,18 +14,17 @@
   font-family: 'Inter', system-ui, sans-serif;
 }
 
-/* Main Layout Container */
+
 .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 24px 60px;
   display: flex;
   justify-content: space-between;
-  flex-wrap: wrap; /* Critical for mobile responsiveness */
+  flex-wrap: wrap; 
   gap: 40px;
 }
 
-/* Left Section: Logo & About */
 .footer-left {
   flex: 1;
   min-width: 280px;
@@ -55,7 +52,6 @@
   font-weight: 500;
 }
 
-/* Social Media Icons */
 .social-icons {
   display: flex;
   gap: 16px;
@@ -73,10 +69,9 @@
   transform: translateY(-3px);
 }
 
-/* Right Section: Link Groups */
 .footer-right {
   display: flex;
-  gap: 80px; /* Space between Feature and Support lists */
+  gap: 80px; 
   flex-wrap: wrap;
 }
 
@@ -108,7 +103,6 @@
   transform: translateX(5px);
 }
 
-/* Bottom Copyright Bar */
 .bottom-bar {
   background-color: var(--bottom-bar-bg);
   padding: 24px;
@@ -122,7 +116,6 @@
   margin: 0;
 }
 
-/* Mobile Adjustments */
 @media (max-width: 768px) {
   .container {
     flex-direction: column;

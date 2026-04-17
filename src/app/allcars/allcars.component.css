@@ -5,30 +5,26 @@
   color: #f0f0f0;
 }
 
-/* Back Button Styling */
 .navigation-header {
   margin-bottom: 40px;
 }
 
 .back-link,.upper-section button {
-  /* Layout & Positioning */
   display: inline-flex;
   align-items: center;
   gap: 15px;
   padding: 12px 28px;
   background-color: #c5a059;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 4px; /* Sharp corners feel more "technical" than round ones */
+  border-radius: 4px; 
   
-  /* Typography */
   color: #0d0d0e;
   text-decoration: none;
   text-transform: uppercase;
   font-size: 0.7rem;
   font-weight: 700;
-  letter-spacing: 4px; /* Essential for luxury branding */
+  letter-spacing: 4px; 
   
-  /* Animation */
   transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
   cursor: pointer;
   position: relative;
@@ -38,12 +34,11 @@
 .back-link:hover, .upper-section button:hover {
   color: #e81010;
   background: rgba(234, 228, 228, 0.08);
-  border-color: #c5a059; /* That accent gold we used earlier */
-  transform: translateX(-5px); /* Subtle physical feedback */
+  border-color: #c5a059; 
+  transform: translateX(-5px); 
   box-shadow: -10px 0 20px rgba(197, 160, 89, 0.1);
 }
 
-/* The Animated Icon */
 .back-link .icon {
   font-size: 1rem;
   transition: transform 0.4s ease;
@@ -54,13 +49,11 @@
   color: #c5a059;
 }
 
-/* Subtle "Scanning" Glow Effect */
 .back-link::after {
   content: '';
   position: absolute;
   top: 0;
   left: -100%;
-  /* width: 100%; */
   height: 100%;
   background: linear-gradient(
     90deg,
@@ -74,7 +67,6 @@
 .back-link:hover::after {
   left: 100%;
 }
-/* Typography */
 .upper-section {
   text-align: center;
   margin-bottom: 60px;
@@ -100,17 +92,15 @@
   text-transform: uppercase;
 }
 
-/* Container Spacing */
 .table-container {
   padding: 0 40px 60px;
   overflow-x: auto; 
 }
 
-/* Table Logic */
 .vault-table {
   width: 100%;
   border-collapse: separate;
-  border-spacing: 0 12px; /* Gap between rows */
+  border-spacing: 0 12px; 
   font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
@@ -124,7 +114,7 @@
   font-weight: 700;
 }
 
-/* Row Styling */
+
 .vault-table tbody tr {
   background: white;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -143,7 +133,6 @@
   border-bottom: 1px solid #f1f5f9;
 }
 
-/* First and Last TD rounding for the "card" effect */
 .vault-table td:first-child {
   border-left: 1px solid #f1f5f9;
   border-radius: 12px 0 0 12px;
@@ -153,7 +142,6 @@
   border-radius: 0 12px 12px 0;
 }
 
-/* Vehicle Info Cell */
 .vehicle-info {
   display: flex;
   align-items: center;
@@ -173,7 +161,6 @@
   color: #0f172a;
 }
 
-/* Performance and Tags */
 .category-tag {
   background: #f1f5f9;
   padding: 4px 10px;
@@ -200,7 +187,6 @@
   color: #0f172a;
 }
 
-/* Truncate Description */
 .truncate {
   max-width: 250px;
   white-space: nowrap;
@@ -302,13 +288,11 @@
   z-index: 1000;
 }
 
-/* ⚠️ Icon */
 .delete-icon {
   font-size: 42px;
   margin-bottom: 15px;
 }
 
-/* Title */
 .delete-modal h3 {
   font-size: 1.3rem;
   font-weight: 800;
@@ -316,15 +300,13 @@
   color: #0f172a;
 }
 
-/* Text */
 .delete-modal p {
-  color: #475569; /* darker for better readability */
+  color: #475569; 
   font-size: 0.95rem;
   line-height: 1.5;
   margin-bottom: 24px;
 }
 
-/* 🔘 Buttons */
 .delete-actions {
   display: flex;
   gap: 12px;
@@ -345,7 +327,6 @@
   border: none;
 }
 
-/* Cancel */
 .btn-cancel {
   background: #f1f5f9;
   color: #475569;
@@ -355,7 +336,6 @@
   background: #e2e8f0;
 }
 
-/* Confirm */
 .btn-confirm {
   background: #ef4444;
   color: white;
@@ -367,9 +347,7 @@
   box-shadow: 0 6px 14px rgba(239, 68, 68, 0.3);
 }
 
-/* ================= RESPONSIVE ================= */
 
-/* Tablets */
 @media (max-width: 1024px) {
   .main-title {
     font-size: 2.3rem;
@@ -389,7 +367,6 @@
 }
 
 
-/* Mobile */
 @media (max-width: 768px) {
 
   .inventory-wrapper {
@@ -408,7 +385,6 @@
     margin-bottom: 30px;
   }
 
-  /* TABLE → CARD VIEW */
   .vault-table thead {
     display: none;
   }
@@ -427,27 +403,24 @@
     overflow: hidden;
   }
 
-  /* FIXED MOBILE TABLE */
 .vault-table td {
   display: flex;
-  flex-direction: column;   /* 🔥 stack instead of pushing apart */
-  align-items: flex-start;  /* align properly */
+  flex-direction: column;  
+  align-items: flex-start;  
   padding: 12px 15px;
   border: none;
   border-bottom: 1px solid #eee;
 }
 
-/* Label */
 .vault-table td::before {
   content: attr(data-label);
   font-weight: 700;
   color: #64748b;
   font-size: 0.7rem;
   text-transform: uppercase;
-  margin-bottom: 4px;   /* space between label & value */
+  margin-bottom: 4px;   
 }
 
-/* Fix content overflow */
 .vault-table td > * {
   word-break: break-word;
 }
@@ -481,11 +454,11 @@
   }
   
   .vault-table td {
-    overflow: hidden; /* prevents spill outside */
+    overflow: hidden; 
   }
 
 
-  /* Buttons */
+
   .back-link,
   .upper-section button {
     padding: 10px 18px;
@@ -495,7 +468,6 @@
 
   
 
-  /* Modal */
   .modal-content {
     padding: 50px 20px 20px;
   }
@@ -506,7 +478,6 @@
 }
 
 
-/* Small Mobile */
 @media (max-width: 480px) {
 
   .main-title {

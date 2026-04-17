@@ -29,14 +29,12 @@ export class NavbarComponent {
     this.router.navigate(['/']);
   }
 
- // navbar.component.ts
 
  user_id: string = this.dataservice.getUserId()?? '';
 
 addBrand() {
   const userId = sessionStorage.getItem("user_id");
   if (userId) {
-    // Navigates to /brand_details/5
     this.router.navigate(['/brand_details']); 
   } else {
     this.router.navigate(['/login']);
@@ -46,7 +44,6 @@ addBrand() {
 addCar() {
   const userId = sessionStorage.getItem("user_id");
   if (userId) {
-    // Navigates to /car_details/5
     this.router.navigate(['/car_details', userId]); 
   } else {
     this.router.navigate(['/login']);

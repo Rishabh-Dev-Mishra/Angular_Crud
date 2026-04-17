@@ -26,10 +26,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// app.use((req, res, next) => {
-//   console.log("➡️ API HIT:", req.method, req.url);
-//   next();
-// });
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -247,7 +243,6 @@ app.get("/userInfo/:user_id", verifyToken, async (req, res) => {
     const user = await pool.query("select * from users where id=$1", [
       cleanUserId,
     ]);
-    // console.log(user);
 
     return res.status(200).json(user.rows[0]);
   } catch (err) {
@@ -322,9 +317,6 @@ app.post(
         }
 
         const cleanUserId = parseInt(user_id, 10);
-        // >>>>>>>>>console.log("user_id:", user_id);
-        // >>>>>>>>>console.log("cleanUserId:", cleanUserId);
-        // >>>>>>>>>console.log(email);
         
 
         const existingUser = await pool.query(
@@ -337,7 +329,6 @@ app.post(
           [email, cleanUserId],
         );
 
-        // console.log(exsistingemail.rows);
 
         if (existingUser.rows.length == 0) {
           return res.status(400).json({ message: "User does not exist" });
@@ -412,11 +403,6 @@ app.put("/logout/:user_id", verifyToken, async (req, res) => {
     if (isNaN(cleanUserId)) {
       return res.status(400).json({ message: "Invalid user_id" });
     }
-
-    // await pool.query("update users set status=$1 where id = $2", [
-    //   status,
-    //   cleanUserId,
-    // ]);
     return res.status(200).json({ message: "LoggedOut" });
   } catch (err) {
     console.log(err);
@@ -584,7 +570,6 @@ app.get("/brands/:user_id", verifyToken, async (req, res) => {
 
     const brands = await pool.query(query, [userID]);
 
-    // 3. Return only the rows array
     return res.status(200).json(brands.rows);
   } catch (err) {
     console.error("Database Error:", err.message);

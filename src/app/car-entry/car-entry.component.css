@@ -1,8 +1,6 @@
-/* 1. Global Setup - Airy & Professional */
 :host {
     display: block;
     background-color: #f8fafc;
-    /* Subtle mesh gradient for a "studio lighting" effect */
     background-image: 
         radial-gradient(at 0% 0%, rgba(226, 232, 240, 0.5) 0, transparent 50%), 
         radial-gradient(at 100% 100%, rgba(241, 245, 249, 0.5) 0, transparent 50%);
@@ -10,7 +8,6 @@
     overflow-x: hidden;
 }
 
-/* Container & Layout */
 .admin-page-wrapper {
     position: relative;
     display: flex;
@@ -21,7 +18,6 @@
     font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
 }
 
-/* The Sophisticated White Card */
 .glass-form-card {
     background: rgba(255, 255, 255, 0.8);
     backdrop-filter: blur(20px);
@@ -31,16 +27,14 @@
     padding: 60px;
     width: 100%;
     max-width: 750px;
-    /* Multi-layered "soft" shadows */
     box-shadow: 
         0 4px 6px -1px rgba(0, 0, 0, 0.02),
         0 20px 25px -5px rgba(0, 0, 0, 0.05),
         0 40px 60px -15px rgba(0, 0, 0, 0.03);
 }
 
-/* Typography */
 .main-title {
-    color: #0f172a; /* Midnight Blue */
+    color: #0f172a;
     font-size: 2.8rem;
     margin-bottom: 8px;
     font-weight: 800;
@@ -55,16 +49,15 @@
     letter-spacing: 0.5px;
 }
 
-/* Form Grid */
 .premium-form {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 30px;
 }
 
-.premium-form .input-group:nth-child(1), /* Photo Section */
-.premium-form .input-group:nth-child(2), /* Brand Name */
-.premium-form .input-group:last-of-type,   /* Description */
+.premium-form .input-group:nth-child(1), 
+.premium-form .input-group:nth-child(2),
+.premium-form .input-group:last-of-type,  
 .submit-btn {
     grid-column: span 2;
 }
@@ -79,7 +72,6 @@
     display: block;
 }
 
-/* Clean "Canvas" Inputs */
 input[type="text"], 
 input[type="number"], 
 textarea,
@@ -95,13 +87,12 @@ select {
 }
 
 input:focus, select:focus {
-    border-color: #6366f1; /* Indigo Accent */
+    border-color: #6366f1;
     background: #ffffff;
     box-shadow: 0 10px 20px -10px rgba(99, 102, 241, 0.2);
     transform: translateY(-1px);
 }
 
-/* Minimalist Drag & Drop */
 .drag-drop {
     border: 2px dashed #cbd5e1;
     background: rgba(241, 245, 249, 0.6);
@@ -123,7 +114,6 @@ input:focus, select:focus {
     font-size: 1rem;
 }
 
-/* Preview Gallery */
 
 .preview-container {
     display: grid;
@@ -134,20 +124,20 @@ input:focus, select:focus {
 
 
 .preview-card {
-    position: relative; /* Essential for the button placement */
+    position: relative; 
     border-radius: 16px;
     background: #ffffff;
     padding: 4px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     border: 1px solid #f1f5f9;
-    height: 120px; /* Fixed height for uniformity */
+    height: 120px; 
     overflow: hidden;
 }
 
 .preview-card img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Prevents image stretching */
+    object-fit: cover; 
     border-radius: 12px;
 }
 
@@ -155,9 +145,9 @@ input:focus, select:focus {
     position: absolute;
     top: 0px;
     right: 0px;
-    background: #ef4444; /* Standard red for delete */
+    background: #ef4444; 
     color: white;
-    border: 2px solid white; /* Makes it pop against the image */
+    border: 2px solid white; 
     border-radius: 50%;
     width: 28px;
     height: 28px;
@@ -176,7 +166,6 @@ input:focus, select:focus {
     transform: scale(1.1);
 }
 
-/* The Bold Action Button */
 .submit-btn {
     margin-top: 30px;
     background: #0f172a;
@@ -194,12 +183,11 @@ input:focus, select:focus {
 }
 
 .submit-btn:hover {
-    background: #6366f1; /* Transitions to Indigo for excitement */
+    background: #6366f1; 
     transform: translateY(-4px);
     box-shadow: 0 25px 50px -12px rgba(99, 102, 241, 0.4);
 }
 
-/* Fixed Floating Navigation */
 .back-btn {
     position: fixed;
     top: 100px;
@@ -228,14 +216,13 @@ input:focus, select:focus {
 }
 
 .error-text {
-  color: #ef4444; /* Red color */
+  color: #ef4444; 
   font-size: 0.75rem;
   font-weight: 600;
   margin-top: 4px;
   display: block;
 }
 
-/* Optional: Turn the input border red when invalid */
 input.ng-invalid.ng-touched, 
 select.ng-invalid.ng-touched {
   border-color: #ef4444 !important;
@@ -246,9 +233,7 @@ select.ng-invalid.ng-touched {
   background: rgba(239, 68, 68, 0.05);
 }
 
-/* =========================
-   MODAL OVERLAY (BLUR BACKGROUND)
-========================= */
+
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -263,9 +248,7 @@ select.ng-invalid.ng-touched {
   animation: fadeIn 0.25s ease;
 }
 
-/* =========================
-   MODAL BOX
-========================= */
+
 .modal-content {
   background: #ffffff;
   width: 100%;
@@ -277,9 +260,7 @@ select.ng-invalid.ng-touched {
   animation: slideUp 0.3s ease;
 }
 
-/* =========================
-   CLOSE BUTTON
-========================= */
+
 .modal-content > button {
   position: absolute;
   top: 12px;
@@ -300,9 +281,7 @@ select.ng-invalid.ng-touched {
   transform: scale(1.1);
 }
 
-/* =========================
-   TITLE
-========================= */
+
 .modal-content h2 {
   font-size: 1.4rem;
   font-weight: 700;
@@ -310,18 +289,14 @@ select.ng-invalid.ng-touched {
   margin-bottom: 20px;
 }
 
-/* =========================
-   FORM INSIDE MODAL
-========================= */
+
 .modal-content form {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-/* =========================
-   INPUT GROUP
-========================= */
+
 .modal-content .input-group {
   display: flex;
   flex-direction: column;
@@ -334,9 +309,6 @@ select.ng-invalid.ng-touched {
   color: #475569;
 }
 
-/* =========================
-   INPUT STYLES
-========================= */
 .modal-content input {
   padding: 12px 14px;
   border-radius: 12px;
@@ -354,16 +326,12 @@ select.ng-invalid.ng-touched {
   box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
 }
 
-/* =========================
-   FILE INPUT WRAPPER
-========================= */
+
 .file-input-wrapper input {
   width: 100%;
 }
 
-/* =========================
-   SUBMIT BUTTON
-========================= */
+
 .submit-btn {
   margin-top: 10px;
   background: #0f172a;
@@ -417,9 +385,7 @@ select.ng-invalid.ng-touched {
 }
 
 
-/* =========================
-   ANIMATIONS
-========================= */
+
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -430,9 +396,7 @@ select.ng-invalid.ng-touched {
   to { transform: translateY(0); opacity: 1; }
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
+
 @media (max-width: 768px) {
   .modal-content {
     max-width: 95%;
@@ -494,7 +458,6 @@ select.ng-invalid.ng-touched {
     gap: 18px;
   }
 
-  /* Remove forced spanning */
   .premium-form .input-group:nth-child(1),
   .premium-form .input-group:nth-child(2),
   .premium-form .input-group:last-of-type,
@@ -525,12 +488,10 @@ select.ng-invalid.ng-touched {
     letter-spacing: 1px;
   }
 
-  /* Drag & drop smaller */
   .drag-drop {
     padding: 30px 20px;
   }
 
-  /* Image preview tighter */
   .preview-container {
     grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
     gap: 10px;
@@ -540,7 +501,6 @@ select.ng-invalid.ng-touched {
     height: 90px;
   }
 
-  /* Back button reposition */
   .back-btn {
     top: 20px;
     left: 15px;

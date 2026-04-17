@@ -17,12 +17,11 @@
   color: #1a1a1a;
 }
 
-/* 🌑 FULL SCREEN BLUR BACKGROUND */
 .delete-overlay {
   position: fixed;
   inset: 0;
 
-  background: rgba(15, 23, 42, 0.45); /* dark glass tint */
+  background: rgba(15, 23, 42, 0.45); 
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 
@@ -35,7 +34,6 @@
   animation: fadeIn 0.25s ease;
 }
 
-/* 🪟 MODAL BOX */
 .delete-modal {
   background: #ffffff;
   width: 90%;
@@ -53,13 +51,11 @@
   animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* ⚠️ Icon */
 .delete-icon {
   font-size: 42px;
   margin-bottom: 15px;
 }
 
-/* Title */
 .delete-modal h3 {
   font-size: 1.3rem;
   font-weight: 800;
@@ -67,15 +63,14 @@
   color: #0f172a;
 }
 
-/* Text */
+
 .delete-modal p {
-  color: #475569; /* darker for better readability */
+  color: #475569; 
   font-size: 0.95rem;
   line-height: 1.5;
   margin-bottom: 24px;
 }
 
-/* 🔘 Buttons */
 .delete-actions {
   display: flex;
   gap: 12px;
@@ -96,7 +91,6 @@
   border: none;
 }
 
-/* Cancel */
 .btn-cancel {
   background: #f1f5f9;
   color: #475569;
@@ -106,7 +100,6 @@
   background: #e2e8f0;
 }
 
-/* Confirm */
 .btn-confirm {
   background: #ef4444;
   color: white;
@@ -118,7 +111,6 @@
   box-shadow: 0 6px 14px rgba(239, 68, 68, 0.3);
 }
 
-/* ✨ Animations */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -134,7 +126,6 @@
     opacity: 1;
   }
 }
-/* --- BACK BUTTON --- */
 .back-btn {
   position: absolute;
   top: 100px;
@@ -155,7 +146,6 @@
   color: #fff;
 }
 
-/* --- HERO --- */
 .upper-section {
   width: 100%;
   max-width: 1200px;
@@ -163,17 +153,16 @@
   margin-bottom: 50px;
 }
 
-/* --- CONTROLS (FIXED CENTERING) --- */
 .controls-container {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center; /* FIX */
+  justify-content: center; 
   align-items: center;
   gap: 16px;
 
   width: 100%;
   max-width: 1100px;
-  margin: 30px auto 0 auto; /* FIX CENTER */
+  margin: 30px auto 0 auto; 
 
   padding: 20px;
 
@@ -186,16 +175,15 @@
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
 
-/* SEARCH BAR FIX */
 .search-bar {
   display: flex;
-  justify-content: center; /* FIX */
+  justify-content: center;
   width: 100%;
 }
 
 .search-bar input {
   width: 100%;
-  max-width: 350px; /* FIX */
+  max-width: 350px; 
   height: 48px;
 
   border-radius: 12px;
@@ -204,11 +192,10 @@
   padding: 0 18px;
 }
 
-/* FILTER GROUP */
 .filter-group {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center; /* FIX */
+  justify-content: center; 
   gap: 15px;
 }
 
@@ -220,7 +207,6 @@
   padding: 0 15px;
 }
 
-/* BUTTONS */
 .controls-container button {
   height: 48px;
   padding: 0 20px;
@@ -235,35 +221,30 @@
   background: var(--gold);
 }
 
-/* --- TABLE WRAPPER FIX --- */
 .car-box {
   width: 100%;
-  max-width: 1200px; /* FIX */
+  max-width: 1200px; 
   margin: 30px auto;
   overflow-x: auto;
 }
 
-/* --- TABLE FIX --- */
 .car-table {
   width: 100%;
-  min-width: 900px; /* prevents breaking */
+  min-width: 900px; 
   border-collapse: separate;
   border-spacing: 0 12px;
 }
 
-/* HEAD */
 .car-table th {
   text-align: center;
   font-size: 0.75rem;
   color: #64748b;
 }
 
-/* ROW */
 .car-table tr:not(:first-child) {
   background: white;
 }
 
-/* CELL */
 .car-table td {
   padding: 18px;
   text-align: center;
@@ -271,14 +252,12 @@
   border-bottom: 1px solid var(--border-light);
 }
 
-/* IMAGE */
 .car-image {
   width: 100px;
   height: 70px;
   object-fit: cover;
 }
 
-/* BUTTON */
 .btn-view {
   padding: 8px 14px;
   border-radius: 8px;
@@ -291,7 +270,6 @@
   color: white;
 }
 
-/* DELETE BUTTON */
 .btn-delete-trigger {
   color: var(--danger);
   border: 1px solid rgba(239, 68, 68, 0.2);
@@ -306,9 +284,7 @@
   color: white;
 }
 
-/* ============================= */
-/* 📱 TABLE RESPONSIVE FIX */
-/* ============================= */
+
 
 @media (max-width: 1024px) {
   .controls-container {
@@ -330,7 +306,6 @@
     flex-direction: column;
   }
 
-  /* TABLE → CARD */
   .car-table {
     display: block;
     min-width: 100%;
@@ -374,7 +349,6 @@
   padding: 4px;
 }
 
-/* 🌑 FULL SCREEN OVERLAY (BLUR BACKGROUND) */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -393,7 +367,6 @@
   animation: fadeIn 0.25s ease;
 }
 
-/* 🪟 MODAL BOX */
 .modal-content {
   position: relative;
 
@@ -414,7 +387,6 @@
   animation: slideUp 0.3s ease;
 }
 
-/* 🔙 BACK BUTTON */
 .modal-content > button {
   position: absolute;
   top: 20px;
@@ -439,7 +411,6 @@
   transform: translateX(-3px);
 }
 
-/* 🧾 TITLE */
 .modal-content h3 {
   text-align: center;
   font-size: 1.3rem;
@@ -448,14 +419,12 @@
   color: #0f172a;
 }
 
-/* 🖼️ IMAGE GRID */
 .image-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 16px;
 }
 
-/* 🖼️ IMAGE STYLE */
 .image-grid img {
   width: 100%;
   height: 180px;
@@ -467,13 +436,11 @@
   cursor: pointer;
 }
 
-/* Hover effect */
 .image-grid img:hover {
   transform: scale(1.03);
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
 }
 
-/* ✨ ANIMATIONS */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -490,7 +457,6 @@
   }
 }
 
-/* 📱 RESPONSIVE */
 @media (max-width: 768px) {
   .modal-content {
     padding: 50px 20px 20px;
@@ -505,7 +471,6 @@
   }
 }
 
-/* 📱 MOBILE */
 @media (max-width: 768px) {
   .inventory-wrapper {
     padding: 100px 15px;

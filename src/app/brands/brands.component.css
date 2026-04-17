@@ -1,14 +1,12 @@
-/* Container & Background */
 .brands-container {
     padding: 120px 10% 80px;
     min-height: 100vh;
-    background-color: #0a0a0a; /* Dark luxury theme */
+    background-color: #0a0a0a; 
     color: white;
     font-family: 'Inter', sans-serif;
     position: relative;
 }
 
-/* Back Button */
 .back-btn {
     position: absolute; 
     top: 40px;
@@ -34,7 +32,6 @@
     box-shadow: 0 0 20px rgba(255, 0, 76, 0.4);
 }
 
-/* Header Section */
 .brands-header {
     text-align: center;
     margin-bottom: 80px;
@@ -60,7 +57,6 @@
     -webkit-text-fill-color: transparent;
 }
 
-/* Search Bar */
 .search-wrapper {
     position: relative;
     max-width: 550px;
@@ -94,12 +90,11 @@
     padding: 15px;
     border-radius: 50%;
     background-color: azure;
-    transform: translateY(-50%); /* Perfectly centers it vertically */
-    color: #c83186; /* Your brand accent color */
+    transform: translateY(-50%); 
+    color: #c83186; 
     cursor: pointer;
     transition: transform 0.3s ease;
 }
-/* Grid & List Handling */
 .brands-grid ul {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -109,7 +104,6 @@
     margin: 0;
 }
 
-/* Individual Card */
 .brand-card {
     position: relative;
     display: flex;
@@ -156,7 +150,6 @@
     letter-spacing: 1px;
 }
 
-/* Hover State */
 .brand-card:hover {
     transform: translateY(-12px);
     border-color: #ff004c;
@@ -168,7 +161,6 @@
     transform: scale(1.1);
 }
 
-/* Empty State */
 .empty {
     text-align: center;
     padding: 100px 0;
@@ -178,7 +170,6 @@
     letter-spacing: 2px;
 }
 
-/* Responsive Adjustments */
 @media (max-width: 768px) {
     .brands-header h1 { font-size: 2.5rem; }
     .brands-container { padding: 100px 5% 50px; }

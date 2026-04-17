@@ -1,4 +1,3 @@
-/* Full-page container centered */
 .container {
     height: 100vh;
     width: 100%;
@@ -10,7 +9,6 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Card box */
 .box {
     background-color: #ffffff;
     border-radius: 20px;
@@ -23,7 +21,6 @@
     gap: 15px;
 }
 
-/* Section heading */
 .top-content {
     font-size: 1.8rem;
     font-weight: 600;
@@ -32,7 +29,6 @@
     text-align: center;
 }
 
-/* Input section */
 .cred {
     width: 100%;
     display: flex;
@@ -40,14 +36,12 @@
     gap: 10px;
 }
 
-/* Labels */
 .cred h5 {
     font-size: 0.9rem;
     color: #666;
     margin: 0;
 }
 
-/* Inputs */
 input {
     padding: 12px 15px;
     border-radius: 12px;
@@ -62,7 +56,6 @@ input:focus {
     box-shadow: 0 0 5px rgba(246, 239, 59, 0.6);
 }
 
-/* Button */
 button {
     margin-top: 15px;
     background-color: #f6ef3b;
@@ -81,7 +74,6 @@ button:hover {
     transform: scale(1.03);
 }
 
-/* Footer text */
 h6 {
     font-size: 0.85rem;
     color: #999;

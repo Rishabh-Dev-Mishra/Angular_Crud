@@ -38,7 +38,7 @@ export class LoginComponent implements OnInit{
   login(form: any){
     this.showmssg = false;
     if (form.invalid) {
-    this.toast.warning('Please fix the errors before logging in', 'Form Invalid');
+    this.toast.warning('password or email invalid');
     return;
   }
 

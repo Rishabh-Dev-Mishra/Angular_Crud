@@ -14,14 +14,13 @@
 }
 
 .profile-section {
-    position: relative; /* CRITICAL: Anchor for the hover modal */
+    position: relative; 
     display: flex;
     align-items: center;
     cursor: pointer;
     gap: 25px;
 }
 
-/* Profile Image & Icon Styling */
 .profile-icon, .profile-section img {
     width: 45px;     
     height: 45px;     
@@ -45,7 +44,7 @@
 
 .hover-modal-nav {
     position: absolute;
-    top: 55px; /* Appears below the icon */
+    top: 55px; 
     right: 0;
     width: 220px;
     background: white;
@@ -69,7 +68,6 @@
     color: #102050;
 }
 
-/* Tooltip Arrow */
 .hover-modal-nav::before {
     content: '';
     position: absolute;
@@ -83,7 +81,7 @@
 .logout, .auth button {
     background-color: red;
     color: white;
-    padding: 8px 15px; /* Adjusted padding for better button look */
+    padding: 8px 15px; 
     border-radius: 15px;
     border: none;
     font-size: 14px;
@@ -93,7 +91,7 @@
 }
 
 .logout:hover, .auth button:hover {
-    background-color: #cc0000; /* Darker red on hover */
+    background-color: #cc0000; 
 }
 
 .auth button{
@@ -131,14 +129,12 @@
     gap: 10px;
   }
 
-  /* Smaller profile icon */
   .profile-icon,
   .profile-section img {
     width: 35px;
     height: 35px;
   }
 
-  /* Dropdown fix */
   .hover-modal-nav {
     top: 50px;
     right: 0;
@@ -154,7 +150,6 @@
     font-size: 14px;
   }
 
-  /* Buttons smaller */
   .logout,
   .auth button {
     padding: 6px 12px;
@@ -174,14 +169,12 @@
     justify-content: space-between;
   }
 
-  /* Make dropdown full-width feel */
   .hover-modal-nav {
     right: 0;
     width: 100%;
     max-width: 250px;
   }
 
-  /* Fix arrow position */
   .hover-modal-nav::before {
     right: 20px;
   }

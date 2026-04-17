@@ -141,7 +141,6 @@ export class ProfileEditComponent {
         }
         sessionStorage.setItem('userName', res.name);
         sessionStorage.setItem('userEmail', res.email);
-        // this.router.navigate(['/home']);
       },
       error: (err: any) => {
         this.toast.error(err.error?.message || 'An error occurred');

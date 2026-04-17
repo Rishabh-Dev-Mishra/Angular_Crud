@@ -245,3 +245,325 @@ select.ng-invalid.ng-touched {
   border: 2px dashed #ef4444 !important;
   background: rgba(239, 68, 68, 0.05);
 }
+
+/* =========================
+   MODAL OVERLAY (BLUR BACKGROUND)
+========================= */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  padding: 20px;
+  animation: fadeIn 0.25s ease;
+}
+
+/* =========================
+   MODAL BOX
+========================= */
+.modal-content {
+  background: #ffffff;
+  width: 100%;
+  max-width: 520px;
+  border-radius: 20px;
+  padding: 25px;
+  position: relative;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+  animation: slideUp 0.3s ease;
+}
+
+/* =========================
+   CLOSE BUTTON
+========================= */
+.modal-content > button {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  background: #f1f5f9;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.modal-content > button:hover {
+  background: #e2e8f0;
+  transform: scale(1.1);
+}
+
+/* =========================
+   TITLE
+========================= */
+.modal-content h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 20px;
+}
+
+/* =========================
+   FORM INSIDE MODAL
+========================= */
+.modal-content form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* =========================
+   INPUT GROUP
+========================= */
+.modal-content .input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.modal-content label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #475569;
+}
+
+/* =========================
+   INPUT STYLES
+========================= */
+.modal-content input {
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  font-size: 0.95rem;
+  outline: none;
+  transition: 0.2s;
+  width: 100%;
+}
+
+.modal-content input:focus {
+  border-color: #6366f1;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
+}
+
+/* =========================
+   FILE INPUT WRAPPER
+========================= */
+.file-input-wrapper input {
+  width: 100%;
+}
+
+/* =========================
+   SUBMIT BUTTON
+========================= */
+.submit-btn {
+  margin-top: 10px;
+  background: #0f172a;
+  color: white;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.submit-btn:hover {
+  background: #6366f1;
+  transform: translateY(-2px);
+}
+
+.custom-multiselect {
+  position: relative;
+  width: 250px;
+}
+
+.select-box {
+  padding: 10px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  background: white;
+}
+
+.dropdown-content {
+  position: absolute;
+  border: 1px solid #ccc;
+  background: white;
+  width: 100%;
+  z-index: 10;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.dropdown-content label {
+  display: block;
+  padding: 8px;
+  cursor: pointer;
+}
+
+.dropdown-content label:hover {
+  background: #f0f0f0;
+}
+
+
+/* =========================
+   ANIMATIONS
+========================= */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 768px) {
+  .modal-content {
+    max-width: 95%;
+    padding: 18px;
+    border-radius: 16px;
+  }
+
+  .modal-content h2 {
+    font-size: 1.2rem;
+  }
+
+  .submit-btn {
+    padding: 12px;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-content {
+    padding: 15px;
+  }
+
+  .modal-content > button {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .glass-form-card {
+    padding: 40px;
+  }
+
+  .premium-form {
+    gap: 20px;
+  }
+
+  .main-title {
+    font-size: 2.2rem;
+  }
+
+  .subtitle {
+    margin-bottom: 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-page-wrapper {
+    padding: 40px 15px;
+  }
+
+  .glass-form-card {
+    padding: 25px;
+    border-radius: 20px;
+  }
+
+  .premium-form {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  /* Remove forced spanning */
+  .premium-form .input-group:nth-child(1),
+  .premium-form .input-group:nth-child(2),
+  .premium-form .input-group:last-of-type,
+  .submit-btn {
+    grid-column: span 1;
+  }
+
+  .main-title {
+    font-size: 1.8rem;
+    letter-spacing: -0.5px;
+  }
+
+  .subtitle {
+    font-size: 0.9rem;
+    margin-bottom: 25px;
+  }
+
+  input,
+  select,
+  textarea {
+    padding: 14px 16px;
+    font-size: 0.95rem;
+  }
+
+  .submit-btn {
+    padding: 16px;
+    font-size: 1rem;
+    letter-spacing: 1px;
+  }
+
+  /* Drag & drop smaller */
+  .drag-drop {
+    padding: 30px 20px;
+  }
+
+  /* Image preview tighter */
+  .preview-container {
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    gap: 10px;
+  }
+
+  .preview-card {
+    height: 90px;
+  }
+
+  /* Back button reposition */
+  .back-btn {
+    top: 20px;
+    left: 15px;
+    padding: 10px 18px;
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .glass-form-card {
+    padding: 20px 15px;
+  }
+
+  .main-title {
+    font-size: 1.5rem;
+  }
+
+  .subtitle {
+    font-size: 0.85rem;
+  }
+
+  .submit-btn {
+    padding: 14px;
+    font-size: 0.9rem;
+  }
+}

@@ -1,0 +1,15 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <h2>Enter Your Email to Reset Password</h2>
+    <form #resetForm="ngForm" (ngSubmit)="onSubmit(resetForm)">
+      
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" name="email" [(ngModel)]="formData.email" required email #emailRef="ngModel">
+        <span class="error-msg" *ngIf="emailRef.invalid && emailRef.touched">Valid email is required.</span>
+      </div>
+      <button [disabled]="!formData.email || !showmssg" (click)="disableButton()" type="submit">Submit</button>
+    </form>
+    <div class="mssg"><a href="/">Go for Login</a></div>
+  </div>
+</div>

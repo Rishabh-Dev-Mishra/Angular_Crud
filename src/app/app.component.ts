@@ -1,6 +1,8 @@
 import { Component, HostListener } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { DataService } from './data.service';
+import { AuthServiceService } from './auth-service.service';
+import { StatusserviceService } from './statusservice.service';
 
 
 @Component({
@@ -12,11 +14,15 @@ import { DataService } from './data.service';
 })
 export class AppComponent {
 
-    constructor(private dataservice: DataService) {}
-  title = 'Basic';
-   @HostListener('window:beforeunload', ['$event'])
-  unloadHandler(event: Event) {
-      this.dataservice.logOut().subscribe();
-    
+  constructor(private dataservice: DataService, private auth:AuthServiceService, private statusservice: StatusserviceService) {}
+  title = 'Car Gallery';
+
+  ngOnInit(){
+    if(this.auth.isLoggedIn()){
+      this.statusservice.startPolling();
+    }
+  }
+  ngOnDestroy(){
+    this.statusservice.stopPolling();
   }
 }

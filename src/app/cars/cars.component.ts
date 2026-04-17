@@ -92,10 +92,11 @@ export class CarsComponent implements OnInit {
 
   getAllCars() {
     const id: string = this.route.snapshot.paramMap.get('id') ?? '';
+    const user_id : string = this.route.snapshot.paramMap.get('user_id')?? '';
     const name: string =
       this.route.snapshot.paramMap.get('name') ?? 'Unknown Brand';
     this.dataservice.setIdForNavig(id, name);
-    this.router.navigate(['/allcars']);
+    this.router.navigate(['/allcars', user_id]);
   }
 
   filterCars() {
@@ -143,10 +144,6 @@ export class CarsComponent implements OnInit {
     this.showModal = false;
     this.multiImage = [];
   }
-
-  confirmDeleteButton: boolean = false;
-  selectedCar: any;
-
   confirmDelete(car: any) {
     this.confirmDeleteButton = true;
     this.selectedCar = car;
@@ -170,6 +167,10 @@ export class CarsComponent implements OnInit {
       },
     });
   }
+
+  confirmDeleteButton: boolean = false;
+  selectedCar: any;
+
 
   editCar(data: any) {
     const car_id = data.car_id;

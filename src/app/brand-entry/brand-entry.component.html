@@ -2,8 +2,7 @@
 
 <div class="admin-page-wrapper">
     <a routerLink="/home" class="back-btn">
-    <span class="icon">←</span>
-    <span class="label">Home</span>
+    <span class="label" (click)="goBack()">Back</span>
   </a>
     <div class="glass-form-card">
         <h1 class="main-title">Add New Brand</h1>
@@ -22,7 +21,7 @@
                 <input type="text" name="brandName" ngModel id="brandName" placeholder="e.g. Aston Martin">
             </div>
 
-            <button type="submit" class="submit-btn">
+            <button type="submit" (click)="disableButton()" [disabled] = "brandform.invalid || !showmssg" class="submit-btn">
                 <span>Save Brand</span>
             </button>
         </form>

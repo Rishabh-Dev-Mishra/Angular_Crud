@@ -43,15 +43,14 @@ export class DataService {
   getUserInfo(user_id: any){
     return this.http.get(`${this.url}/userInfo/${user_id}`);
   }
-
-
+  
+  
   logOut(){
     const user_id = this.getUserId();
     return this.http.put(`${this.url}/logout/${user_id}`,{status:"Inactive"});
   }
-
-  allCars() {
-    const user_id = this.getUserId();
+  
+  allCars(user_id : any) {
     return this.http.get(`${this.url}/allcars/${user_id}`);
   }
 
@@ -62,15 +61,21 @@ export class DataService {
   }
 
   edit(data: any) {
+    console.log(data.email);
+    
     return this.http.post(this.url + '/edit-profile', data);
   }
+  
+  checkMail(mail: string, user_id : any){
+    return this.http.get(`${this.url}/mailCheck/${mail}/${user_id}`);
+  }
+
 
   addBrand(data: any) {
     return this.http.post(this.url + '/brand_details', data);
   }
 
-  addCar(formData: FormData) {
-    const id = this.getUserId();
+  addCar(formData: FormData, id:any) {
     return this.http.post(`${this.url}/car_details/${id}`, formData);
   }
 
@@ -81,6 +86,11 @@ export class DataService {
   filteredBrands(data: any) {
     const id = this.getUserId();
     return this.http.get(`${this.url}/brands/search/${data}/${id}`);
+  }
+
+  deleteBrand(id:any){
+    return this.http.delete(`${this.url}/brandDelete/${id}`);
+
   }
 
   filteredCars(id: string, name: string, category: string, engine: string) {
@@ -166,4 +176,41 @@ export class DataService {
   deleteUser(user_id : any){
     return this.http.put(`${this.url}/deleteUser/${user_id}`, "date");
   }
+
+  createRequest(data:any){
+    return this.http.post(`${this.url}/createRequest`, data);
+  }
+
+  getRequests(){
+    return this.http.get(`${this.url}/getRequests`);
+  }
+
+  acceptRequest(data:any){
+    return this.http.post(`${this.url}/acceptRequests`, data);
+  }
+
+  rejectRequest(data:any){
+    return this.http.put(`${this.url}/rejectRequests`, data);
+  }
+
+  updateuserStatus(data :any){
+    return this.http.put(`${this.url}/updateUserStatus`, data);
+  }
+
+  getUserStatus(user_id: any){
+    return this.http.get(`${this.url}/userStatus/${user_id}`);
+  }
+
+  sendMail(data: any){
+    return this.http.post(`${this.url}/sendMail`, data);
+  }
+
+  validateToken(token:any, id:any){
+    return this.http.get(`${this.url}/validateToken/${token}/${id}`);
+  }
+
+  resetPassword(data: any, token_number: any){
+    return this.http.put(`${this.url}/resetPassword/${token_number}`, data);
+  }
+
 }

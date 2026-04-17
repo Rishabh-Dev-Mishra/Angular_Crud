@@ -24,7 +24,7 @@
     <div class="brands-grid">
       <ul>
         <li *ngFor="let brand of filteredBrands">
-          <a [routerLink]="['/cars', brand.brand_id, brand.brand_name]" class="brand-card">
+          <a [routerLink]="['/cars', brand.brand_id, brand.brand_name, user_id]" class="brand-card">
             <div class="brand-logo">
               <img
                 [src]="'http://localhost:3000/uploads/' + brand.brand_logo"

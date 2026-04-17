@@ -4,6 +4,7 @@ const cors = require("cors");
 const pool = require("./db");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const nodemailer = require("nodemailer");
 const multer = require("multer");
 
 require("dotenv").config({ path: "../.env" });
@@ -24,6 +25,62 @@ app.use((req, res, next) => {
   res.set("Cache-Control", "no-store, no-cache, must-revalidate, private");
   next();
 });
+
+// app.use((req, res, next) => {
+//   console.log("➡️ API HIT:", req.method, req.url);
+//   next();
+// });
+
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.MAILID,
+    pass: process.env.MAILPASSWORD,
+  },
+});
+
+const sendMail = async (userEmail, token, id) => {
+  const resetUrl = `http://localhost:4200/forgotPassword/${token}/${id}`;
+
+  const mailOptions = {
+    from: '"Car Gallery" <rishumishra3899@gmail.com>',
+    to: userEmail,
+    subject: "Reset Your Password - Car Gallery",
+    html: `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
+      <div style="background-color: #1a1a1a; padding: 20px; text-align: center;">
+        <h1 style="color: #ffffff; margin: 0; font-size: 24px;">Car Gallery</h1>
+      </div>
+      <div style="padding: 30px; color: #333333; line-height: 1.6;">
+        <h2 style="margin-top: 0;">Password Reset Request</h2>
+        <p>Hi there,</p>
+        <p>We received a request to reset the password for your Car Gallery account. If you didn't make this request, you can safely ignore this email.</p>
+        
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="${resetUrl}" 
+             style="background-color: #007bff; color: white; padding: 12px 25px; text-decoration: none; font-weight: bold; border-radius: 5px; display: inline-block;">
+             Reset My Password
+          </a>
+        </div>
+        
+        <p style="font-size: 0.9em; color: #666666;">
+          This link will <strong>expire in 15 minutes</strong> for your security.
+        </p>
+        <hr style="border: 0; border-top: 1px solid #eeeeee; margin: 20px 0;">
+        <p style="font-size: 0.8em; color: #999999;">
+          If the button above doesn't work, copy and paste this URL into your browser:<br>
+          <span style="color: #007bff;">${resetUrl}</span>
+        </p>
+      </div>
+      <div style="background-color: #f9f9f9; padding: 15px; text-align: center; font-size: 12px; color: #999999;">
+        © ${new Date().getFullYear()} Car Gallery. All rights reserved.
+      </div>
+    </div>
+    `,
+  };
+
+  return transporter.sendMail(mailOptions);
+};
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, "uploads/"),
@@ -48,22 +105,36 @@ const upload = multer({
   storage: storage,
 });
 
+const getUserId = (req) => {
+  const loggedInUser = req.user;
+
+  if (loggedInUser.role == "admin" && req.params.user_id) {
+    const id = parseInt(req.params.user_id, 10);
+    if (isNaN(id)) {
+      throw new Error("Invalid user_id");
+    }
+    return id;
+  }
+
+  return loggedInUser.user_id;
+};
+
 app.get("/", (req, res) => {
   res.send("Welcome");
 });
 
-// const verifyToken = (req, res, next) => {
-//   const authHeader = req.headers["authorization"];
-//   const token = authHeader && authHeader.split(" ")[1];
-//   if (!token) {
-//     return res.status(401).json({ message: "No token" });
-//   }
-//   jwt.verify(token, process.env.SECRET, (err, user) => {
-//     if (err) return res.status(401).json({ message: "No user" });
-//     req.user = user;
-//     next();
-//   });
-// };
+const verifyToken = async (req, res, next) => {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+  if (!token) {
+    return res.status(401).json({ message: "No token" });
+  }
+  jwt.verify(token, process.env.SECRET, (err, user) => {
+    if (err) return res.status(401).json({ message: "No user" });
+    req.user = user;
+    next();
+  });
+};
 
 app.post("/register", async (req, res) => {
   try {
@@ -106,7 +177,16 @@ app.post("/login", async (req, res) => {
     );
 
     if (ExisitingUser.rows.length === 0) {
-      return res.status(400).send("User not found");
+      return res.status(400).json("User not found");
+    }
+
+    const userStatus = await pool.query(
+      "SELECT * FROM users WHERE email = $1 and status='active'",
+      [email],
+    );
+
+    if (userStatus.rows.length === 0) {
+      return res.status(400).json("Your Account is Suspended");
     }
 
     const isMatch = await bcrypt.compare(
@@ -115,7 +195,7 @@ app.post("/login", async (req, res) => {
     );
 
     if (!isMatch) {
-      return res.status(401).send("Invalid password");
+      return res.status(401).json("Invalid password");
     }
 
     const userImage = ExisitingUser.rows[0].image_path;
@@ -124,12 +204,19 @@ app.post("/login", async (req, res) => {
         ? ExisitingUser.rows[0].image_path
         : "";
 
-    const token = jwt.sign({ email: email }, process.env.SECRET, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign(
+      {
+        email: email,
+        user_id: ExisitingUser.rows[0].id,
+        role: ExisitingUser.rows[0].role,
+      },
+      process.env.SECRET,
+      {
+        expiresIn: "1h",
+      },
+    );
     const userName = ExisitingUser.rows[0].firstname;
     const user_id = ExisitingUser.rows[0].id;
-    await pool.query("update users set status=$1 where id = $2",['Active', user_id])
     res.json({
       message: "Login Success",
       token: token,
@@ -137,7 +224,7 @@ app.post("/login", async (req, res) => {
       name: userName,
       email: email,
       user_id: user_id,
-      role:ExisitingUser.rows[0].role
+      role: ExisitingUser.rows[0].role,
     });
   } catch (err) {
     console.error(err.message);
@@ -145,32 +232,40 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.get("/userInfo/:user_id", async(req, res)=>{
-  try{
-    const {user_id} = req.params;
+app.get("/userInfo/:user_id", verifyToken, async (req, res) => {
+  try {
+    const user_id = getUserId(req);
 
-    if(!user_id){
-      return res.status(500).json({message: "user_id not found for retrieving information"})
+    if (!user_id) {
+      return res
+        .status(500)
+        .json({ message: "user_id not found for retrieving information" });
     }
 
     const cleanUserId = parseInt(user_id, 10);
 
-    const user = await pool.query("select * from users where id=$1", [cleanUserId]);
+    const user = await pool.query("select * from users where id=$1", [
+      cleanUserId,
+    ]);
+    // console.log(user);
+
     return res.status(200).json(user.rows[0]);
-  }
-  catch(err){
+  } catch (err) {
     console.log(err);
-    return res.status(500).json(err)
+    return res.status(500).json(err);
   }
-})
+});
 
 app.post(
   "/edit-profile",
+  verifyToken,
   upload.single("image"),
   async (req, res) => {
     try {
       if (req.body.currentpassword) {
-        const { confirmpassword, currentpassword, newpassword, user_id} = req.body;
+        const { confirmpassword, currentpassword, newpassword } = req.body;
+
+        const user_id = getUserId(req);
 
         if (!confirmpassword || !currentpassword || !newpassword || !user_id)
           return res.status(402).send("Bad Request");
@@ -211,29 +306,48 @@ app.post(
           hashedpassword,
           cleanUserId,
         ]);
-        await pool.query("update users set updated_at = $1 where id = $2",[new Date(), cleanUserId])
+        await pool.query("update users set updated_at = $1 where id = $2", [
+          new Date(),
+          cleanUserId,
+        ]);
         return res.json({ message: "Password updated successfully" });
       } else {
-        const { firstname, lastname, email, user_id } = req.body;
-        
+        const { firstname, lastname, email } = req.body;
+        const user_id = getUserId(req);
+
         let newImagePath = req.file ? req.file.filename : null;
 
         if (!firstname || !lastname || !email || !user_id) {
           return res.status(400).json({ message: "All fields are required" });
         }
-        
 
-        cleanUserId = parseInt(user_id, 10);
+        const cleanUserId = parseInt(user_id, 10);
+        // >>>>>>>>>console.log("user_id:", user_id);
+        // >>>>>>>>>console.log("cleanUserId:", cleanUserId);
+        // >>>>>>>>>console.log(email);
+        
 
         const existingUser = await pool.query(
           "SELECT * FROM users WHERE id = $1",
           [cleanUserId],
         );
+
+        const exsistingemail = await pool.query(
+          "select * from users where email=$1 and id <> $2",
+          [email, cleanUserId],
+        );
+
+        // console.log(exsistingemail.rows);
+
         if (existingUser.rows.length == 0) {
           return res.status(400).json({ message: "User does not exist" });
         }
 
-        
+        if (exsistingemail.rows.length > 0) {
+          return res
+            .status(400)
+            .json({ message: "This email is already taken" });
+        }
 
         if (newImagePath) {
           await pool.query(
@@ -246,9 +360,11 @@ app.post(
             [firstname, lastname, email, cleanUserId],
           );
         }
-        
-        await pool.query("update users set updated_at = NOW() where id = $1",[ cleanUserId])
-        
+
+        await pool.query("update users set updated_at = NOW() where id = $1", [
+          cleanUserId,
+        ]);
+
         return res.json({
           message: "Profile updated successfully",
           img_pth: newImagePath,
@@ -263,56 +379,93 @@ app.post(
   },
 );
 
-app.put("/logout/:user_id", async(req, res)=>{
-  try{
-    const {user_id} = req.params;
-    const {status} = req.body;
-    
-    const cleanUserId = parseInt(user_id, 10);
-    await pool.query("update users set status=$1 where id = $2",[status, cleanUserId]);
-    return res.status(200).json({message: "LoggedOut"})
-  }
-  catch(err){
-    console.log(err);
-    return res.status(500).json(err)
-  }
-})
-
-app.post("/brand_details", upload.single("image"), async (req, res) => {
+app.get("/mailCheck/:mail/:user_id", verifyToken, async (req, res) => {
   try {
-    const { brandName } = req.body;
-    let imagePath = req.file ? req.file.filename : null;
-    if (!brandName || imagePath == null)
-      return res.status(303).json({ message: "Data Required" });
-    const has = pool.query("select * from brands where brandName = $1", [
-      brandName,
-    ]);
-    if (has.rows > 0)
-      return res.status(303).json({ message: "This brand already exists" });
+    const { mail } = req.params;
+    console.log(req.params);
 
-    await pool.query(
-      "INSERT INTO brands (brand_name, brand_logo) values ($1, $2)",
-      [brandName, imagePath],
+    const user_id = getUserId(req);
+
+    if (!user_id) return res.status(500).json({ message: "No mail id" });
+    console.log(user_id);
+
+    const cleanId = parseInt(user_id, 10);
+    if (isNaN(cleanId)) {
+      console.log("❌ Invalid user_id:", user_id);
+      return res.status(400).json({ message: "Invalid user_id" });
+    }
+    const exsist = await pool.query(
+      "Select * from users where email ILIKE $1 and id <> $2",
+      [`${mail}%`, cleanId],
     );
-
-    res.status(200).json({
-      message: "Success",
-      data: brandName,
-    });
+    return res.status(200).json(exsist.rows);
   } catch (err) {
     console.log(err);
-    return res
-      .status(500)
-      .json({ message: "Internal Server Error", error: err.message });
+    res.status(500).json({ message: err });
+  }
+});
+
+app.put("/logout/:user_id", verifyToken, async (req, res) => {
+  try {
+    const user_id = getUserId(req);
+    const cleanUserId = parseInt(user_id, 10);
+    if (isNaN(cleanUserId)) {
+      return res.status(400).json({ message: "Invalid user_id" });
+    }
+
+    // await pool.query("update users set status=$1 where id = $2", [
+    //   status,
+    //   cleanUserId,
+    // ]);
+    return res.status(200).json({ message: "LoggedOut" });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
   }
 });
 
 app.post(
+  "/brand_details",
+  verifyToken,
+  upload.single("image"),
+  async (req, res) => {
+    try {
+      const { brandName } = req.body;
+      let imagePath = req.file ? req.file.filename : null;
+      if (!brandName || imagePath == null)
+        return res.status(303).json({ message: "Data Required" });
+      const has = await pool.query(
+        "select * from brands where brand_name = $1",
+        [brandName],
+      );
+      if (has.rows.length > 0)
+        return res.status(303).json({ message: "This brand already exists" });
+
+      await pool.query(
+        "INSERT INTO brands (brand_name, brand_logo) values ($1, $2)",
+        [brandName, imagePath],
+      );
+
+      res.status(200).json({
+        message: "Success",
+        data: brandName,
+      });
+    } catch (err) {
+      console.log(err);
+      return res
+        .status(500)
+        .json({ message: "Internal Server Error", error: err.message });
+    }
+  },
+);
+
+app.post(
   "/car_details/:user_id",
+  verifyToken,
   upload.array("image", 250),
   async (req, res) => {
     try {
-      const { user_id } = req.params;
+      const user_id = getUserId(req);
       const userID = parseInt(user_id, 10);
       const {
         brandName,
@@ -403,7 +556,7 @@ app.post(
   },
 );
 
-app.get("/brands", async (req, res) => {
+app.get("/brands", verifyToken, async (req, res) => {
   try {
     const brands = await pool.query("select * from brands");
     return res.status(200).json(brands.rows || brands);
@@ -413,9 +566,9 @@ app.get("/brands", async (req, res) => {
   }
 });
 
-app.get("/brands/:user_id", async (req, res) => {
+app.get("/brands/:user_id", verifyToken, async (req, res) => {
   try {
-    const { user_id } = req.params;
+    const user_id = getUserId(req);
     const userID = parseInt(user_id, 10);
 
     if (isNaN(userID)) {
@@ -425,7 +578,7 @@ app.get("/brands/:user_id", async (req, res) => {
     const query = `
       SELECT * FROM brands 
       WHERE brand_id IN (
-        SELECT DISTINCT brand_id FROM cars WHERE user_id = $1
+        SELECT DISTINCT brand_id FROM cars WHERE user_id = $1 and cars.deleted_at is null
       )
     `;
 
@@ -439,13 +592,14 @@ app.get("/brands/:user_id", async (req, res) => {
   }
 });
 
-app.get("/cars/:id/:user_id/:limit/:offset", async (req, res) => {
+app.get("/cars/:id/:user_id/:limit/:offset", verifyToken, async (req, res) => {
   try {
-    const { id, user_id, limit, offset } = req.params;
+    const { id, limit, offset } = req.params;
+    const user_id = getUserId(req);
     const userID = parseInt(user_id, 10);
     const brandId = parseInt(id, 10);
-    const cleanLimit = parseInt(limit,10);
-    const cleanOffset = parseInt(offset,10);
+    const cleanLimit = parseInt(limit, 10);
+    const cleanOffset = parseInt(offset, 10);
     const query = `SELECT 
         b.brand_name,
         c.car_id AS car_id, 
@@ -461,10 +615,13 @@ app.get("/cars/:id/:user_id/:limit/:offset", async (req, res) => {
         cd.top_speed
       FROM cars c join brands b on b.brand_id = c.brand_id
       JOIN car_details cd ON c.car_id = cd.car_id 
-      WHERE c.brand_id = $1 and c.user_id = $2 and c.deleted_at is null order by b.brand_name, c.model_name limit $3 offset $4`
-    ;
-
-    const cars = await pool.query(query, [brandId, userID, cleanLimit, cleanOffset]);
+      WHERE c.brand_id = $1 and c.user_id = $2 and c.deleted_at is null order by b.brand_name, c.model_name limit $3 offset $4`;
+    const cars = await pool.query(query, [
+      brandId,
+      userID,
+      cleanLimit,
+      cleanOffset,
+    ]);
 
     return res
       .status(200)
@@ -476,9 +633,10 @@ app.get("/cars/:id/:user_id/:limit/:offset", async (req, res) => {
   }
 });
 
-app.get("/cars/:id/:user_id", async (req, res) => {
+app.get("/cars/:id/:user_id", verifyToken, async (req, res) => {
   try {
-    const { id, user_id } = req.params;
+    const { id } = req.params;
+    const user_id = getUserId(req);
     const userID = parseInt(user_id, 10);
     const brandId = parseInt(id, 10);
     const query = `
@@ -509,9 +667,10 @@ app.get("/cars/:id/:user_id", async (req, res) => {
   }
 });
 
-app.get("/brands/search/:name/:user_id", async (req, res) => {
+app.get("/brands/search/:name/:user_id", verifyToken, async (req, res) => {
   try {
-    const { name, user_id } = req.params;
+    const { name } = req.params;
+    const user_id = getUserId(req);
     const userID = parseInt(user_id, 10);
     console.log(req);
 
@@ -531,11 +690,29 @@ app.get("/brands/search/:name/:user_id", async (req, res) => {
   }
 });
 
+app.delete("/brandDelete/:id", async(req, res)=>{
+  try{
+    const {id} = req.params;
+    if(!id)  return res.status(400).json({message:"No brand Id"});
+    const cleanId = parseInt(id, 10);
+    
+    await pool.query("delete from cars where brand_id=$1", [cleanId]);
+    await pool.query("delete from brands where brand_id=$1", [cleanId]);
+
+    return res.status(200).json({message: "Deletion Success"})
+  }catch(err){
+    console.log(err);
+    return res.status(400).json({message:"Error in deleting"})
+  }
+})
+
 app.get(
   "/cars/search/:id/:name/:category/:engine/:user_id",
+  verifyToken,
   async (req, res) => {
     try {
-      const { id, name, category, engine, user_id } = req.params;
+      const { id, name, category, engine } = req.params;
+      const user_id = getUserId(req);
       const ID = parseInt(id, 10);
       const userID = parseInt(user_id, 10);
       const SQLQuery = `
@@ -570,9 +747,9 @@ app.get(
   },
 );
 
-app.get("/allcars/:user_id", async (req, res) => {
+app.get("/allcars/:user_id", verifyToken, async (req, res) => {
   try {
-    const { user_id } = req.params;
+    const user_id = getUserId(req);
     if (!user_id)
       return res.status(405).json({ message: "No user_id to get all cars" });
     const cars = await pool.query(
@@ -600,9 +777,10 @@ app.get("/allcars/:user_id", async (req, res) => {
   }
 });
 
-app.get("/cars_images/:id/:user_id", async (req, res) => {
+app.get("/cars_images/:id/:user_id", verifyToken, async (req, res) => {
   try {
-    const { id, user_id } = req.params;
+    const { id } = req.params;
+    const user_id = getUserId(req);
     if (!id || !user_id)
       return res
         .status(405)
@@ -617,26 +795,26 @@ app.get("/cars_images/:id/:user_id", async (req, res) => {
   }
 });
 
-app.delete("/delete_car/:car_id/:user_id", async (req, res) => {
+app.delete("/delete_car/:car_id/:user_id", verifyToken, async (req, res) => {
   try {
-    const { car_id, user_id } = req.params;
+    const { car_id } = req.params;
+    const user_id = getUserId(req);
     if (!user_id || !car_id)
       return res
         .status(400)
         .json({ message: "User or car id missing to delete" });
 
-    await pool.query("update cars set deleted_at=$3 where car_id = $1 and user_id = $2", [
-      car_id,
-      user_id,
-      new Date()
-    ]);
+    await pool.query(
+      "update cars set deleted_at=$3 where car_id = $1 and user_id = $2",
+      [car_id, user_id, new Date()],
+    );
     return res.status(200).json({ message: "Success To delete" });
   } catch (err) {
     console.log(err);
   }
 });
 
-app.get("/singleCar/:car_id", async (req, res) => {
+app.get("/singleCar/:car_id", verifyToken, async (req, res) => {
   try {
     const { car_id } = req.params;
     const car_Id = parseInt(car_id, 10);
@@ -660,6 +838,10 @@ app.get("/singleCar/:car_id", async (req, res) => {
     `,
       [car_Id],
     );
+
+    if (car_detail.rows.length === 0) {
+      return res.status(404).json({ message: "Car not found" });
+    }
     console.log(car_detail.rows[0].horsepower);
 
     const brandName = await pool.query(
@@ -674,145 +856,375 @@ app.get("/singleCar/:car_id", async (req, res) => {
   }
 });
 
-app.put("/editCar", upload.array("image", 250), async (req, res) => {
-  try {
-    console.log("good");
-    const {
-      car_id,
-      brandName,
-      modelName,
-      category,
-      engineType,
-      torque,
-      topSpeed,
-      price,
-      horsePower,
-      description,
-      oldImages,
-    } = req.body;
-
-    const carID = parseInt(car_id, 10);
-    console.log(car_id);
-
-    const toNum = (val) => {
-      if (val === "null" || val === "" || val === undefined) return null;
-      return parseFloat(val);
-    };
-
-    const cleanTorque = toNum(torque);
-    const cleanTopSpeed = toNum(topSpeed);
-    const cleanPrice = toNum(price);
-
-    const brandId = await pool.query(
-      "select brand_id from brands where brand_name = $1",
-      [brandName],
-    );
-    let keepOld = oldImages ? JSON.parse(oldImages) : [];
-
-    let imagePaths = req.files.map((file) => file.filename);
-    imagePaths = [...imagePaths, ...keepOld];
-    if (imagePaths && imagePaths.length > 0) {
-      await pool.query(
-        `update
-        cars set brand_id=$1, model_name=$2, category=$3, car_logo=$4 where car_id= $5`,
-        [brandId.rows[0].brand_id, modelName, category, imagePaths, carID],
-      );
-    } else {
-      await pool.query(
-        `update
-        cars set brand_id=$1, model_name=$2, category=$3 where car_id= $4`,
-        [brandId.rows[0].brand_id, modelName, category, carID],
-      );
-    }
-    await pool.query(
-      `update
-        car_details set engine_type=$1, horsepower=$2, torque=$3, top_speed=$4, price=$5, description= $6 where car_id= $7`,
-      [
+app.put(
+  "/editCar",
+  verifyToken,
+  upload.array("image", 250),
+  async (req, res) => {
+    try {
+      console.log("good");
+      const {
+        car_id,
+        brandName,
+        modelName,
+        category,
         engineType,
+        torque,
+        topSpeed,
+        price,
         horsePower,
-        cleanTorque,
-        cleanTopSpeed,
-        cleanPrice,
         description,
-        carID,
-      ],
-    );
-    console.log(car_id);
+        oldImages,
+      } = req.body;
 
-    return res.status(200).json({ message: "Edit Success" });
-  } catch (err) {
-    console.log(err);
-    return res.status(500).json({ message: "Unable to update" });
-  }
-});
+      const carID = parseInt(car_id, 10);
+      console.log(car_id);
 
+      const toNum = (val) => {
+        if (val === "null" || val === "" || val === undefined) return null;
+        return parseFloat(val);
+      };
+
+      const cleanTorque = toNum(torque);
+      const cleanTopSpeed = toNum(topSpeed);
+      const cleanPrice = toNum(price);
+
+      const brandId = await pool.query(
+        "select brand_id from brands where brand_name = $1",
+        [brandName],
+      );
+      let keepOld = oldImages ? JSON.parse(oldImages) : [];
+
+      let imagePaths = req.files.map((file) => file.filename);
+      imagePaths = [...imagePaths, ...keepOld];
+      if (imagePaths && imagePaths.length > 0) {
+        await pool.query(
+          `update
+        cars set brand_id=$1, model_name=$2, category=$3, car_logo=$4 where car_id= $5`,
+          [brandId.rows[0].brand_id, modelName, category, imagePaths, carID],
+        );
+      } else {
+        await pool.query(
+          `update
+        cars set brand_id=$1, model_name=$2, category=$3 where car_id= $4`,
+          [brandId.rows[0].brand_id, modelName, category, carID],
+        );
+      }
+      const cleanHP = parseInt(horsePower, 10);
+      await pool.query(
+        `update
+        car_details set engine_type=$1, horsepower=$2, torque=$3, top_speed=$4, price=$5, description= $6 where car_id= $7`,
+        [
+          engineType,
+          cleanHP,
+          cleanTorque,
+          cleanTopSpeed,
+          cleanPrice,
+          description,
+          carID,
+        ],
+      );
+      console.log(car_id);
+
+      return res.status(200).json({ message: "Edit Success" });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({ message: "Unable to update" });
+    }
+  },
+);
 
 //Admin Panel
 
-app.get("/allbrands", async(req, res)=>{
-  try{
-    const brands = await pool.query("Select * from brands");    
+app.get("/allbrands", verifyToken, async (req, res) => {
+  try {
+    const brands = await pool.query("Select * from brands");
     return res.status(200).json(brands.rows);
-  }
-  catch(err){
+  } catch (err) {
     console.log(err);
-    return res.status(500).json(err)
+    return res.status(500).json(err);
   }
-})
+});
 
-app.get("/allCars", async(req, res)=>{
-  try{
-    const cars = await pool.query("select c.*, u.* from cars c join users u on u.id = c.user_id and c.deleted_at is null");
+app.get("/allCars", verifyToken, async (req, res) => {
+  try {
+    const cars = await pool.query(
+      "select c.*, u.* from cars c join users u on u.id = c.user_id and c.deleted_at is null",
+    );
     return res.status(200).json(cars.rows);
-  }
-  catch(err){
+  } catch (err) {
     console.log(err);
-    return res.status(500).json(err)
+    return res.status(500).json(err);
   }
-})
+});
 
-app.get("/allUsers", async(req, res)=>{
-  try{
-    const users = await pool.query("select * from users where deleted_at is null order by role , updated_at");
+app.get("/allUsers", verifyToken, async (req, res) => {
+  try {
+    const users = await pool.query(
+      "select * from users where deleted_at is null order by role , updated_at",
+    );
     return res.status(200).json(users.rows);
-  }
-  catch(err){
+  } catch (err) {
     console.log(err);
-    return res.status(500).json(err)
+    return res.status(500).json(err);
   }
-})
+});
 
-app.put("/updateUserRole", async(req, res)=>{
-  try{
-    const {user_id, role} = req.body;
-    await pool.query("update users set role=$1 where id = $2",[role, user_id]);
-    return res.status(200).json({message:"updated role"});
-  }
-  catch(err){
+app.put("/updateUserRole", verifyToken, async (req, res) => {
+  try {
+    const { user_id, role } = req.body;
+    await pool.query("update users set role=$1 where id = $2", [role, user_id]);
+    return res.status(200).json({ message: "updated role" });
+  } catch (err) {
     console.log(err);
-    return res.status(500).json(err)
+    return res.status(500).json(err);
   }
-})
+});
 
-app.put("/deleteUser/:user_id", async(req, res)=>{
-  
-  try{
+app.put("/deleteUser/:user_id", verifyToken, async (req, res) => {
+  try {
     console.log("Deleting");
-    
-    const {user_id} = req.params;
+
+    const { user_id } = req.params;
     console.log(user_id);
-    
-    if(!user_id) return res.status(500).json({message:err})
+
+    if (!user_id) return res.status(500).json({ message: err });
     const cleanUserId = parseInt(user_id, 10);
-    await pool.query("update users set deleted_at= NOW() where id = $1",[cleanUserId])
-    
-    return res.status(200).json({message:"Deletion Success"})
-  }
-  catch(err){
+    await pool.query("update users set deleted_at= NOW() where id = $1", [
+      cleanUserId,
+    ]);
+
+    return res.status(200).json({ message: "Deletion Success" });
+  } catch (err) {
     console.log(err);
-    return res.status(500).json({message:err})
+    return res.status(500).json({ message: err });
   }
-})
+});
+
+app.post(
+  "/createRequest",
+  verifyToken,
+  upload.single("brand_logo"),
+  async (req, res) => {
+    try {
+      const { brand_name, user_id } = req.body;
+
+      const image_path = req.file ? req.file.filename : null;
+
+      if (!image_path || !brand_name || !user_id)
+        return res.status(400).json({ message: "Details missing" });
+
+      const cleanUserId = parseInt(user_id, 10);
+
+      const exsisting = await pool.query(
+        "select * from brands where brand_name=$1",
+        [brand_name],
+      );
+
+      if (exsisting.rows.length > 0)
+        return res.status(400).json({ message: "This brand Already exsists" });
+      await pool.query(
+        "Insert into requests (user_id, brand_logo, brand_name) values ($1, $2, $3)",
+        [cleanUserId, image_path, brand_name],
+      );
+      return res.status(200).json({ message: "Success request" });
+    } catch (err) {
+      console.log(err);
+      return res.status(400).json({ message: err });
+    }
+  },
+);
+
+app.get("/getRequests", verifyToken, async (req, res) => {
+  try {
+    const requests = await pool.query(
+      "select r.*, u.firstname from requests r join users u on u.id = r.user_id where r.status=$1",
+      ["pending"],
+    );
+    return res.status(200).json(requests.rows);
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({ message: err });
+  }
+});
+
+app.post("/acceptRequests", verifyToken, async (req, res) => {
+  try {
+    const { request_id, brand_logo, brand_name } = req.body;
+    if (!brand_logo || !brand_name || !request_id)
+      return res.status(400).json({ message: "Error fetching request id" });
+
+    const cleanId = parseInt(request_id, 10);
+
+    await pool.query(
+      "insert into brands (brand_name, brand_logo) values ($1, $2)",
+      [brand_name, brand_logo],
+    );
+
+    await pool.query("update requests set status = $1 where request_id=$2", [
+      "accepted",
+      cleanId,
+    ]);
+    return res.status(200).json({ message: "Accepted" });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({ message: err });
+  }
+});
+
+app.put("/rejectRequests", verifyToken, async (req, res) => {
+  try {
+    const { request_id } = req.body;
+    if (!request_id)
+      return res.status(400).json({ message: "Error fetching request id" });
+    const cleanId = parseInt(request_id, 10);
+    await pool.query("update requests set status = $1 where request_id=$2", [
+      "rejected",
+      cleanId,
+    ]);
+    return res.status(200).json({ message: "Rejceted" });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({ message: err });
+  }
+});
+
+app.put("/updateUserStatus", verifyToken, async (req, res) => {
+  try {
+    const { user_id, Update } = req.body;
+    if (!user_id)
+      return res
+        .status(400)
+        .json({ message: "error in updating status user id" });
+
+    const cleanId = parseInt(user_id, 10);
+
+    await pool.query("update users set status=$1 where id = $2", [
+      Update,
+      cleanId,
+    ]);
+    return res.status(200).json({ message: "Status Update Success", Update });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({ message: `error in updating status` });
+  }
+});
+
+app.get("/userStatus/:user_id", verifyToken, async (req, res) => {
+  try {
+    const { user_id } = req.params;
+    if (!user_id)
+      return res
+        .status(400)
+        .json({ message: "error in fetching status user id" });
+
+    const cleanId = parseInt(user_id, 10);
+    const status = await pool.query("select status from users where id=$1", [
+      cleanId,
+    ]);
+    return res.status(200).json(status.rows[0]);
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({ message: `error fetching the user status` });
+  }
+});
+
+app.post("/sendMail", async (req, res) => {
+  try {
+    const { email, data } = req.body;
+
+    if (!email)
+      return res.status(400).json({ message: `error sending mail no email` });
+
+    const user = await pool.query("Select * from users where email=$1", [
+      email,
+    ]);
+
+    if (user.rows.length == 0)
+      return res.status(400).json({ message: `error sending mail no user` });
+
+    const userStatus = await pool.query(
+      "select status from users where email=$1 and status = 'active'",
+      [email],
+    );
+
+    if (userStatus.rows.length == 0)
+      return res.status(400).json({ message: `Your account is suspended` });
+
+    const token = jwt.sign({ email: email }, process.env.SECRET, {
+      expiresIn: "15m",
+    });
+    await sendMail(email, token, user.rows[0].id);
+
+    await pool.query(
+      "Update users set token_for_password=$1 , token_number=$2 where email=$3",
+      [token, user.rows[0].id, email],
+    );
+
+    return res.status(200).json({ message: `Mail sent` });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({ message: `error sending mail` });
+  }
+});
+
+app.get("/validateToken/:token/:id", async (req, res) => {
+  try {
+    const { token, id } = req.params;
+    if (!token || !id) return res.status(500).json({ message: "no token" });
+
+    const correct = await pool.query(
+      "select token_number from users where token_for_password =$1 and token_number=$2",
+      [token, id],
+    );
+
+    if (correct.rows.length === 0) {
+      return res.status(404).json({ valid: false });
+    }
+
+    return res.status(200).json({ valid: true });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: err });
+  }
+});
+
+app.put("/resetPassword/:token_number", async (req, res) => {
+  try {
+    const { password } = req.body;
+    const { token_number } = req.params;
+
+    if (!password)
+      return res
+        .status(400)
+        .json({ message: `error reseting password data missing` });
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await pool.query("Update users set password=$1 where token_number=$2", [
+      hashedPassword,
+      token_number,
+    ]);
+
+    await pool.query(
+      "Update users set token_for_password=$1, token_number=$2 where token_number=$3",
+      [null, null, token_number],
+    );
+
+    return res.status(200).json({ message: `Password Reset success` });
+  } catch (err) {
+    console.log(err);
+
+    await pool.query(
+      "Update users set token_for_password=$1, token_number=$2 where token_number=$3",
+      [null, null, token_number],
+    );
+
+    return res
+      .status(400)
+      .json({ message: `error reseting password pata nhi` });
+  }
+});
 
 app.listen(3000, (req, res) => {
   console.log("Server Is Running");

@@ -63,7 +63,7 @@ export class BrandsComponent implements OnInit {
     }
   }
 
-  goBack(){
+  goBack() {
     this.location.back();
   }
 }

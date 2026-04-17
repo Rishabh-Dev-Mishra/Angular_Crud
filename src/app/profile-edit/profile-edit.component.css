@@ -1,5 +1,5 @@
 .container{
-    height: 100vh;
+    min-height: 100vh;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -27,12 +27,34 @@
 }
 input {
     padding: 12px 15px;
+    color: grey;
     border-radius: 12px;
     border: 1px solid #ddd;
     outline: none;
     transition: 0.3s;
     font-size: 0.95rem;
 }
+
+.admin {
+    display: flex;
+    align-items: center;
+    gap: 12px; /* Gap between text and checkbox */
+    padding: 10px 0;
+    cursor: pointer;
+}
+
+.admin h5 {
+    margin: 0; /* Remove default margins */
+}
+
+.admin input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-left: 90px;
+    cursor: pointer;
+    accent-color: #f6ef3b; /* Matches button color */
+}
+
 
 input:focus {
     border-color: #f6ef3b;
@@ -82,6 +104,7 @@ button:hover {
   display: flex;
   background-color: #f1f3f5; /* Light grey background */
   padding: 5px;
+  margin-top: 40px;
   border-radius: 12px;
   margin-bottom: 20px;
   width: fit-content;
@@ -147,7 +170,7 @@ button:hover {
 
 .back-btn {
     position: absolute;
-    top: 20px;
+    top: 50px;
     left: 20px;
     text-decoration: none;
     color: #555;

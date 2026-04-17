@@ -88,3 +88,67 @@ h6 {
     text-align: center;
     margin-top: 10px;
 }
+
+@media (max-width: 1024px) {
+  .box {
+    width: 320px;
+    padding: 25px 30px;
+  }
+
+  .top-content {
+    font-size: 1.6rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 20px;
+    height: auto; 
+    min-height: 100vh;
+  }
+
+  .box {
+    width: 100%;              
+    max-width: 400px;        
+    padding: 20px;
+    border-radius: 16px;
+  }
+
+  .top-content {
+    font-size: 1.4rem;
+  }
+
+  input {
+    padding: 10px 12px;
+    font-size: 0.9rem;
+  }
+
+  button {
+    padding: 10px;
+    font-size: 0.95rem;
+  }
+
+  h6 {@media screen {
+    
+}
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .box {
+    padding: 18px 15px;
+  }
+
+  .top-content {
+    font-size: 1.2rem;
+  }
+
+  input {
+    font-size: 0.85rem;
+  }
+
+  button {
+    font-size: 0.9rem;
+  }
+}

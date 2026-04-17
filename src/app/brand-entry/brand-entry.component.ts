@@ -5,6 +5,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
 import { FormsModule } from '@angular/forms';
 import { DataService } from '../data.service';
 import { ToastrService } from 'ngx-toastr';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-brand-entry',
@@ -14,6 +15,8 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './brand-entry.component.css'
 })
 export class BrandEntryComponent {
+
+  constructor(private location : Location){}
 
   
   private dataservice = inject(DataService);
@@ -30,8 +33,22 @@ export class BrandEntryComponent {
       this.selectedFile = file;
     }
   }
+
+
+  goBack(){
+    this.location.back();
+  }
+
+  showmssg: boolean = true;
+
+  
+  disableButton(){
+    this.showmssg = false;
+  }
   
   update(form :any){
+        this.showmssg = false;
+
     if (form.invalid) {
       this.toast.warning('Please fix the errors before submitting', 'Form Invalid');
       return;
@@ -50,8 +67,12 @@ export class BrandEntryComponent {
       next: (res:any)=>{
         this.toast.success("Added Successfully")
         form.resetForm();
+        this.showmssg = true;
+
       },
       error: (err:any)=>{
+        this.showmssg = true;
+
         this.toast.error("Wrong!!");
         console.log(err);
       }

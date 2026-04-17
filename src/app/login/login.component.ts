@@ -4,6 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { AuthServiceService } from '../auth-service.service';
+import { StatusserviceService } from '../statusservice.service';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +18,8 @@ export class LoginComponent implements OnInit{
   password = '';
   message = '';
 
-  private dataservice = inject(DataService);  
+  private dataservice = inject(DataService); 
+  private statusservice = inject(StatusserviceService) 
   private authService = inject(AuthServiceService)
   private router = inject(Router);  
   private toast = inject(ToastrService)
@@ -26,8 +28,15 @@ export class LoginComponent implements OnInit{
     this.authService.logout();
   }
 
-  login(form: any){
+   showmssg: boolean = true;
 
+  
+  disableButton(){
+    this.showmssg = false;
+  }
+
+  login(form: any){
+    this.showmssg = false;
     if (form.invalid) {
     this.toast.warning('Please fix the errors before logging in', 'Form Invalid');
     return;
@@ -51,17 +60,15 @@ export class LoginComponent implements OnInit{
         else{
           this.dataservice.setProfileImage('')
         }
+        this.statusservice.startPolling();
         this.router.navigate(['/home']);
       },
       error:(err:any)=> {
-        if (err.status === 401 ) {
-        this.toast.error("Invalid email or password")
-      } else if (err.status === 400) {
-        this.toast.error("User Not Registered");
-      } else {
-        this.toast.error("An unexpected error occurred");
-      }
-        this.message = err.error?.message || "Login failed";
+        const backendMessage = typeof err.error === 'string' 
+    ? err.error 
+    : (err.error?.message || "An unexpected error occurred");
+        this.toast.error(backendMessage);
+        this.showmssg = true
       },
     })
   }

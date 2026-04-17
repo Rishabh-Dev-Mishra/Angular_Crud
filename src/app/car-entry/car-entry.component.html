@@ -1,9 +1,9 @@
 <app-navbar></app-navbar>
 
 <div class="admin-page-wrapper">
-  <a routerLink="/allcars" class="back-btn">
+  <a (click)="goBack()" class="back-btn">
     <span class="icon">←</span>
-    <span class="label">All Cars</span>
+    <span class="label">Back</span>
   </a>
 
   <div class="glass-form-card">
@@ -17,13 +17,14 @@
       class="premium-form"
       novalidate
     >
-      
       <div class="input-group">
         <label for="logo">Car Photo</label>
         <div
           class="drag-drop"
           [class.drag-over]="isDragging"
-          [class.invalid-border]="brandform.submitted && selectedFile.length === 0"
+          [class.invalid-border]="
+            brandform.submitted && selectedFile.length === 0
+          "
           (dragover)="onDragOver($event)"
           (dragleave)="onDragLeave($event)"
           (drop)="onDrop($event)"
@@ -32,15 +33,20 @@
           <span *ngIf="!selectedFileName">Drag & Drop or Click to Upload</span>
           <span *ngIf="selectedFileName">Selected: {{ selectedFileName }}</span>
         </div>
-        
-        <span class="error-text" *ngIf="brandform.submitted && selectedFile.length === 0">
+
+        <span
+          class="error-text"
+          *ngIf="brandform.submitted && selectedFile.length === 0"
+        >
           At least one image is required.
         </span>
 
         <div class="preview-container" *ngIf="previews.length > 0">
           <div *ngFor="let url of previews; let i = index" class="preview-card">
             <img [src]="url" alt="Car preview" />
-            <button type="button" class="remove-img" (click)="removeImage(i)">×</button>
+            <button type="button" class="remove-img" (click)="removeImage(i)">
+              ×
+            </button>
           </div>
         </div>
 
@@ -51,27 +57,98 @@
           id="image"
           name="image"
           accept=".png,.jpg,.jpeg"
-          style="display: none;"
+          style="display: none"
           multiple
         />
       </div>
 
       <div class="input-group">
         <label for="brandName">Brand Name</label>
-        <select 
-          name="brandName" 
-          [(ngModel)]=car_detail.brandName
-          id="brandName" 
-          required 
-          #brandName="ngModel">
+        <select
+          name="brandName"
+          [(ngModel)]="car_detail.brandName"
+          id="brandName"
+          required
+          #brandName="ngModel"
+        >
           <option value="" disabled selected>Select a brand</option>
-          <option *ngFor="let brand of availableBrands" [value]="brand.brand_name">
+          <option
+            *ngFor="let brand of availableBrands"
+            [value]="brand.brand_name"
+          >
             {{ brand.brand_name }}
           </option>
         </select>
-        <span class="error-text" *ngIf="brandName.invalid && (brandName.touched || brandform.submitted)">
+        <span
+          class="error-text"
+          *ngIf="
+            brandName.invalid && (brandName.touched || brandform.submitted)
+          "
+        >
           Please select a brand.
         </span>
+      </div>
+
+      <div class="input-group" *ngIf="role == 'user'">
+        <label>Request Brand</label>
+        <button
+          type="button"
+          (click)="requestBrand()"
+          class="submit-btn"
+          style="font-size: 12px"
+        >
+          Request
+        </button>
+      </div>
+
+      <div class="modal-overlay" *ngIf="showRequestModal">
+        <div class="modal-content">
+          <button type="button" (click)="closeModal()">×</button>
+
+          <h2>Request a Brand</h2>
+
+          <form #requestForm="ngForm" (ngSubmit)="onSubmitRequest(requestForm)">
+            <div class="input-group">
+              <label for="logo">Brand Logo / Photo</label>
+              <div class="file-input-wrapper">
+                <input
+                  type="file"
+                  #fileInput
+                  (change)="fileForRequest($event)"
+                  name="logo"
+                  required
+                  id="logo"
+                  accept="image/*"
+                />
+              </div>
+            </div>
+
+            <div class="input-group">
+              <label for="brandName">Official Name</label>
+              <input
+                type="text"
+                required
+                name="brandName"
+                ngModel
+                id="brandName"
+                placeholder="e.g. Aston Martin"
+              />
+              <span
+              class="error-text"
+              *ngIf="
+                brandName.invalid && (brandName.dirty || brandName.touched)
+              "
+            >
+              Brand name is required.
+            </span>
+            </div>
+            
+
+            <button type="submit" class="submit-btn">
+              <span>Save Brand</span>
+            </button>
+          </form>
+        </div>
       </div>
 
       <div class="input-group">
@@ -81,19 +158,50 @@
           name="modelName"
           ngModel
           id="modelName"
-          [(ngModel)]=car_detail.modelName
+          [(ngModel)]="car_detail.modelName"
           required
           #modelName="ngModel"
           placeholder="e.g. Martin"
         />
-        <span class="error-text" *ngIf="modelName.invalid && (modelName.touched || brandform.submitted)">
+        <span
+          class="error-text"
+          *ngIf="
+            modelName.invalid && (modelName.touched || brandform.submitted)
+          "
+        >
           Model Name is required.
         </span>
       </div>
 
+      <div class="custom-multiselect input-group" *ngIf="role == 'admin'">
+        <div class="select-box" (click)="toggleDropdown()">
+          <span>{{
+            selectedUsers.length > 0 ? selectedUsers.join(", ") : "Select Users"
+          }}</span>
+        </div>
+        <div class="dropdown-content" *ngIf="isOpen">
+          <label *ngFor="let user of users">
+            <input
+              *ngIf="user.role != 'admin'"
+              type="checkbox"
+              [checked]="selectedUsers.includes(user.id)"
+              (change)="onCheckboxChange($event, user.id)"
+            />
+            <span *ngIf="user.role != 'admin'"> {{ user.firstname }} </span>
+          </label>
+        </div>
+      </div>
+
       <div class="input-group">
         <label for="category">Category</label>
-        <select name="category" [(ngModel)]=car_detail.category id="category" ngModel required #category="ngModel">
+        <select
+          name="category"
+          [(ngModel)]="car_detail.category"
+          id="category"
+          ngModel
+          required
+          #category="ngModel"
+        >
           <option value="" disabled selected>Select Category</option>
           <option value="Sports">Sports</option>
           <option value="SUV">SUV</option>
@@ -101,7 +209,10 @@
           <option value="Luxury">Luxury</option>
           <option value="Classic">Classic</option>
         </select>
-        <span class="error-text" *ngIf="category.invalid && (category.touched || brandform.submitted)">
+        <span
+          class="error-text"
+          *ngIf="category.invalid && (category.touched || brandform.submitted)"
+        >
           Category is required.
         </span>
       </div>
@@ -111,14 +222,19 @@
         <input
           type="text"
           name="engineType"
-          [(ngModel)]=car_detail.engineType
+          [(ngModel)]="car_detail.engineType"
           ngModel
           id="EngineType"
           required
           #engineType="ngModel"
           placeholder="e.g. V8 Biturbo"
         />
-        <span class="error-text" *ngIf="engineType.invalid && (engineType.touched || brandform.submitted)">
+        <span
+          class="error-text"
+          *ngIf="
+            engineType.invalid && (engineType.touched || brandform.submitted)
+          "
+        >
           Engine type is required.
         </span>
       </div>
@@ -128,14 +244,19 @@
         <input
           type="text"
           name="horsePower"
-          [(ngModel)]=car_detail.horsePower
+          [(ngModel)]="car_detail.horsePower"
           ngModel
           id="horsePower"
           required
           #horsePower="ngModel"
           placeholder="e.g. 500"
         />
-        <span class="error-text" *ngIf="horsePower.invalid && (horsePower.touched || brandform.submitted)">
+        <span
+          class="error-text"
+          *ngIf="
+            horsePower.invalid && (horsePower.touched || brandform.submitted)
+          "
+        >
           Horse power is required.
         </span>
       </div>
@@ -145,7 +266,7 @@
         <input
           type="text"
           name="torque"
-          [(ngModel)]=car_detail.torque
+          [(ngModel)]="car_detail.torque"
           ngModel
           id="torque"
           placeholder="e.g. 650"
@@ -158,7 +279,7 @@
           type="text"
           name="topSpeed"
           ngModel
-          [(ngModel)]=car_detail.topSpeed
+          [(ngModel)]="car_detail.topSpeed"
           id="topSpeed"
           placeholder="e.g. 320kmph"
         />
@@ -170,7 +291,7 @@
           type="text"
           name="price"
           ngModel
-          [(ngModel)]=car_detail.price
+          [(ngModel)]="car_detail.price"
           id="price"
           placeholder="e.g. 250000"
         />
@@ -181,24 +302,35 @@
         <textarea
           maxlength="100"
           name="description"
-          [(ngModel)]=car_detail.description
+          [(ngModel)]="car_detail.description"
           ngModel
           id="description"
           placeholder="Brief overview..."
         ></textarea>
       </div>
 
-      <button type="submit" class="submit-btn" (click)="forAdd()" *ngIf="!editMode">
+      <button
+        type="submit"
+        class="submit-btn"
+        (click)="forAdd()"
+        *ngIf="!editMode"
+      >
         <span>Save Car</span>
       </button>
-      <button type="submit" (click)="forEdit()" class="submit-btn" *ngIf="editMode">
+      <button
+        type="submit"
+        (click)="forEdit()"
+        class="submit-btn"
+        *ngIf="editMode"
+      >
         <span>Edit Car</span>
       </button>
-
     </form>
 
     <ng-template #noBrand>
-      <div class="empty-state">No Brands Available. Please add a brand first.</div>
+      <div class="empty-state">
+        No Brands Available. Please add a brand first.
+      </div>
     </ng-template>
   </div>
 </div>

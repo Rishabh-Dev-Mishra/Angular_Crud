@@ -1,28 +1,26 @@
-import { Component, inject } from '@angular/core';
+import { afterNextRender, Component, inject } from '@angular/core';
 import { FooterComponent } from '../footer/footer.component';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { DataService } from '../data.service';
 import { ToastrService } from 'ngx-toastr';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 
 @Component({
   selector: 'app-car-entry',
-  imports: [
-    FooterComponent,
-    NavbarComponent,
-    CommonModule,
-    FormsModule,
-    RouterLink,
-  ],
+  imports: [FooterComponent, NavbarComponent, CommonModule, FormsModule],
   templateUrl: './car-entry.component.html',
   styleUrl: './car-entry.component.css',
 })
 export class CarEntryComponent {
+  constructor(private location: Location) {}
+
   private dataservice = inject(DataService);
   private toast = inject(ToastrService);
   private route = inject(ActivatedRoute);
+
+  role = this.dataservice.getUserRole();
 
   editMode: boolean = false;
 
@@ -32,6 +30,9 @@ export class CarEntryComponent {
 
   previews: string[] = [];
 
+  selectedUsers: string[] = [];
+
+  availableUsers: string[] = [];
 
   car_detail = {
     brandName: '',
@@ -82,14 +83,46 @@ export class CarEntryComponent {
     });
   }
 
+  isOpen: boolean = false;
+
+  toggleDropdown() {
+    this.isOpen = !this.isOpen;
+  }
+
+  onCheckboxChange(event: any, id: any) {
+    if (event.target.checked) {
+      this.selectedUsers.push(id);
+    } else {
+      this.selectedUsers = this.selectedUsers.filter((u) => u !== id);
+    }
+  }
+
   ngOnInit() {
     this.allCars();
+    this.allUsers();
+
+    for (let i = 0; i < this.users.length; i++) {
+      this.availableUsers.push(this.users[i].firstname);
+    }
+
     this.dataservice.getBrandsForEntry().subscribe({
       next: (data: any) => {
         this.availableBrands = data;
       },
       error: (err) => {
         console.error('Error fetching all brands:', err);
+      },
+    });
+  }
+
+  users: any[] = [];
+  allUsers() {
+    this.dataservice.getAllUsers().subscribe({
+      next: (res: any) => {
+        this.users = res;
+      },
+      error: (err: any) => {
+        console.log('Error in getting all users');
       },
     });
   }
@@ -156,18 +189,15 @@ export class CarEntryComponent {
   }
 
   removeImage(index: number) {
-
     const imageToRemove = this.previews[index];
-    if(imageToRemove.startsWith('blob:')){
-      const blobPreview = this.previews.filter(p=>p.startsWith('blob:'));
-      const indexOriginal = blobPreview.indexOf(imageToRemove)
-      if(indexOriginal != -1){
+    if (imageToRemove.startsWith('blob:')) {
+      const blobPreview = this.previews.filter((p) => p.startsWith('blob:'));
+      const indexOriginal = blobPreview.indexOf(imageToRemove);
+      if (indexOriginal != -1) {
         this.selectedFile.splice(indexOriginal, 1);
       }
-    }
-    else{
-      console.log("removing form views");
-      
+    } else {
+      console.log('removing form views');
     }
     this.previews.splice(index, 1);
 
@@ -179,16 +209,18 @@ export class CarEntryComponent {
   }
 
   getformData(form: any) {
-    console.log("InfoprmData");
-    
+    console.log('InfoprmData');
+
     const formData = new FormData();
     const car_id = this.route.snapshot.paramMap.get('car_id');
     if (this.editMode && car_id) {
       formData.append('car_id', car_id);
-      console.log("CARID",formData.get('car_id'));
+      console.log('CARID', formData.get('car_id'));
     }
-    const existingImages = this.previews.filter(p=>!p.startsWith('blob:')).map(p=>p.split('/').pop());
-    formData.append("oldImages", JSON.stringify(existingImages));
+    const existingImages = this.previews
+      .filter((p) => !p.startsWith('blob:'))
+      .map((p) => p.split('/').pop());
+    formData.append('oldImages', JSON.stringify(existingImages));
     formData.append('brandName', form.value.brandName);
     formData.append('modelName', form.value.modelName);
     formData.append('category', form.value.category);
@@ -226,27 +258,49 @@ export class CarEntryComponent {
       this.toast.warning('Fix the errors before proceeding');
       return;
     }
+
     const forms = this.getformData(form);
 
     if (this.selectedFile.length === 0) {
       this.toast.warning('Upload image');
       return;
     }
-  
-    
-    this.dataservice.addCar(forms).subscribe({
-      next: (res: any) => {
-        this.toast.success('Added Success');
-        form.resetForm();
-        this.selectedFile = [];
-        this.selectedFileName = '';
-        this.previews = [];
-      },
-      error: (err: any) => {
-        this.toast.error('Wrong!!');
-        console.log(err);
-      },
-    });
+
+    if (this.role == 'admin') {
+      if (this.selectedUsers.length == 0)
+        this.toast.warning('Please select users');
+      else {
+        for (let i = 0; i < this.selectedUsers.length; i++) {
+          this.dataservice.addCar(forms, this.selectedUsers[i]).subscribe({
+            next: (res: any) => {
+              form.resetForm();
+              this.selectedFile = [];
+              this.selectedFileName = '';
+              this.previews = [];
+            },
+            error: (err: any) => {
+              this.toast.error('Wrong!!');
+              console.log(err);
+            },
+          });
+        }
+      }
+    } else {
+      const url_user_id = this.route.snapshot.paramMap.get("user_id")
+      this.dataservice.addCar(forms, url_user_id).subscribe({
+        next: (res: any) => {
+          this.toast.success('Added Success');
+          form.resetForm();
+          this.selectedFile = [];
+          this.selectedFileName = '';
+          this.previews = [];
+        },
+        error: (err: any) => {
+          this.toast.error('Wrong!!');
+          console.log(err);
+        },
+      });
+    }
   }
 
   saveEdits(form: any) {
@@ -259,8 +313,8 @@ export class CarEntryComponent {
       return;
     }
     const forms = this.getformData(form);
-       
-    console.log("Before to servie",forms.get("car_id"));
+
+    console.log('Before to servie', forms.get('car_id'));
     this.dataservice.editCar(forms).subscribe({
       next: (res: any) => {
         this.toast.success('Saved Edits');
@@ -268,6 +322,55 @@ export class CarEntryComponent {
       error: (err: any) => {
         console.log(err);
         this.toast.error(err);
+      },
+    });
+  }
+
+  goBack() {
+    this.location.back();
+  }
+
+  showRequestModal: boolean = false;
+  requestBrand() {
+    this.showRequestModal = true;
+  }
+  closeModal() {
+    this.showRequestModal = false;
+  }
+
+  brandLogoRequest: File | null = null;
+
+  fileForRequest(event: any) {
+    const file: File = event.target.files[0];
+    const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+
+    if (file && allowedTypes.includes(file.type)) {
+      this.brandLogoRequest = file;
+    } else {
+      this.brandLogoRequest = null;
+      this.toast?.error?.('Invalid file type');
+    }
+  }
+
+  user_id = this.dataservice.getUserId();
+
+  onSubmitRequest(form: any) {
+    if (!this.brandLogoRequest || !this.user_id || !form.value.brandName){
+      this.toast.warning("All fields required")
+      return;}
+    const requestForm = new FormData();
+
+    requestForm.append('brand_logo', this.brandLogoRequest);
+    requestForm.append('brand_name', form.value.brandName);
+    requestForm.append('user_id', this.user_id);
+    this.dataservice.createRequest(requestForm).subscribe({
+      next: (res: any) => {
+        this.toast.success('Request Sent');
+        form.reset();
+      },
+      error: (err: any) => {
+        this.toast.warning("Exsisting Brand")
+        console.log(err);
       },
     });
   }

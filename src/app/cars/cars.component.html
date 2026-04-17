@@ -61,7 +61,7 @@
         <th>Get More Images</th>
       </tr>
       <tr *ngFor="let car of carList; trackBy: trackByCarId">
-        <td>
+        <td data-label="Image">
           <img
             [src]="'http://localhost:3000/uploads/' + car.car_logo[0]"
             [alt]="car.model_name"
@@ -69,22 +69,25 @@
             (click)="getImages(car)"
           />
         </td>
-        <td>{{ brand_name }}</td>
-        <td>{{car.model_name}}</td>
-        <td>${{ car.price ? (car.price | number) : "0" }}</td>
-        <td>{{ car.category }}</td>
-        <td>{{ car.engine_type }}</td>
-        <td>{{ car.horsepower }} HP</td>
-        <td>{{ car.torque }} Nm</td>
-        <td>{{ car.top_speed }} km/h</td>
-        <td>{{ car.description }}</td>
-        <td><button class="btn-view" (click)="editCar(car)">Edit</button></td>
-        <td>
+        <td data-label="Brand">{{ brand_name }}</td>
+        <td data-label="Model Name">{{car.model_name}}</td>
+        <td data-label="Price">${{ car.price ? (car.price | number) : "0" }}</td>
+        <td data-label="Category">{{ car.category }}</td>
+        <td data-label="Engine">{{ car.engine_type }}</td>
+        <td data-label="Horsepower">{{ car.horsepower }} HP</td>
+        <td data-label="Torque">{{ car.torque }} Nm</td>
+        <td data-label="Top Speed">{{ car.top_speed }} km/h</td>
+        <td data-label="Description">{{ car.description }}</td>
+        <td data-label="Edit">
+          <button class="btn-view" (click)="editCar(car)">
+            Edit
+          </button>
+        </td>
+        <td data-label="Delete">
           <button class="btn-delete-trigger" (click)="confirmDelete(car)">
             Delete Car
           </button>
         </td>
-
       </tr>
     </table>
     <div class="delete-overlay" *ngIf="confirmDeleteButton">

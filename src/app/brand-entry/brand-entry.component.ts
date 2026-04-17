@@ -5,6 +5,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
 import { FormsModule } from '@angular/forms';
 import { DataService } from '../data.service';
 import { ToastrService } from 'ngx-toastr';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-brand-entry',
@@ -14,6 +15,8 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './brand-entry.component.css'
 })
 export class BrandEntryComponent {
+
+  constructor(private location : Location){}
 
   
   private dataservice = inject(DataService);
@@ -29,6 +32,11 @@ export class BrandEntryComponent {
     if(file){
       this.selectedFile = file;
     }
+  }
+
+
+  goBack(){
+    this.location.back();
   }
 
   showmssg: boolean = true;

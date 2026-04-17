@@ -40,7 +40,7 @@ export class ProfileEditComponent {
   path: string = '';
   user:any;
   
-    emailControl = new FormControl('', [Validators.required, Validators.email, Validators.pattern('^(.+)@\\1\\.[a-zA-Z]{2,}$')]);
+  emailControl = new FormControl('', [Validators.required, Validators.email, Validators.pattern('^(.+)@\\1\\.[a-zA-Z]{2,}$')]);
   emailExsitsError: boolean = false;
 
 
@@ -120,14 +120,17 @@ export class ProfileEditComponent {
     formData.append('user_id', this.user_id);
     formData.append('firstname', form.value.firstname || '');
     formData.append('lastname', form.value.lastname || '');
-    formData.append('email', form.value.email);
+    formData.append('email', this.emailControl.value || '');
+    
 
     if (this.selectedFile) {
       formData.append('image', this.selectedFile);
     }
-
+    
+    console.log(this.email);
     this.dataservice.edit(formData).subscribe({
       next: (res: any) => {
+        this.getUserInfo();
         this.toast.success('Profile Updated Successfully');
         this.firstname = form.value.firstname
         this.lastname = form.value.lastname
@@ -138,7 +141,7 @@ export class ProfileEditComponent {
         }
         sessionStorage.setItem('userName', res.name);
         sessionStorage.setItem('userEmail', res.email);
-        this.router.navigate(['/home']);
+        // this.router.navigate(['/home']);
       },
       error: (err: any) => {
         this.toast.error(err.error?.message || 'An error occurred');

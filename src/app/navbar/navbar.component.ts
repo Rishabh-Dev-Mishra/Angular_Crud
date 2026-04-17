@@ -13,6 +13,7 @@ import { DataService } from '../data.service';
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent {
+
   public hoverService = inject(ProfileHoverService);
   private dataservice = inject(DataService)
 
@@ -36,7 +37,7 @@ addBrand() {
   const userId = sessionStorage.getItem("user_id");
   if (userId) {
     // Navigates to /brand_details/5
-    this.router.navigate(['/brand_details', userId]); 
+    this.router.navigate(['/brand_details']); 
   } else {
     this.router.navigate(['/login']);
   }

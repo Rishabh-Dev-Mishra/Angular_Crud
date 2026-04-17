@@ -103,7 +103,7 @@
 /* Container Spacing */
 .table-container {
   padding: 0 40px 60px;
-  overflow-x: auto; /* Scroll horizontally on small screens */
+  overflow-x: auto; 
 }
 
 /* Table Logic */

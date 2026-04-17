@@ -61,6 +61,8 @@ export class DataService {
   }
 
   edit(data: any) {
+    console.log(data.email);
+    
     return this.http.post(this.url + '/edit-profile', data);
   }
   

@@ -123,7 +123,7 @@
                   </div>
                 </td>
                 <td data-label="Suspend User">
-                  <button
+                  <button style="background-color: red;"
                     class="btn"
                     *ngIf="user.id != user_id && user.status=='active'"
                     (click)="suspendUser(user.id)"
@@ -176,6 +176,7 @@
               <tr>
                 <th>Brand Image</th>
                 <th>Name</th>
+                <th>Delete</th>
               </tr>
             </thead>
             <tbody>
@@ -190,6 +191,7 @@
                 <td data-label="Brand Name">
                   <span class="brand-name">{{ brand.brand_name }}</span>
                 </td>
+                <td><button class="btn-sm btn-danger btn">Delete</button></td>
               </tr>
             </tbody>
           </table>

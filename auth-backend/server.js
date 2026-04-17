@@ -77,7 +77,7 @@ const sendMail = async (userEmail, token, id) => {
       </div>
     </div>
     `,
-};
+  };
 
   return transporter.sendMail(mailOptions);
 };
@@ -105,22 +105,36 @@ const upload = multer({
   storage: storage,
 });
 
+const getUserId = (req) => {
+  const loggedInUser = req.user;
+
+  if (loggedInUser.role == "admin" && req.params.user_id) {
+    const id = parseInt(req.params.user_id, 10);
+    if (isNaN(id)) {
+      throw new Error("Invalid user_id");
+    }
+    return id;
+  }
+
+  return loggedInUser.user_id;
+};
+
 app.get("/", (req, res) => {
   res.send("Welcome");
 });
 
-// const verifyToken = (req, res, next) => {
-//   const authHeader = req.headers["authorization"];
-//   const token = authHeader && authHeader.split(" ")[1];
-//   if (!token) {
-//     return res.status(401).json({ message: "No token" });
-//   }
-//   jwt.verify(token, process.env.SECRET, (err, user) => {
-//     if (err) return res.status(401).json({ message: "No user" });
-//     req.user = user;
-//     next();
-//   });
-// };
+const verifyToken = async (req, res, next) => {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+  if (!token) {
+    return res.status(401).json({ message: "No token" });
+  }
+  jwt.verify(token, process.env.SECRET, (err, user) => {
+    if (err) return res.status(401).json({ message: "No user" });
+    req.user = user;
+    next();
+  });
+};
 
 app.post("/register", async (req, res) => {
   try {
@@ -171,7 +185,7 @@ app.post("/login", async (req, res) => {
       [email],
     );
 
-     if (userStatus.rows.length === 0) {
+    if (userStatus.rows.length === 0) {
       return res.status(400).json("Your Account is Suspended");
     }
 
@@ -190,9 +204,17 @@ app.post("/login", async (req, res) => {
         ? ExisitingUser.rows[0].image_path
         : "";
 
-    const token = jwt.sign({ email: email }, process.env.SECRET, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign(
+      {
+        email: email,
+        user_id: ExisitingUser.rows[0].id,
+        role: ExisitingUser.rows[0].role,
+      },
+      process.env.SECRET,
+      {
+        expiresIn: "1h",
+      },
+    );
     const userName = ExisitingUser.rows[0].firstname;
     const user_id = ExisitingUser.rows[0].id;
     res.json({
@@ -210,9 +232,9 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.get("/userInfo/:user_id", async (req, res) => {
+app.get("/userInfo/:user_id", verifyToken, async (req, res) => {
   try {
-    const { user_id } = req.params;
+    const user_id = getUserId(req);
 
     if (!user_id) {
       return res
@@ -221,7 +243,6 @@ app.get("/userInfo/:user_id", async (req, res) => {
     }
 
     const cleanUserId = parseInt(user_id, 10);
-    // console.log(cleanUserId);
 
     const user = await pool.query("select * from users where id=$1", [
       cleanUserId,
@@ -235,118 +256,135 @@ app.get("/userInfo/:user_id", async (req, res) => {
   }
 });
 
-app.post("/edit-profile", upload.single("image"), async (req, res) => {
-  try {
-    if (req.body.currentpassword) {
-      const { confirmpassword, currentpassword, newpassword, user_id } =
-        req.body;
+app.post(
+  "/edit-profile",
+  verifyToken,
+  upload.single("image"),
+  async (req, res) => {
+    try {
+      if (req.body.currentpassword) {
+        const { confirmpassword, currentpassword, newpassword } = req.body;
 
-      if (!confirmpassword || !currentpassword || !newpassword || !user_id)
-        return res.status(402).send("Bad Request");
+        const user_id = getUserId(req);
 
-      const cleanUserId = parseInt(user_id, 10);
+        if (!confirmpassword || !currentpassword || !newpassword || !user_id)
+          return res.status(402).send("Bad Request");
 
-      const ExisitingUser = await pool.query(
-        "SELECT * FROM users WHERE id = $1",
-        [cleanUserId],
-      );
+        const cleanUserId = parseInt(user_id, 10);
 
-      if (ExisitingUser.rows.length === 0) {
-        return res.status(400).send("User not found");
-      }
-
-      const isMatch = await bcrypt.compare(
-        currentpassword,
-        ExisitingUser.rows[0].password,
-      );
-
-      if (!isMatch) return res.status(400).send("User Not Found");
-
-      const compareNew = await bcrypt.compare(
-        newpassword,
-        ExisitingUser.rows[0].password,
-      );
-
-      if (compareNew)
-        return res.status(405).send("New Password is same as Current");
-
-      if (confirmpassword != newpassword)
-        return res.status(405).send("Password not same as newpassword");
-
-      const salthash = 10;
-      const hashedpassword = await bcrypt.hash(newpassword, salthash);
-
-      await pool.query("UPDATE users SET password=$1 WHERE id = $2", [
-        hashedpassword,
-        cleanUserId,
-      ]);
-      await pool.query("update users set updated_at = $1 where id = $2", [
-        new Date(),
-        cleanUserId,
-      ]);
-      return res.json({ message: "Password updated successfully" });
-    } else {
-      const { firstname, lastname, email, user_id } = req.body;
-
-      let newImagePath = req.file ? req.file.filename : null;
-
-      if (!firstname || !lastname || !email || !user_id) {
-        return res.status(400).json({ message: "All fields are required" });
-      }
-
-      const cleanUserId = parseInt(user_id, 10);
-
-      const existingUser = await pool.query(
-        "SELECT * FROM users WHERE id = $1",
-        [cleanUserId],
-      );
-
-      const exsistingemail = await pool.query(
-        "select * from users where email=$1 and id <> $2",
-        [email, cleanUserId],
-      );
-
-      if (existingUser.rows.length == 0) {
-        return res.status(400).json({ message: "User does not exist" });
-      }
-
-      if (exsistingemail.rows.length > 0) {
-        return res.status(400).json({ message: "This email is already taken" });
-      }
-
-      if (newImagePath) {
-        await pool.query(
-          "UPDATE users SET firstname = $1, lastname = $2, email = $3, image_path = $4 WHERE id = $5",
-          [firstname, lastname, email, newImagePath, cleanUserId],
+        const ExisitingUser = await pool.query(
+          "SELECT * FROM users WHERE id = $1",
+          [cleanUserId],
         );
+
+        if (ExisitingUser.rows.length === 0) {
+          return res.status(400).send("User not found");
+        }
+
+        const isMatch = await bcrypt.compare(
+          currentpassword,
+          ExisitingUser.rows[0].password,
+        );
+
+        if (!isMatch) return res.status(400).send("User Not Found");
+
+        const compareNew = await bcrypt.compare(
+          newpassword,
+          ExisitingUser.rows[0].password,
+        );
+
+        if (compareNew)
+          return res.status(405).send("New Password is same as Current");
+
+        if (confirmpassword != newpassword)
+          return res.status(405).send("Password not same as newpassword");
+
+        const salthash = 10;
+        const hashedpassword = await bcrypt.hash(newpassword, salthash);
+
+        await pool.query("UPDATE users SET password=$1 WHERE id = $2", [
+          hashedpassword,
+          cleanUserId,
+        ]);
+        await pool.query("update users set updated_at = $1 where id = $2", [
+          new Date(),
+          cleanUserId,
+        ]);
+        return res.json({ message: "Password updated successfully" });
       } else {
-        await pool.query(
-          "UPDATE users SET firstname = $1, lastname = $2, email = $3 WHERE id = $4",
-          [firstname, lastname, email, cleanUserId],
+        const { firstname, lastname, email } = req.body;
+        const user_id = getUserId(req);
+
+        let newImagePath = req.file ? req.file.filename : null;
+
+        if (!firstname || !lastname || !email || !user_id) {
+          return res.status(400).json({ message: "All fields are required" });
+        }
+
+        const cleanUserId = parseInt(user_id, 10);
+        // >>>>>>>>>console.log("user_id:", user_id);
+        // >>>>>>>>>console.log("cleanUserId:", cleanUserId);
+        // >>>>>>>>>console.log(email);
+        
+
+        const existingUser = await pool.query(
+          "SELECT * FROM users WHERE id = $1",
+          [cleanUserId],
         );
+
+        const exsistingemail = await pool.query(
+          "select * from users where email=$1 and id <> $2",
+          [email, cleanUserId],
+        );
+
+        // console.log(exsistingemail.rows);
+
+        if (existingUser.rows.length == 0) {
+          return res.status(400).json({ message: "User does not exist" });
+        }
+
+        if (exsistingemail.rows.length > 0) {
+          return res
+            .status(400)
+            .json({ message: "This email is already taken" });
+        }
+
+        if (newImagePath) {
+          await pool.query(
+            "UPDATE users SET firstname = $1, lastname = $2, email = $3, image_path = $4 WHERE id = $5",
+            [firstname, lastname, email, newImagePath, cleanUserId],
+          );
+        } else {
+          await pool.query(
+            "UPDATE users SET firstname = $1, lastname = $2, email = $3 WHERE id = $4",
+            [firstname, lastname, email, cleanUserId],
+          );
+        }
+
+        await pool.query("update users set updated_at = NOW() where id = $1", [
+          cleanUserId,
+        ]);
+
+        return res.json({
+          message: "Profile updated successfully",
+          img_pth: newImagePath,
+          name: firstname,
+          email: email,
+        });
       }
-
-      await pool.query("update users set updated_at = NOW() where id = $1", [
-        cleanUserId,
-      ]);
-
-      return res.json({
-        message: "Profile updated successfully",
-        img_pth: newImagePath,
-        name: firstname,
-        email: email,
-      });
+    } catch (err) {
+      console.error("Register error:", err.message);
+      res.status(500).json({ message: "Internal server error" });
     }
-  } catch (err) {
-    console.error("Register error:", err.message);
-    res.status(500).json({ message: "Internal server error" });
-  }
-});
+  },
+);
 
-app.get("/mailCheck/:mail/:user_id", async (req, res) => {
+app.get("/mailCheck/:mail/:user_id", verifyToken, async (req, res) => {
   try {
-    const { mail, user_id } = req.params;
+    const { mail } = req.params;
     console.log(req.params);
+
+    const user_id = getUserId(req);
 
     if (!user_id) return res.status(500).json({ message: "No mail id" });
     console.log(user_id);
@@ -367,10 +405,9 @@ app.get("/mailCheck/:mail/:user_id", async (req, res) => {
   }
 });
 
-app.put("/logout/:user_id", async (req, res) => {
+app.put("/logout/:user_id", verifyToken, async (req, res) => {
   try {
-    const { user_id } = req.params;
-    const { status } = req.body;
+    const user_id = getUserId(req);
     const cleanUserId = parseInt(user_id, 10);
     if (isNaN(cleanUserId)) {
       return res.status(400).json({ message: "Invalid user_id" });
@@ -387,41 +424,48 @@ app.put("/logout/:user_id", async (req, res) => {
   }
 });
 
-app.post("/brand_details", upload.single("image"), async (req, res) => {
-  try {
-    const { brandName } = req.body;
-    let imagePath = req.file ? req.file.filename : null;
-    if (!brandName || imagePath == null)
-      return res.status(303).json({ message: "Data Required" });
-    const has = pool.query("select * from brands where brand_name = $1", [
-      brandName,
-    ]);
-    if (has.rows.length > 0)
-      return res.status(303).json({ message: "This brand already exists" });
+app.post(
+  "/brand_details",
+  verifyToken,
+  upload.single("image"),
+  async (req, res) => {
+    try {
+      const { brandName } = req.body;
+      let imagePath = req.file ? req.file.filename : null;
+      if (!brandName || imagePath == null)
+        return res.status(303).json({ message: "Data Required" });
+      const has = await pool.query(
+        "select * from brands where brand_name = $1",
+        [brandName],
+      );
+      if (has.rows.length > 0)
+        return res.status(303).json({ message: "This brand already exists" });
 
-    await pool.query(
-      "INSERT INTO brands (brand_name, brand_logo) values ($1, $2)",
-      [brandName, imagePath],
-    );
+      await pool.query(
+        "INSERT INTO brands (brand_name, brand_logo) values ($1, $2)",
+        [brandName, imagePath],
+      );
 
-    res.status(200).json({
-      message: "Success",
-      data: brandName,
-    });
-  } catch (err) {
-    console.log(err);
-    return res
-      .status(500)
-      .json({ message: "Internal Server Error", error: err.message });
-  }
-});
+      res.status(200).json({
+        message: "Success",
+        data: brandName,
+      });
+    } catch (err) {
+      console.log(err);
+      return res
+        .status(500)
+        .json({ message: "Internal Server Error", error: err.message });
+    }
+  },
+);
 
 app.post(
   "/car_details/:user_id",
+  verifyToken,
   upload.array("image", 250),
   async (req, res) => {
     try {
-      const { user_id } = req.params;
+      const user_id = getUserId(req);
       const userID = parseInt(user_id, 10);
       const {
         brandName,
@@ -512,7 +556,7 @@ app.post(
   },
 );
 
-app.get("/brands", async (req, res) => {
+app.get("/brands", verifyToken, async (req, res) => {
   try {
     const brands = await pool.query("select * from brands");
     return res.status(200).json(brands.rows || brands);
@@ -522,9 +566,9 @@ app.get("/brands", async (req, res) => {
   }
 });
 
-app.get("/brands/:user_id", async (req, res) => {
+app.get("/brands/:user_id", verifyToken, async (req, res) => {
   try {
-    const { user_id } = req.params;
+    const user_id = getUserId(req);
     const userID = parseInt(user_id, 10);
 
     if (isNaN(userID)) {
@@ -548,9 +592,10 @@ app.get("/brands/:user_id", async (req, res) => {
   }
 });
 
-app.get("/cars/:id/:user_id/:limit/:offset", async (req, res) => {
+app.get("/cars/:id/:user_id/:limit/:offset", verifyToken, async (req, res) => {
   try {
-    const { id, user_id, limit, offset } = req.params;
+    const { id, limit, offset } = req.params;
+    const user_id = getUserId(req);
     const userID = parseInt(user_id, 10);
     const brandId = parseInt(id, 10);
     const cleanLimit = parseInt(limit, 10);
@@ -588,9 +633,10 @@ app.get("/cars/:id/:user_id/:limit/:offset", async (req, res) => {
   }
 });
 
-app.get("/cars/:id/:user_id", async (req, res) => {
+app.get("/cars/:id/:user_id", verifyToken, async (req, res) => {
   try {
-    const { id, user_id } = req.params;
+    const { id } = req.params;
+    const user_id = getUserId(req);
     const userID = parseInt(user_id, 10);
     const brandId = parseInt(id, 10);
     const query = `
@@ -621,9 +667,10 @@ app.get("/cars/:id/:user_id", async (req, res) => {
   }
 });
 
-app.get("/brands/search/:name/:user_id", async (req, res) => {
+app.get("/brands/search/:name/:user_id", verifyToken, async (req, res) => {
   try {
-    const { name, user_id } = req.params;
+    const { name } = req.params;
+    const user_id = getUserId(req);
     const userID = parseInt(user_id, 10);
     console.log(req);
 
@@ -645,9 +692,11 @@ app.get("/brands/search/:name/:user_id", async (req, res) => {
 
 app.get(
   "/cars/search/:id/:name/:category/:engine/:user_id",
+  verifyToken,
   async (req, res) => {
     try {
-      const { id, name, category, engine, user_id } = req.params;
+      const { id, name, category, engine } = req.params;
+      const user_id = getUserId(req);
       const ID = parseInt(id, 10);
       const userID = parseInt(user_id, 10);
       const SQLQuery = `
@@ -682,9 +731,9 @@ app.get(
   },
 );
 
-app.get("/allcars/:user_id", async (req, res) => {
+app.get("/allcars/:user_id", verifyToken, async (req, res) => {
   try {
-    const { user_id } = req.params;
+    const user_id = getUserId(req);
     if (!user_id)
       return res.status(405).json({ message: "No user_id to get all cars" });
     const cars = await pool.query(
@@ -712,9 +761,10 @@ app.get("/allcars/:user_id", async (req, res) => {
   }
 });
 
-app.get("/cars_images/:id/:user_id", async (req, res) => {
+app.get("/cars_images/:id/:user_id", verifyToken, async (req, res) => {
   try {
-    const { id, user_id } = req.params;
+    const { id } = req.params;
+    const user_id = getUserId(req);
     if (!id || !user_id)
       return res
         .status(405)
@@ -729,9 +779,10 @@ app.get("/cars_images/:id/:user_id", async (req, res) => {
   }
 });
 
-app.delete("/delete_car/:car_id/:user_id", async (req, res) => {
+app.delete("/delete_car/:car_id/:user_id", verifyToken, async (req, res) => {
   try {
-    const { car_id, user_id } = req.params;
+    const { car_id } = req.params;
+    const user_id = getUserId(req);
     if (!user_id || !car_id)
       return res
         .status(400)
@@ -747,7 +798,7 @@ app.delete("/delete_car/:car_id/:user_id", async (req, res) => {
   }
 });
 
-app.get("/singleCar/:car_id", async (req, res) => {
+app.get("/singleCar/:car_id", verifyToken, async (req, res) => {
   try {
     const { car_id } = req.params;
     const car_Id = parseInt(car_id, 10);
@@ -771,6 +822,10 @@ app.get("/singleCar/:car_id", async (req, res) => {
     `,
       [car_Id],
     );
+
+    if (car_detail.rows.length === 0) {
+      return res.status(404).json({ message: "Car not found" });
+    }
     console.log(car_detail.rows[0].horsepower);
 
     const brandName = await pool.query(
@@ -785,81 +840,87 @@ app.get("/singleCar/:car_id", async (req, res) => {
   }
 });
 
-app.put("/editCar", upload.array("image", 250), async (req, res) => {
-  try {
-    console.log("good");
-    const {
-      car_id,
-      brandName,
-      modelName,
-      category,
-      engineType,
-      torque,
-      topSpeed,
-      price,
-      horsePower,
-      description,
-      oldImages,
-    } = req.body;
-
-    const carID = parseInt(car_id, 10);
-    console.log(car_id);
-
-    const toNum = (val) => {
-      if (val === "null" || val === "" || val === undefined) return null;
-      return parseFloat(val);
-    };
-
-    const cleanTorque = toNum(torque);
-    const cleanTopSpeed = toNum(topSpeed);
-    const cleanPrice = toNum(price);
-
-    const brandId = await pool.query(
-      "select brand_id from brands where brand_name = $1",
-      [brandName],
-    );
-    let keepOld = oldImages ? JSON.parse(oldImages) : [];
-
-    let imagePaths = req.files.map((file) => file.filename);
-    imagePaths = [...imagePaths, ...keepOld];
-    if (imagePaths && imagePaths.length > 0) {
-      await pool.query(
-        `update
-        cars set brand_id=$1, model_name=$2, category=$3, car_logo=$4 where car_id= $5`,
-        [brandId.rows[0].brand_id, modelName, category, imagePaths, carID],
-      );
-    } else {
-      await pool.query(
-        `update
-        cars set brand_id=$1, model_name=$2, category=$3 where car_id= $4`,
-        [brandId.rows[0].brand_id, modelName, category, carID],
-      );
-    }
-    await pool.query(
-      `update
-        car_details set engine_type=$1, horsepower=$2, torque=$3, top_speed=$4, price=$5, description= $6 where car_id= $7`,
-      [
+app.put(
+  "/editCar",
+  verifyToken,
+  upload.array("image", 250),
+  async (req, res) => {
+    try {
+      console.log("good");
+      const {
+        car_id,
+        brandName,
+        modelName,
+        category,
         engineType,
+        torque,
+        topSpeed,
+        price,
         horsePower,
-        cleanTorque,
-        cleanTopSpeed,
-        cleanPrice,
         description,
-        carID,
-      ],
-    );
-    console.log(car_id);
+        oldImages,
+      } = req.body;
 
-    return res.status(200).json({ message: "Edit Success" });
-  } catch (err) {
-    console.log(err);
-    return res.status(500).json({ message: "Unable to update" });
-  }
-});
+      const carID = parseInt(car_id, 10);
+      console.log(car_id);
+
+      const toNum = (val) => {
+        if (val === "null" || val === "" || val === undefined) return null;
+        return parseFloat(val);
+      };
+
+      const cleanTorque = toNum(torque);
+      const cleanTopSpeed = toNum(topSpeed);
+      const cleanPrice = toNum(price);
+
+      const brandId = await pool.query(
+        "select brand_id from brands where brand_name = $1",
+        [brandName],
+      );
+      let keepOld = oldImages ? JSON.parse(oldImages) : [];
+
+      let imagePaths = req.files.map((file) => file.filename);
+      imagePaths = [...imagePaths, ...keepOld];
+      if (imagePaths && imagePaths.length > 0) {
+        await pool.query(
+          `update
+        cars set brand_id=$1, model_name=$2, category=$3, car_logo=$4 where car_id= $5`,
+          [brandId.rows[0].brand_id, modelName, category, imagePaths, carID],
+        );
+      } else {
+        await pool.query(
+          `update
+        cars set brand_id=$1, model_name=$2, category=$3 where car_id= $4`,
+          [brandId.rows[0].brand_id, modelName, category, carID],
+        );
+      }
+      const cleanHP = parseInt(horsePower, 10);
+      await pool.query(
+        `update
+        car_details set engine_type=$1, horsepower=$2, torque=$3, top_speed=$4, price=$5, description= $6 where car_id= $7`,
+        [
+          engineType,
+          cleanHP,
+          cleanTorque,
+          cleanTopSpeed,
+          cleanPrice,
+          description,
+          carID,
+        ],
+      );
+      console.log(car_id);
+
+      return res.status(200).json({ message: "Edit Success" });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({ message: "Unable to update" });
+    }
+  },
+);
 
 //Admin Panel
 
-app.get("/allbrands", async (req, res) => {
+app.get("/allbrands", verifyToken, async (req, res) => {
   try {
     const brands = await pool.query("Select * from brands");
     return res.status(200).json(brands.rows);
@@ -869,7 +930,7 @@ app.get("/allbrands", async (req, res) => {
   }
 });
 
-app.get("/allCars", async (req, res) => {
+app.get("/allCars", verifyToken, async (req, res) => {
   try {
     const cars = await pool.query(
       "select c.*, u.* from cars c join users u on u.id = c.user_id and c.deleted_at is null",
@@ -881,7 +942,7 @@ app.get("/allCars", async (req, res) => {
   }
 });
 
-app.get("/allUsers", async (req, res) => {
+app.get("/allUsers", verifyToken, async (req, res) => {
   try {
     const users = await pool.query(
       "select * from users where deleted_at is null order by role , updated_at",
@@ -893,7 +954,7 @@ app.get("/allUsers", async (req, res) => {
   }
 });
 
-app.put("/updateUserRole", async (req, res) => {
+app.put("/updateUserRole", verifyToken, async (req, res) => {
   try {
     const { user_id, role } = req.body;
     await pool.query("update users set role=$1 where id = $2", [role, user_id]);
@@ -904,7 +965,7 @@ app.put("/updateUserRole", async (req, res) => {
   }
 });
 
-app.put("/deleteUser/:user_id", async (req, res) => {
+app.put("/deleteUser/:user_id", verifyToken, async (req, res) => {
   try {
     console.log("Deleting");
 
@@ -924,36 +985,41 @@ app.put("/deleteUser/:user_id", async (req, res) => {
   }
 });
 
-app.post("/createRequest", upload.single("brand_logo"), async (req, res) => {
-  try {
-    const { brand_name, user_id } = req.body;
+app.post(
+  "/createRequest",
+  verifyToken,
+  upload.single("brand_logo"),
+  async (req, res) => {
+    try {
+      const { brand_name, user_id } = req.body;
 
-    const image_path = req.file ? req.file.filename : null;
+      const image_path = req.file ? req.file.filename : null;
 
-    if (!image_path || !brand_name || !user_id)
+      if (!image_path || !brand_name || !user_id)
+        return res.status(400).json({ message: "Details missing" });
+
+      const cleanUserId = parseInt(user_id, 10);
+
+      const exsisting = await pool.query(
+        "select * from brands where brand_name=$1",
+        [brand_name],
+      );
+
+      if (exsisting.rows.length > 0)
+        return res.status(400).json({ message: "This brand Already exsists" });
+      await pool.query(
+        "Insert into requests (user_id, brand_logo, brand_name) values ($1, $2, $3)",
+        [cleanUserId, image_path, brand_name],
+      );
+      return res.status(200).json({ message: "Success request" });
+    } catch (err) {
+      console.log(err);
       return res.status(400).json({ message: err });
+    }
+  },
+);
 
-    const cleanUserId = parseInt(user_id, 10);
-
-    const exsisting = await pool.query(
-      "select * from brands where brand_name=$1",
-      [brand_name],
-    );
-
-    if (exsisting.rows.length > 0)
-      return res.status(400).json({ message: "This brand Already exsists" });
-    await pool.query(
-      "Insert into requests (user_id, brand_logo, brand_name) values ($1, $2, $3)",
-      [cleanUserId, image_path, brand_name],
-    );
-    return res.status(200).json({ message: "Success request" });
-  } catch (err) {
-    console.log(err);
-    return res.status(400).json({ message: err });
-  }
-});
-
-app.get("/getRequests", async (req, res) => {
+app.get("/getRequests", verifyToken, async (req, res) => {
   try {
     const requests = await pool.query(
       "select r.*, u.firstname from requests r join users u on u.id = r.user_id where r.status=$1",
@@ -966,7 +1032,7 @@ app.get("/getRequests", async (req, res) => {
   }
 });
 
-app.post("/acceptRequests", async (req, res) => {
+app.post("/acceptRequests", verifyToken, async (req, res) => {
   try {
     const { request_id, brand_logo, brand_name } = req.body;
     if (!brand_logo || !brand_name || !request_id)
@@ -990,7 +1056,7 @@ app.post("/acceptRequests", async (req, res) => {
   }
 });
 
-app.put("/rejectRequests", async (req, res) => {
+app.put("/rejectRequests", verifyToken, async (req, res) => {
   try {
     const { request_id } = req.body;
     if (!request_id)
@@ -1007,7 +1073,7 @@ app.put("/rejectRequests", async (req, res) => {
   }
 });
 
-app.put("/updateUserStatus", async (req, res) => {
+app.put("/updateUserStatus", verifyToken, async (req, res) => {
   try {
     const { user_id, Update } = req.body;
     if (!user_id)
@@ -1028,7 +1094,7 @@ app.put("/updateUserStatus", async (req, res) => {
   }
 });
 
-app.get("/userStatus/:user_id", async (req, res) => {
+app.get("/userStatus/:user_id", verifyToken, async (req, res) => {
   try {
     const { user_id } = req.params;
     if (!user_id)
@@ -1061,9 +1127,13 @@ app.post("/sendMail", async (req, res) => {
     if (user.rows.length == 0)
       return res.status(400).json({ message: `error sending mail no user` });
 
-    const userStatus = await pool.query("select status from users where email=$1 and status = 'active'",[email])
+    const userStatus = await pool.query(
+      "select status from users where email=$1 and status = 'active'",
+      [email],
+    );
 
-    if(userStatus.rows.length == 0) return res.status(400).json({ message: `Your account is suspended` });
+    if (userStatus.rows.length == 0)
+      return res.status(400).json({ message: `Your account is suspended` });
 
     const token = jwt.sign({ email: email }, process.env.SECRET, {
       expiresIn: "15m",

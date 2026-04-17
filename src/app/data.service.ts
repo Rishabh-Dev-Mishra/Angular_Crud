@@ -88,6 +88,11 @@ export class DataService {
     return this.http.get(`${this.url}/brands/search/${data}/${id}`);
   }
 
+  deleteBrand(id:any){
+    return this.http.delete(`${this.url}/brandDelete/${id}`);
+
+  }
+
   filteredCars(id: string, name: string, category: string, engine: string) {
     const user_id = this.getUserId();
     return this.http.get(

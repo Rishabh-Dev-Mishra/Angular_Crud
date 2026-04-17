@@ -219,6 +219,39 @@ homeCarsOfUser(){
     });
   }
 
+
+
+
+
+
+
+confirmDeleteBrand: boolean = false;
+  selectedBrand: any;
+
+  confirmBrandDelete(user: any) {
+    this.confirmDeleteBrand = true;
+    this.selectedBrand = user;
+  }
+
+  cancelDeleteBrand() {
+    this.confirmDeleteBrand = false;
+    this.selectedBrand = null;
+  }
+  deleteUserBrand() {
+    this.dataservice.deleteBrand(this.selectedBrand.brand_id).subscribe({
+      next: (res: any) => {
+        this.brands();
+        this.cancelDeleteBrand();
+        this.toast.success('Deletion Success');
+      },
+      error: (err: any) => {
+        this.toast.error(err);
+      },
+    });
+  }
+
+
+
   requests: any[] = [];
   showRequests: boolean = false;
   showRequestIcon: boolean = false;

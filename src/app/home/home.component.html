@@ -191,10 +191,30 @@
                 <td data-label="Brand Name">
                   <span class="brand-name">{{ brand.brand_name }}</span>
                 </td>
-                <td><button class="btn-sm btn-danger btn">Delete</button></td>
+                <td><button class="btn-sm btn-danger btn" (click)="confirmBrandDelete(brand)">Delete</button></td>
               </tr>
             </tbody>
           </table>
+          <div class="delete-overlay" *ngIf="confirmDeleteBrand">
+            <div class="delete-modal">
+              <div class="delete-icon">⚠️</div>
+              <h3>Confirm Deletion</h3>
+              <p>
+                Are you sure you want to remove the
+                <strong>{{ selectedBrand?.brand_name }}</strong> from the vault?
+                This action cannot be undone.
+              </p>
+
+              <div class="delete-actions">
+                <button class="btn-cancel" (click)="cancelDeleteBrand()">
+                  Keep Brand
+                </button>
+                <button class="btn-confirm" (click)="deleteUserBrand()">
+                  Confirm Delete
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div *ngIf="activeTab === 'cars'" class="panel-fade-in">

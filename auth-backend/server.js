@@ -690,6 +690,22 @@ app.get("/brands/search/:name/:user_id", verifyToken, async (req, res) => {
   }
 });
 
+app.delete("/brandDelete/:id", async(req, res)=>{
+  try{
+    const {id} = req.params;
+    if(!id)  return res.status(400).json({message:"No brand Id"});
+    const cleanId = parseInt(id, 10);
+    
+    await pool.query("delete from cars where brand_id=$1", [cleanId]);
+    await pool.query("delete from brands where brand_id=$1", [cleanId]);
+
+    return res.status(200).json({message: "Deletion Success"})
+  }catch(err){
+    console.log(err);
+    return res.status(400).json({message:"Error in deleting"})
+  }
+})
+
 app.get(
   "/cars/search/:id/:name/:category/:engine/:user_id",
   verifyToken,

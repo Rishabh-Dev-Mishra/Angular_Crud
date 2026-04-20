@@ -384,8 +384,6 @@ app.post(
 app.get("/mailCheck/:mail/:user_id", verifyToken, async (req, res) => {
   try {
     const { mail } = req.params;
-    console.log(req.params);
-
     const user_id = getUserId(req);
 
     if (!user_id) return res.status(500).json({ message: "No mail id" });
@@ -393,7 +391,6 @@ app.get("/mailCheck/:mail/:user_id", verifyToken, async (req, res) => {
 
     const cleanId = parseInt(user_id, 10);
     if (isNaN(cleanId)) {
-      console.log("❌ Invalid user_id:", user_id);
       return res.status(400).json({ message: "Invalid user_id" });
     }
     const exsist = await pool.query(
@@ -981,8 +978,7 @@ app.put("/deleteUser/:user_id", verifyToken, async (req, res) => {
   try {
     console.log("Deleting");
 
-    const { user_id } = req.params;
-    console.log(user_id);
+    const user_id = getUserId(req);
 
     if (!user_id) return res.status(500).json({ message: err });
     const cleanUserId = parseInt(user_id, 10);
@@ -1108,7 +1104,7 @@ app.put("/updateUserStatus", verifyToken, async (req, res) => {
 
 app.get("/userStatus/:user_id", verifyToken, async (req, res) => {
   try {
-    const { user_id } = req.params;
+    const user_id = getUserId(req);
     if (!user_id)
       return res
         .status(400)

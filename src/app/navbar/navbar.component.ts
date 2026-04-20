@@ -61,7 +61,7 @@ role = this.dataservice.getUserRole();
   get imageURL(): string {
   const path = this.dataservice.img_path();
   if(path !== null && path.length > 0)
-    return path ? `${this.serverUrl}uploads/${path}` : '';
+    return path ? `${this.serverUrl}/uploads/${path}` : '';
   return '';
   }
 }

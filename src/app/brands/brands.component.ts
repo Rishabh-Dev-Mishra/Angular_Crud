@@ -5,6 +5,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { DataService } from '../data.service';
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-brands',
@@ -23,6 +24,8 @@ export class BrandsComponent implements OnInit {
   constructor(private location: Location) {}
   private dataservice = inject(DataService);
   private route = inject(ActivatedRoute);
+
+  backendUrl = environment.apiUrl
 
   brandList: any[] = [];
   filteredBrands: any[] = [];

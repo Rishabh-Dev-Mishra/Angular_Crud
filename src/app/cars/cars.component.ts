@@ -6,6 +6,8 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { environment } from '../../environments/environment';
+
 
 @Component({
   selector: 'app-cars',
@@ -25,6 +27,8 @@ export class CarsComponent implements OnInit {
   private dataservice = inject(DataService);
   private router = inject(Router);
   private toast = inject(ToastrService);
+
+  backendUrl = environment.apiUrl
 
   carList: any[] = [];
   filteredCar: any[] = [];
@@ -131,7 +135,7 @@ export class CarsComponent implements OnInit {
     this.dataservice.getImagesOfOne(carData.car_id).subscribe({
       next: (res: any) => {
         this.multiImage = res[0].car_logo.map(
-          (img: string) => `http://localhost:3000/uploads/${img}`,
+          (img: string) => `${environment.apiUrl}/uploads/${img}`,
         );
         this.showModal = true;
       },

@@ -4,6 +4,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { DataService } from '../data.service';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { Location } from '@angular/common';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-profile',
@@ -18,7 +19,7 @@ export class ProfileComponent {
   constructor(private location: Location) {}
   private dataservice = inject(DataService);
   private route = inject(ActivatedRoute);
-  readonly serverUrl = 'http://localhost:3000/'; 
+  readonly serverUrl = environment.apiUrl; 
   name:string = '';
   email:string = '';
 
@@ -46,7 +47,7 @@ export class ProfileComponent {
   }
 
   get imageURL(): string {
-  return this.path && (this.path.length > 0) ? `${this.serverUrl}uploads/${this.path}` : '';
+  return this.path && (this.path.length > 0) ? `${this.serverUrl}/uploads/${this.path}` : '';
   }
 
   goBack(){

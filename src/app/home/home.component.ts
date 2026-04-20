@@ -5,6 +5,7 @@ import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { DataService } from '../data.service';
 import { ToastrService } from 'ngx-toastr';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-home',
@@ -16,6 +17,8 @@ export class HomeComponent {
   private router = inject(Router);
   private dataservice = inject(DataService);
   private toast = inject(ToastrService);
+
+  backendUrl = environment.apiUrl
 
   activeTab: 'users' | 'cars' | 'brands' = 'users';
 

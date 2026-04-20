@@ -5,6 +5,7 @@ import { CommonModule, Location } from '@angular/common';
 import { DataService } from '../data.service';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-allcars',
@@ -20,11 +21,15 @@ export class AllCarsComponent implements OnInit {
   private router = inject(Router);
   private toast = inject(ToastrService)
 
+
+  backendUrl = environment.apiUrl;
+
   allCars: any[] = [];
   userData: any;
 
   showModal: boolean = false;
   multiImage: string[] = [];
+
 
   user_id = this.route.snapshot.paramMap.get('user_id') ?? ' ';
   loggedUser_id = this.dataservice.getUserId() ?? ' ';
@@ -52,7 +57,7 @@ export class AllCarsComponent implements OnInit {
     this.dataservice.getImagesOfOne(carData.car_id).subscribe({
       next: (res: any) => {
         this.multiImage = res[0].car_logo.map(
-          (img: string) => `http://localhost:3000/uploads/${img}`,
+          (img: string) => `${environment.apiUrl}/uploads/${img}`,
         );
         this.showModal = true;
       },

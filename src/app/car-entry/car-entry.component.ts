@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { DataService } from '../data.service';
 import { ToastrService } from 'ngx-toastr';
 import { CommonModule, Location } from '@angular/common';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-car-entry',
@@ -57,7 +58,7 @@ export class CarEntryComponent {
     this.dataservice.getImagesOfOne(car_id).subscribe({
       next: (res: any) => {
         this.previews = res[0].car_logo.map(
-          (img: string) => `http://localhost:3000/uploads/${img}`,
+          (img: string) => `${environment.apiUrl}/uploads/${img}`,
         );
       },
       error: (err) => {

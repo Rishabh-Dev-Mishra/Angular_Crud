@@ -34,7 +34,7 @@
             <td>{{ request.brand_name }}</td>
             <td>
               <img
-                [src]="'http://localhost:3000/uploads/' + request.brand_logo"
+                [src]="backendUrl+'/uploads/' + request.brand_logo"
               />
             </td>
             <td><button (click)="acceptRequest(request)">Accept</button></td>
@@ -184,7 +184,7 @@
                 <td data-label="Brand">
                   <img
                     class="car-thumbnail"
-                    [src]="'http://localhost:3000/uploads/' + brand.brand_logo"
+                    [src]="backendUrl+'/uploads/' + brand.brand_logo"
                     [alt]="brand.brand_name"
                   />
                 </td>
@@ -242,7 +242,7 @@
                 <td data-label="Car">
                   <img
                     class="car-thumbnail"
-                    [src]="'http://localhost:3000/uploads/' + car.car_logo[0]"
+                    [src]="backendUrl+'/uploads/' + car.car_logo[0]"
                     [alt]="car.model_name"
                   />
                 </td>

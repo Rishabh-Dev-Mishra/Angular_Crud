@@ -6,6 +6,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NgIf } from '@angular/common';
 import { Location } from '@angular/common';
 import { debounceTime, distinctUntilChanged, switchMap, filter, tap } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-profile-edit',   
@@ -23,10 +24,9 @@ export class ProfileEditComponent {
   private route = inject(ActivatedRoute);
 
   showPasswordFields: boolean = false;
-  readonly serverUrl = 'http://localhost:3000/';
+  readonly serverUrl = environment.apiUrl;
 
 
-  
   selectedFile: File | null = null;
   previewUrl: string | null = null;
   user_id: any = this.route.snapshot.paramMap.get('user_id');
@@ -89,7 +89,7 @@ export class ProfileEditComponent {
 
   get imageURL(): string {
     if (this.previewUrl) return this.previewUrl;
-    return this.path && this.path.length > 0 ? `${this.serverUrl}uploads/${this.path}` : '';
+    return this.path && this.path.length > 0 ? `${this.serverUrl}/uploads/${this.path}` : '';
   }
 
 

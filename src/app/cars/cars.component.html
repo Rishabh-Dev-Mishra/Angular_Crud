@@ -63,7 +63,7 @@
       <tr *ngFor="let car of carList; trackBy: trackByCarId">
         <td data-label="Image">
           <img
-            [src]="'http://localhost:3000/uploads/' + car.car_logo[0]"
+            [src]="backendUrl+'/uploads/' + car.car_logo[0]"
             [alt]="car.model_name"
             class="car-image"
             (click)="getImages(car)"

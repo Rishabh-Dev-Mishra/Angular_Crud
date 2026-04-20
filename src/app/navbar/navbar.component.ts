@@ -5,6 +5,7 @@ import { ProfileHoverService } from '../profile-hover-service.service';
 import { AuthServiceService } from '../auth-service.service';
 import { Router } from '@angular/router';
 import { DataService } from '../data.service';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-navbar',
@@ -17,7 +18,7 @@ export class NavbarComponent {
   public hoverService = inject(ProfileHoverService);
   private dataservice = inject(DataService)
 
-  readonly serverUrl = 'http://localhost:3000/'; 
+  readonly serverUrl = environment.apiUrl; 
   protected name = sessionStorage.getItem('userName');
   protected email = sessionStorage.getItem('userEmail')
   private authservice = inject(AuthServiceService)

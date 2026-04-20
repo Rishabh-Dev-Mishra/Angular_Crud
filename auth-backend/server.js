@@ -10,7 +10,7 @@ const multer = require("multer");
 require("dotenv").config({ path: "../.env" });
 app.use(
   cors({
-    origin: "http://localhost:4200",
+    origin: process.env.FRONTENDURL,
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -36,7 +36,7 @@ const transporter = nodemailer.createTransport({
 });
 
 const sendMail = async (userEmail, token, id) => {
-  const resetUrl = `http://localhost:4200/forgotPassword/${token}/${id}`;
+  const resetUrl = `${process.env.FRONTENDURL}/forgotPassword/${token}/${id}`;
 
   const mailOptions = {
     from: '"Car Gallery" <rishumishra3899@gmail.com>',

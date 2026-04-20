@@ -51,10 +51,12 @@ addCar() {
   }
 }
 
+role = this.dataservice.getUserRole();
+
   checkUser(){
     const name = sessionStorage.getItem('userName');
     const email = sessionStorage.getItem('userEmail');
-    if(name == "Rishabh" && email == 'rd@rd.com')return true;
+    if(this.role=='admin')return true;
     return false;
   }
 

@@ -16,21 +16,31 @@ export class DataService {
     return this.http.post(this.url + '/login', data);
   }
 
-  public img_path: string = sessionStorage.getItem('userImage') || '';
-  public userName: string = sessionStorage.getItem('userName') || '(..)';
-  public userEmail: string = sessionStorage.getItem('userEmail') || '(..)';
-  public user_id: string = sessionStorage.getItem('user_id') || '(..)';
 
   setProfileImage(path: string) {
-    this.img_path = path;
     sessionStorage.setItem('userImage', path);
   }
+
+  userName(): string {
+    return sessionStorage.getItem('userName') || '(..)';
+  }
+
   getUserId(): string | null {
     return sessionStorage.getItem('user_id');
   }
 
   getUserRole(): string | null {
     return sessionStorage.getItem('role');
+  }
+
+  userEmail(): string {
+    return sessionStorage.getItem('userEmail') || '(..)';
+  }
+
+  
+
+  img_path(): string {
+    return sessionStorage.getItem('userImage') || '';
   }
 
   

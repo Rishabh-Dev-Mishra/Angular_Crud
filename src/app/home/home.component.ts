@@ -74,8 +74,6 @@ homeCarsOfUser(){
   }
 
   checkUser() {
-    const name = sessionStorage.getItem('userName');
-    const email = sessionStorage.getItem('userEmail');
     if (this.role == 'admin') return true;
     return false;
   }

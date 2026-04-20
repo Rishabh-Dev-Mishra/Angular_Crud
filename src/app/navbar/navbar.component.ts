@@ -19,8 +19,8 @@ export class NavbarComponent {
   private dataservice = inject(DataService)
 
   readonly serverUrl = environment.apiUrl; 
-  protected name = sessionStorage.getItem('userName');
-  protected email = sessionStorage.getItem('userEmail')
+  protected name = this.dataservice.userName();
+  protected email = this.dataservice.userEmail();
   private authservice = inject(AuthServiceService)
   private router = inject(Router)
 
@@ -54,14 +54,12 @@ addCar() {
 role = this.dataservice.getUserRole();
 
   checkUser(){
-    const name = sessionStorage.getItem('userName');
-    const email = sessionStorage.getItem('userEmail');
     if(this.role=='admin')return true;
     return false;
   }
 
   get imageURL(): string {
-  const path = sessionStorage.getItem('userImage'); 
+  const path = this.dataservice.img_path();
   if(path !== null && path.length > 0)
     return path ? `${this.serverUrl}uploads/${path}` : '';
   return '';

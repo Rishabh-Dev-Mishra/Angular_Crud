@@ -39,7 +39,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true, 
               "vendorChunk": false,
               "buildOptimizer": true,
               "budgets": [

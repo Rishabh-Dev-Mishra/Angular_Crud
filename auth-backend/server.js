@@ -10,7 +10,7 @@ const multer = require("multer");
 require("dotenv").config({ path: "../.env" });
 app.use(
   cors({
-    origin: process.env.FRONTENDURL,
+    origin: "*",
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -114,6 +114,17 @@ const getUserId = (req) => {
 
   return loggedInUser.user_id;
 };
+
+
+app.get("/db-test", async (req, res) => {
+  try {
+    console.log("DB URL:", process.env.DATABASE_URL);
+    const result = await pool.query("SELECT NOW()");
+    res.json(result.rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 app.get("/", (req, res) => {
   res.send("Welcome");

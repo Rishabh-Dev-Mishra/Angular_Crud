@@ -348,9 +348,8 @@ npm test                  # Backend tests
 
 ## Support
 
- Email: your-email@example.com
- Issues: GitHub Issues
- Discussions: GitHub Discussions
+ Email: rishabhdevmishra388@gmail.com
+
 
 ---
 

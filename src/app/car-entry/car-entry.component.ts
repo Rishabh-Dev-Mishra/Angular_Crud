@@ -367,7 +367,7 @@ export class CarEntryComponent {
     this.dataservice.createRequest(requestForm).subscribe({
       next: (res: any) => {
         this.toast.success('Request Sent');
-        form.reset();
+        form.resetForm();
       },
       error: (err: any) => {
         this.toast.warning("Exsisting Brand")

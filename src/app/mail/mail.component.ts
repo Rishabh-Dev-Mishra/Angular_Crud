@@ -41,14 +41,14 @@ export class MailComponent {
     this.dataservice.sendMail(this.formData).subscribe({
       next:(res:any)=>{
         this.toast.success("Please check mail for resetting")
-        form.reset();
+        form.resetForm();
         this.showmssg = true;
         this.router.navigate(["/"])
       },
       error:(err:any)=>{
         const backendMessage = err.error?.message || "An unexpected error occurred";
         this.toast.error(backendMessage);
-                form.reset();
+               form.resetForm();
                 this.showmssg = true;
 
         console.log(err)

@@ -135,7 +135,8 @@ export class ProfileEditComponent {
         this.firstname = form.value.firstname
         this.lastname = form.value.lastname
         this.email = form.value.email
-
+        
+        form.reset();
         if (res.img_pth) {
           this.dataservice.setProfileImage(res.img_pth);
         }

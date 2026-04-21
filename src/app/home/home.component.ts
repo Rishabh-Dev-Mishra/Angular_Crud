@@ -212,6 +212,7 @@ homeCarsOfUser(){
     this.dataservice.deleteUser(this.selectedUser.id).subscribe({
       next: (res: any) => {
         this.users();
+        this.confirmDeleteButton = false;
         this.toast.success('Deletion Success');
       },
       error: (err: any) => {

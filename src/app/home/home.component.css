@@ -433,6 +433,10 @@ tr:hover td img {
   justify-content: center;
 }
 
+.action-link{
+  text-decoration: none;
+}
+
 .btn-cancel, .btn-confirm {
   padding: 14px 28px;
   border-radius: 12px;

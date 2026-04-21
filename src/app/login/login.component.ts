@@ -49,9 +49,9 @@ export class LoginComponent implements OnInit{
 
     this.dataservice.login(user).subscribe({
       next: (res: any)=>{
+        form.resetForm();
         this.message = res.message;
         this.toast.success(res.message || "Login Success");
-        console.log(res);
         this.authService.saveToken(res.token);
         this.dataservice.setInfo(res.name, res.email, res.user_id, res.role)
         if (res.img_pth.length > 0) { 

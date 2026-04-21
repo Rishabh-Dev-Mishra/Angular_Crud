@@ -1,64 +1,39 @@
-<<<<<<< HEAD
-# Basic
+# Angular CRUD Application
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.22.
+## Overview
+This Angular CRUD application is designed to provide a comprehensive solution for managing data with a robust and secure backend. It incorporates several advanced features to enhance user experience and functionality.
 
-## Development server
+## Features
 
-To start a local development server, run:
+### 1. Node.js Express Backend
+A powerful backend built on Node.js and Express, providing a high-performance server-side solution that efficiently handles HTTP requests and serves data to the Angular frontend.
 
-```bash
-ng serve
-```
+### 2. PostgreSQL Database
+Utilizes PostgreSQL as the relational database management system, ensuring data integrity and implementing complex querying capabilities to store and retrieve data efficiently.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+### 3. JWT Authentication
+Incorporates JSON Web Tokens (JWT) for secure user authentication, enabling users to log in securely and maintain access to their sessions without exposing sensitive data.
 
-## Code scaffolding
+### 4. Role-Based Access Control
+Implements role-based access control (RBAC) to manage user permissions effectively, allowing differentiation between user levels and safeguarding sensitive routes and resources.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### 5. Multer for Image Uploads
+Uses Multer middleware for handling multipart/form-data, which allows users to upload images seamlessly, enhancing the application's functionality.
 
-```bash
-ng generate component component-name
-```
+### 6. Bcrypt Password Security
+Employs bcrypt for password hashing, ensuring that user credentials are stored securely, protecting against unauthorized access and enhancing security practices.
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+### 7. Interceptors and Auth Guards
+Utilizes Angular interceptors to manage HTTP requests and responses, and implements auth guards to prevent unauthorized access to certain application routes, improving application security and user experience.
 
-```bash
-ng generate --help
-```
+### 8. Pagination
+Features pagination for managing large data sets efficiently, providing a better user experience by loading data in manageable chunks, reducing loading times, and enhancing performance.
 
-## Building
+### 9. Admin/User Role Separation
+Enables distinct functionalities for admin and regular users, ensuring that administrative controls are separated from general user interactions for better management and security.
 
-To build the project run:
+### 10. Brand Management System
+Includes a comprehensive brand management system that allows easy handling and categorization of brands within the application, facilitating better organization and usability.
 
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
-=======
-# Angular_Crud
-Simple angular app for practice
->>>>>>> b00ecf50d0b7ed669ba7c410130554f2d7191316
+## Conclusion
+This application is a full-fledged solution for any CRUD operation, providing all the necessary features to develop an efficient, secure, and user-friendly experience.

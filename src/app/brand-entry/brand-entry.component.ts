@@ -47,7 +47,7 @@ export class BrandEntryComponent {
   }
   
   update(form :any){
-        this.showmssg = false;
+    this.showmssg = false;
 
     if (form.invalid) {
       this.toast.warning('Please fix the errors before submitting', 'Form Invalid');
@@ -56,10 +56,20 @@ export class BrandEntryComponent {
 
     const formData = new FormData();
 
-    formData.append('brandName', form.value.brandName);
+    if(form.value.brandName)
+      formData.append('brandName', form.value.brandName);
+    else{
+      this.toast.warning("No brandName");
+      return;
+    }
+
 
     if(this.selectedFile){
       formData.append('image', this.selectedFile);
+    }
+    else {
+      this.toast.warning("No image");
+      return;
     }
 
     

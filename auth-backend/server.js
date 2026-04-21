@@ -318,8 +318,7 @@ app.post(
         ]);
         return res.json({ message: "Password updated successfully" });
       } else {
-        const { firstname, lastname, email } = req.body;
-        const user_id = getUserId(req);
+        const { firstname, lastname, email, user_id } = req.body;
 
         let newImagePath = req.file ? req.file.filename : null;
 

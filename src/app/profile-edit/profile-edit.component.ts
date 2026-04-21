@@ -127,7 +127,6 @@ export class ProfileEditComponent {
       formData.append('image', this.selectedFile);
     }
     
-    console.log(this.email);
     this.dataservice.edit(formData).subscribe({
       next: (res: any) => {
         this.getUserInfo();

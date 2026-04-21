@@ -254,9 +254,13 @@ export class CarEntryComponent {
     }
   }
 
+  saveButton: boolean = true;
+
   update(form: any) {
+    this.saveButton = false;
     if (form.invalid) {
       this.toast.warning('Fix the errors before proceeding');
+      this.saveButton = true;
       return;
     }
 
@@ -264,6 +268,7 @@ export class CarEntryComponent {
 
     if (this.selectedFile.length === 0) {
       this.toast.warning('Upload image');
+      this.saveButton = true;
       return;
     }
 
@@ -278,10 +283,11 @@ export class CarEntryComponent {
               this.selectedFile = [];
               this.selectedFileName = '';
               this.previews = [];
+              this.saveButton = true;
             },
             error: (err: any) => {
               this.toast.error('Wrong!!');
-              console.log(err);
+              this.saveButton = true;
             },
           });
         }
@@ -295,33 +301,39 @@ export class CarEntryComponent {
           this.selectedFile = [];
           this.selectedFileName = '';
           this.previews = [];
+          this.saveButton = true;
         },
         error: (err: any) => {
           this.toast.error('Wrong!!');
-          console.log(err);
+          this.saveButton = true;
         },
       });
     }
   }
 
+  editButton: boolean = true;
+
   saveEdits(form: any) {
+    this.editButton = false;
     if (form.invalid) {
       this.toast.warning('Fix the errors before proceeding');
+      this.editButton = true;
       return;
     }
     if (this.previews.length === 0 && this.selectedFile.length === 0) {
       this.toast.warning('The car must have at least one image');
+      this.editButton = true;
       return;
     }
     const forms = this.getformData(form);
 
-    console.log('Before to servie', forms.get('car_id'));
     this.dataservice.editCar(forms).subscribe({
       next: (res: any) => {
         this.toast.success('Saved Edits');
+        this.editButton = true;
       },
       error: (err: any) => {
-        console.log(err);
+        this.editButton = true;
         this.toast.error(err);
       },
     });

@@ -156,7 +156,6 @@
         <input
           type="text"
           name="modelName"
-          ngModel
           id="modelName"
           [(ngModel)]="car_detail.modelName"
           required
@@ -198,7 +197,6 @@
           name="category"
           [(ngModel)]="car_detail.category"
           id="category"
-          ngModel
           required
           #category="ngModel"
         >
@@ -223,7 +221,6 @@
           type="text"
           name="engineType"
           [(ngModel)]="car_detail.engineType"
-          ngModel
           id="EngineType"
           required
           #engineType="ngModel"
@@ -245,7 +242,6 @@
           type="text"
           name="horsePower"
           [(ngModel)]="car_detail.horsePower"
-          ngModel
           id="horsePower"
           required
           #horsePower="ngModel"
@@ -267,7 +263,6 @@
           type="text"
           name="torque"
           [(ngModel)]="car_detail.torque"
-          ngModel
           id="torque"
           placeholder="e.g. 650"
         />
@@ -278,7 +273,6 @@
         <input
           type="text"
           name="topSpeed"
-          ngModel
           [(ngModel)]="car_detail.topSpeed"
           id="topSpeed"
           placeholder="e.g. 320kmph"
@@ -290,7 +284,6 @@
         <input
           type="text"
           name="price"
-          ngModel
           [(ngModel)]="car_detail.price"
           id="price"
           placeholder="e.g. 250000"
@@ -303,7 +296,6 @@
           maxlength="100"
           name="description"
           [(ngModel)]="car_detail.description"
-          ngModel
           id="description"
           placeholder="Brief overview..."
         ></textarea>
@@ -313,7 +305,7 @@
         type="submit"
         class="submit-btn"
         (click)="forAdd()"
-        *ngIf="!editMode"
+        *ngIf="!editMode && saveButton"
       >
         <span>Save Car</span>
       </button>
@@ -321,7 +313,7 @@
         type="submit"
         (click)="forEdit()"
         class="submit-btn"
-        *ngIf="editMode"
+        *ngIf="editMode && editButton" 
       >
         <span>Edit Car</span>
       </button>

@@ -20,7 +20,6 @@
   </div>
 
   <div class="box">
-    <h4 class="top-content">Edit Here</h4>
     <form
       class="forms"
       #editForm="ngForm"
@@ -28,6 +27,7 @@
         showPasswordFields ? updatePassword(editForm) : editform(editForm)
       "
     >
+    <label for="imgUpload">Click on profile image to update</label>
       <div class="cred" *ngIf="!showPasswordFields; else pass">
         <div class="profile-img-container" (click)="fileInput.click()">
           <img
@@ -40,6 +40,7 @@
             <div class="placeholder-icon"><i class="fa fa-user"></i></div>
           </ng-template>
         </div>
+        <button type="button"  (click)="deleteImage()" *ngIf="showRemoveButton" style="background-color: rgb(213, 90, 90);">Remove image</button>
 
         <input
           type="file"

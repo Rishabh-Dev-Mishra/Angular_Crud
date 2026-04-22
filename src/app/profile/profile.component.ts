@@ -47,7 +47,7 @@ export class ProfileComponent {
   }
 
   get imageURL(): string {
-  return this.path && (this.path.length > 0) ? `${this.serverUrl}/uploads/${this.path}` : '';
+  return this.path && (this.path.length > 0) ? `${this.path}` : '';
   }
 
   goBack(){

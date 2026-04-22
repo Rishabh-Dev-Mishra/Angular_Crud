@@ -54,6 +54,12 @@ export class DataService {
   getUserInfo(user_id: any){
     return this.http.get(`${this.url}/userInfo/${user_id}`);
   }
+
+  removeImage(user_id:any){
+    console.log("in dataservice removeimage",user_id);
+    
+    return this.http.delete(`${this.url}/removeImage/${user_id}`, user_id);
+  }
   
   
   logOut(){
@@ -72,7 +78,7 @@ export class DataService {
   }
 
   edit(data: any) {
-    console.log(data.email);
+    console.log("email for editing user",data.get('email'));
     
     return this.http.post(this.url + '/edit-profile', data);
   }

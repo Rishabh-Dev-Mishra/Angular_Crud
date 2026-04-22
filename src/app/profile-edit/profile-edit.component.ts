@@ -53,7 +53,14 @@ export class ProfileEditComponent {
         this.path = res.image_path;
         this.user = res;
         this.emailControl.patchValue(this.email, {emitEvent: false});
-        console.log(this.path);
+        if(this.path != null){
+          this.showRemoveButton = true;
+        }
+        else{
+          this.showRemoveButton=false;
+        }
+        console.log("image path",this.path);
+        console.log("Inside the UserInfo");
         
       },
       error: (err: any) => {
@@ -80,6 +87,9 @@ export class ProfileEditComponent {
         if(res.length > 0)
         this.emailExsitsError = true;
         else this.emailExsitsError = false;
+
+        console.log("Inside the INIT");
+        
       },
       error:(err: any)=>{
         console.log(err);
@@ -88,9 +98,35 @@ export class ProfileEditComponent {
   }
 
   get imageURL(): string {
-    if (this.previewUrl) return this.previewUrl;
-    return this.path && this.path.length > 0 ? `${this.serverUrl}/uploads/${this.path}` : '';
+    return this.previewUrl || this.path || '';
+
   }
+
+  deleteImage(){
+    this.dataservice.removeImage(this.user_id).subscribe({
+      next:(res:any)=>{
+      this.path = '';
+      this.previewUrl = null;
+      this.selectedFile = null;
+
+      this.user.image_path = null;
+
+      sessionStorage.setItem('userImage', '');
+
+      this.showRemoveButton = false;
+
+      this.toast.success("Image removed");
+      console.log("Inside the delete image");
+
+      this.showRemoveButton=false;
+      },
+      error:(err:any)=>{
+        this.toast.error(err.message);
+      }
+    })
+  }
+
+  showRemoveButton: boolean = false;
 
 
   onFileSelected(event: any) {
@@ -98,7 +134,7 @@ export class ProfileEditComponent {
     if (file) {
       this.selectedFile = file;
 
-      // Create a local preview
+      this.showRemoveButton=true;
       const reader = new FileReader();
       reader.onload = () => {
         this.previewUrl = reader.result as string;
@@ -121,6 +157,7 @@ export class ProfileEditComponent {
     formData.append('firstname', form.value.firstname || '');
     formData.append('lastname', form.value.lastname || '');
     formData.append('email', this.emailControl.value || '');
+    console.log(formData.get('email'));
     
 
     if (this.selectedFile) {
@@ -129,6 +166,7 @@ export class ProfileEditComponent {
     
     this.dataservice.edit(formData).subscribe({
       next: (res: any) => {
+        console.log("Inside the edit form");
         this.getUserInfo();
         this.toast.success('Profile Updated Successfully');
         this.firstname = form.value.firstname

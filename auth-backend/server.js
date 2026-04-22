@@ -6,11 +6,12 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 const multer = require("multer");
+const cloudinary = require("./config/cloudinary");
 
 require("dotenv").config({ path: "../.env" });
 app.use(
   cors({
-    origin: "*",
+    origin: process.env.FRONTENDURL,
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -19,13 +20,12 @@ app.use(
 
 app.use(express.json());
 
-app.use("/uploads", express.static("uploads"));
+// app.use("/uploads", express.static("uploads"));
 
 app.use((req, res, next) => {
   res.set("Cache-Control", "no-store, no-cache, must-revalidate, private");
   next();
 });
-
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -39,7 +39,7 @@ const sendMail = async (userEmail, token, id) => {
   const resetUrl = `${process.env.FRONTENDURL}/forgotPassword/${token}/${id}`;
 
   const mailOptions = {
-    from: '"Car Gallery" <rishumishra3899@gmail.com>',
+    from: `"Car Gallery" ${process.env.MAILID}`,
     to: userEmail,
     subject: "Reset Your Password - Car Gallery",
     html: `
@@ -78,28 +78,56 @@ const sendMail = async (userEmail, token, id) => {
   return transporter.sendMail(mailOptions);
 };
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, "uploads/"),
+const storage = multer.memoryStorage();
+
+const upload = multer({
+  storage,
   fileFilter: (req, file, cb) => {
     if (
-      file.mimetype == "image/png" ||
-      file.mimetype == "image/jpg" ||
-      file.mimetype == "image/jpeg"
+      file.mimetype === "image/png" ||
+      file.mimetype === "image/jpg" ||
+      file.mimetype === "image/jpeg"
     ) {
       cb(null, true);
     } else {
-      cb(null, false);
-      const err = new Error("Only .png, .jpg and .jpeg format allowed!");
-      err.name = "ExtensionError";
-      return cb(err);
+      cb(new Error("Only images allowed"), false);
     }
   },
-  filename: (req, file, cb) => cb(null, Date.now() + "-" + file.originalname),
 });
 
-const upload = multer({
-  storage: storage,
-});
+const uploadToCloudinary = (fileBuffer) => {
+  return new Promise((resolve, reject) => {
+    cloudinary.uploader
+      .upload_stream({ folder: "car-gallery" }, (error, result) => {
+        if (error) return reject(error);
+        resolve(result);
+      })
+      .end(fileBuffer);
+  });
+};
+
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => cb(null, "uploads/"),
+//   fileFilter: (req, file, cb) => {
+//     if (
+//       file.mimetype == "image/png" ||
+//       file.mimetype == "image/jpg" ||
+//       file.mimetype == "image/jpeg"
+//     ) {
+//       cb(null, true);
+//     } else {
+//       cb(null, false);
+//       const err = new Error("Only .png, .jpg and .jpeg format allowed!");
+//       err.name = "ExtensionError";
+//       return cb(err);
+//     }
+//   },
+//   filename: (req, file, cb) => cb(null, Date.now() + "-" + file.originalname),
+// });
+
+// const upload = multer({
+//   storage: storage,
+// });
 
 const getUserId = (req) => {
   const loggedInUser = req.user;
@@ -114,7 +142,6 @@ const getUserId = (req) => {
 
   return loggedInUser.user_id;
 };
-
 
 app.get("/db-test", async (req, res) => {
   try {
@@ -320,14 +347,17 @@ app.post(
       } else {
         const { firstname, lastname, email, user_id } = req.body;
 
-        let newImagePath = req.file ? req.file.filename : null;
+        let newImagePath = null;
+        if (req.file) {
+          const result = await uploadToCloudinary(req.file.buffer);
+          newImagePath = result.secure_url;
+        }
 
         if (!firstname || !lastname || !email || !user_id) {
           return res.status(400).json({ message: "All fields are required" });
         }
 
         const cleanUserId = parseInt(user_id, 10);
-        
 
         const existingUser = await pool.query(
           "SELECT * FROM users WHERE id = $1",
@@ -338,7 +368,6 @@ app.post(
           "select * from users where email=$1 and id <> $2",
           [email, cleanUserId],
         );
-
 
         if (existingUser.rows.length == 0) {
           return res.status(400).json({ message: "User does not exist" });
@@ -379,6 +408,20 @@ app.post(
     }
   },
 );
+
+app.delete("/removeImage/:user_id", verifyToken, async (req, res) => {
+  try {
+    const user_id = req.params.user_id;
+    if (!user_id) return res.status(500).json({ message: "No user id" });
+    const cleanId = parseInt(user_id, 10);
+    await pool.query("UPDATE users SET image_path = NULL WHERE id = $1", [
+      cleanId,
+    ]);
+    return res.status(200).json({ message: "Removed profile image" });
+  } catch (err) {
+    return res.status(500).json({ message: "error in deleting" });
+  }
+});
 
 app.get("/mailCheck/:mail/:user_id", verifyToken, async (req, res) => {
   try {
@@ -424,7 +467,12 @@ app.post(
   async (req, res) => {
     try {
       const { brandName } = req.body;
-      let imagePath = req.file ? req.file.filename : null;
+      let imagePath = null;
+
+      if (req.file) {
+        const result = await uploadToCloudinary(req.file.buffer);
+        imagePath = result.secure_url;
+      }
       if (!brandName || imagePath == null)
         return res.status(303).json({ message: "Data Required" });
       const has = await pool.query(
@@ -478,7 +526,12 @@ app.post(
           .json({ message: "At least one image is required" });
       }
 
-      let imagePaths = req.files.map((file) => file.filename);
+      let imagePaths = [];
+
+      for (let file of req.files) {
+        const result = await uploadToCloudinary(file.buffer);
+        imagePaths.push(result.secure_url);
+      }
 
       if (
         !userID ||
@@ -682,21 +735,21 @@ app.get("/brands/search/:name/:user_id", verifyToken, async (req, res) => {
   }
 });
 
-app.delete("/brandDelete/:id", async(req, res)=>{
-  try{
-    const {id} = req.params;
-    if(!id)  return res.status(400).json({message:"No brand Id"});
+app.delete("/brandDelete/:id", verifyToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) return res.status(400).json({ message: "No brand Id" });
     const cleanId = parseInt(id, 10);
-    
+
     await pool.query("delete from cars where brand_id=$1", [cleanId]);
     await pool.query("delete from brands where brand_id=$1", [cleanId]);
 
-    return res.status(200).json({message: "Deletion Success"})
-  }catch(err){
+    return res.status(200).json({ message: "Deletion Success" });
+  } catch (err) {
     console.log(err);
-    return res.status(400).json({message:"Error in deleting"})
+    return res.status(400).json({ message: "Error in deleting" });
   }
-})
+});
 
 app.get(
   "/cars/search/:id/:name/:category/:engine/:user_id",
@@ -885,10 +938,16 @@ app.put(
         "select brand_id from brands where brand_name = $1",
         [brandName],
       );
+      let newImages = [];
+
+      for (let file of req.files) {
+        const result = await uploadToCloudinary(file.buffer);
+        newImages.push(result.secure_url);
+      }
+
       let keepOld = oldImages ? JSON.parse(oldImages) : [];
 
-      let imagePaths = req.files.map((file) => file.filename);
-      imagePaths = [...imagePaths, ...keepOld];
+      let imagePaths = [...newImages, ...keepOld];
       if (imagePaths && imagePaths.length > 0) {
         await pool.query(
           `update
@@ -1000,7 +1059,12 @@ app.post(
     try {
       const { brand_name, user_id } = req.body;
 
-      const image_path = req.file ? req.file.filename : null;
+      let image_path = null;
+
+      if (req.file) {
+        const result = await uploadToCloudinary(req.file.buffer);
+        image_path = result.secure_url;
+      }
 
       if (!image_path || !brand_name || !user_id)
         return res.status(400).json({ message: "Details missing" });

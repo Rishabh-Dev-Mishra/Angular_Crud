@@ -58,7 +58,7 @@ export class CarEntryComponent {
     this.dataservice.getImagesOfOne(car_id).subscribe({
       next: (res: any) => {
         this.previews = res[0].car_logo.map(
-          (img: string) => `${environment.apiUrl}/uploads/${img}`,
+          (img: string) => `${img}`,
         );
       },
       error: (err) => {

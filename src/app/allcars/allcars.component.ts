@@ -57,7 +57,7 @@ export class AllCarsComponent implements OnInit {
     this.dataservice.getImagesOfOne(carData.car_id).subscribe({
       next: (res: any) => {
         this.multiImage = res[0].car_logo.map(
-          (img: string) => `${environment.apiUrl}/uploads/${img}`,
+          (img: string) => `${img}`,
         );
         this.showModal = true;
       },

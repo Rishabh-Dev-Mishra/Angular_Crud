@@ -46,7 +46,7 @@
         <td class="vehicle-cell" data-label="Vehicle">
           <div class="vehicle-info">
             <img
-              [src]="backendUrl+'/uploads/' + car.car_logo[0]"
+              [src]="car.car_logo[0]"
               [alt]="car.model_name"
               class="table-image"
               (click)="getImages(car)"

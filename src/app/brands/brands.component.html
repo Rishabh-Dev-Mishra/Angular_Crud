@@ -27,7 +27,7 @@
           <a [routerLink]="['/cars', brand.brand_id, brand.brand_name, user_id]" class="brand-card">
             <div class="brand-logo">
               <img
-                [src]="backendUrl+'/uploads/' + brand.brand_logo"
+                [src]="brand.brand_logo"
                 alt="{{ brand.brand_name }} logo"
               />
             </div>

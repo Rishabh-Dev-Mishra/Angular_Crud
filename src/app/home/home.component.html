@@ -34,7 +34,7 @@
             <td>{{ request.brand_name }}</td>
             <td>
               <img
-                [src]="backendUrl+'/uploads/' + request.brand_logo"
+                [src]="request.brand_logo"
               />
             </td>
             <td><button (click)="acceptRequest(request)">Accept</button></td>

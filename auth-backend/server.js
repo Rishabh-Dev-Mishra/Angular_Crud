@@ -476,7 +476,7 @@ app.post(
       if (!brandName || imagePath == null)
         return res.status(303).json({ message: "Data Required" });
       const has = await pool.query(
-        "select * from brands where brand_name = $1",
+        "select brand_id from brands where brand_name = $1",
         [brandName],
       );
       if (has.rows.length > 0)
@@ -1072,7 +1072,7 @@ app.post(
       const cleanUserId = parseInt(user_id, 10);
 
       const exsisting = await pool.query(
-        "select * from brands where brand_name=$1",
+        "select brand_id from brands where brand_name=$1",
         [brand_name],
       );
 
@@ -1191,7 +1191,7 @@ app.post("/sendMail", async (req, res) => {
     if (!email)
       return res.status(400).json({ message: `error sending mail no email` });
 
-    const user = await pool.query("Select * from users where email=$1", [
+    const user = await pool.query("Select id from users where email=$1", [
       email,
     ]);
 

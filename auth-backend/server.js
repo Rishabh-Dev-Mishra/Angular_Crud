@@ -36,7 +36,7 @@ const transporter = nodemailer.createTransport({
 });
 
 const sendMail = async (userEmail, token, id) => {
-  const resetUrl = `${process.env.FRONTENDURL}/forgotPassword/${token}/${id}`;
+  const resetUrl = `https://angular-crud-kohl-alpha.vercel.app/forgotPassword/${token}/${id}`;
 
   const mailOptions = {
     from: `"Car Gallery" ${process.env.MAILID}`,
@@ -229,7 +229,7 @@ app.post("/login", async (req, res) => {
     );
 
     if (!isMatch) {
-      return res.status(401).json("Invalid password");
+      return res.status(401).json("Invalid email or password");
     }
 
     const userImage = ExisitingUser.rows[0].image_path;
@@ -262,9 +262,24 @@ app.post("/login", async (req, res) => {
     });
   } catch (err) {
     console.error(err.message);
-    res.status(500).json({ error: "Internal Server Error" });
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
+app.get("/getImage/:user_id", async(req, res)=>{
+  try{
+    const user_id = req.params.user_id;
+    if(!user_id)res.status(400).json({ error: "image not found of user" });
+    const cleanId = parseInt(user_id, 10);
+    const userImage = await pool.query("select image_path from users where id=$1",[cleanId]);
+    return res.status(200).json(userImage.rows);
+  }
+  catch(err){
+    console.log(err);
+    
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+})
 
 app.get("/userInfo/:user_id", verifyToken, async (req, res) => {
   try {

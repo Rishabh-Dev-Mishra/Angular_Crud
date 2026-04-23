@@ -34,6 +34,8 @@ export class CarsComponent implements OnInit {
   filteredCar: any[] = [];
   multiImage: string[] = [];
 
+  userIdFromURL: any = this.route.snapshot.paramMap.get("id")
+
   trackByCarId(index: number, car: any) {
     return car.car_id;
   }

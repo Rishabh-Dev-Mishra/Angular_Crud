@@ -25,6 +25,7 @@ export class DataService {
     return sessionStorage.getItem('userName') || '(..)';
   }
 
+
   getUserId(): string | null {
     return sessionStorage.getItem('user_id');
   }
@@ -60,6 +61,11 @@ export class DataService {
     
     return this.http.delete(`${this.url}/removeImage/${user_id}`, user_id);
   }
+
+
+  userImage(user_id:any){
+    return this.http.get(`${this.url}/getImage/${user_id}`);
+  } 
   
   
   logOut(){

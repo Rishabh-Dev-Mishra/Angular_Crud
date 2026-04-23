@@ -34,7 +34,11 @@ export class BrandsComponent implements OnInit {
   ngOnInit() {
     this.allBrands();
   }
-  user_id = this.route.snapshot.paramMap.get('id');
+
+  idOfLoggedUser : any = this.dataservice.getUserId();
+
+  idFromURL : any = this.route.snapshot.paramMap.get('id');
+  user_id = this.idFromURL ?? this.idOfLoggedUser;
   allBrands() {
     this.dataservice.getBrands(this.user_id).subscribe({
       next: (data: any) => {

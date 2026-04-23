@@ -19,6 +19,7 @@ export const routes: Routes = [
     {path: "register", component: RegisterComponent},
     {path: "home", component: HomeComponent, canActivate: [routeGuardGuard]},
     {path: "profile/:user_id", component: ProfileComponent, canActivate: [routeGuardGuard]},
+    {path: "profile", component: ProfileComponent, canActivate: [routeGuardGuard]},
     {path: "edit-profile", component: ProfileEditComponent, canActivate: [routeGuardGuard]},
     {path: "edit-profile/:user_id", component: ProfileEditComponent, canActivate: [routeGuardGuard]},
     {path: "brands/:id", component: BrandsComponent, canActivate: [routeGuardGuard]},

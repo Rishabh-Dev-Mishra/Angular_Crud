@@ -221,7 +221,8 @@ export class DataService {
   }
 
   getUserStatus(user_id: any){
-    return this.http.get(`${this.url}/userStatus/${user_id}`);
+    return this.http.get(`${this.url}/userStatus/${user_id}`,
+      {headers: { 'skip-loader': 'true' }});
   }
 
   sendMail(data: any){

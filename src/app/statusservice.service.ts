@@ -19,6 +19,7 @@ export class StatusserviceService {
 
   private toast = inject(ToastrService)
 
+
   startPolling() {
     const userId = this.dataservice.getUserId();
     if (!userId) return;

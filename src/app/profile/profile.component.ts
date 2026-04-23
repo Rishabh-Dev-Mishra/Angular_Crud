@@ -23,7 +23,8 @@ export class ProfileComponent {
   name:string = '';
   email:string = '';
 
-  user_id = this.route.snapshot.paramMap.get('user_id');
+
+  user_id = this.dataservice.getUserId();
   path:string = '';
   status:string ='';
 

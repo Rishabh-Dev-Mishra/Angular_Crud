@@ -147,6 +147,10 @@ export class DataService {
     return this.http.put(`${this.url}/cancelSell`, data); 
   }
 
+  allBids(){
+    return this.http.get(`${this.url}/allBids`); 
+  }
+
   private id: string = '';
   private name: string = '';
 

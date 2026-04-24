@@ -1,91 +1,208 @@
+/* Container */
 .bids-container {
-  padding: 20px;
-  background: #f5f7fa;
+  padding: 30px;
+  background: linear-gradient(to right, #eef2f7, #f8fafc);
 }
 
+/* Heading */
 h2 {
-  margin-bottom: 20px;
-  font-weight: 600;
+  margin-bottom: 25px;
+  font-weight: 700;
+  font-size: 22px;
+  color: #1e293b;
 }
 
+/* Wrapper */
 .table-wrapper {
   overflow-x: auto;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  padding: 10px;
 }
 
+/* Table */
 .car-table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   min-width: 900px;
 }
 
+/* Header */
 .car-table thead {
-  background: #1e293b;
+  background: #0f172a;
   color: #fff;
 }
 
-.car-table th,
-.car-table td {
-  padding: 14px;
-  text-align: left;
-  vertical-align: middle;
+.car-table th {
+  padding: 16px;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
 }
 
+/* Cells */
+.car-table td {
+  padding: 16px;
+  font-size: 14px;
+  vertical-align: middle;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+/* Row */
 .car-table tbody tr {
-  border-bottom: 1px solid #eee;
-  transition: 0.2s;
+  transition: all 0.25s ease;
 }
 
 .car-table tbody tr:hover {
-  background: #f1f5f9;
+  background: #f8fafc;
+  transform: scale(1.01);
 }
 
 /* Car Info */
 .car-info {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
 }
 
 .car-img {
-  width: 70px;
-  height: 50px;
+  width: 75px;
+  height: 55px;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
 }
 
-/* Brand */
-.brand-info {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+/* Model Name */
+.car-info h4 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #111827;
 }
 
-.brand-logo {
-  width: 30px;
-  height: 30px;
-  object-fit: contain;
+/* Category badge */
+.category-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  background: #e0f2fe;
+  color: #0369a1;
+  font-weight: 500;
+}
+
+/* Performance text */
+td p {
+  margin: 2px 0;
+  font-size: 13px;
+  color: #475569;
 }
 
 /* Price */
 .price {
-  font-weight: bold;
+  font-weight: 700;
+  font-size: 16px;
   color: #16a34a;
 }
 
-/* Button */
+/* Owner */
+.owner {
+  font-weight: 500;
+  color: #334155;
+}
+
+/* Optional Button (future use) */
 .bid-btn {
   padding: 8px 14px;
   border: none;
-  background: #2563eb;
+  background: linear-gradient(to right, #2563eb, #1d4ed8);
   color: #fff;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: 0.2s;
+  font-size: 13px;
+  transition: 0.3s;
 }
 
 .bid-btn:hover {
-  background: #1d4ed8;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(37, 99, 235, 0.3);
+}
+
+/* =========================
+   MOBILE RESPONSIVENESS
+========================= */
+@media (max-width: 768px) {
+
+  .bids-container {
+    padding: 15px;
+  }
+
+  h2 {
+    font-size: 18px;
+    text-align: center;
+  }
+
+  /* Hide table header */
+  .car-table thead {
+    display: none;
+  }
+
+  /* Make table behave like cards */
+  .car-table,
+  .car-table tbody,
+  .car-table tr,
+  .car-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .car-table tr {
+    background: #fff;
+    margin-bottom: 15px;
+    border-radius: 12px;
+    padding: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+
+  .car-table td {
+    padding: 8px 10px;
+    text-align: left;
+    border: none;
+    position: relative;
+  }
+
+  /* Label for each field */
+  .car-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    display: block;
+    margin-bottom: 4px;
+    color: #64748b;
+    font-size: 12px;
+  }
+
+  /* Car Info special */
+  .car-info {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .car-img {
+    width: 100%;
+    height: auto;
+    max-height: 180px;
+    border-radius: 10px;
+  }
+
+  .car-info h4 {
+    font-size: 16px;
+  }
+
+  /* Price highlight */
+  .price {
+    font-size: 18px;
+  }
 }

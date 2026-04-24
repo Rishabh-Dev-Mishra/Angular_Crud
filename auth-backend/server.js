@@ -771,8 +771,39 @@ app.put("/cancelSell", async(req, res)=>{
   }
 })
 
+app.get("/allBids", async (req, res) => {
+  try {
+    const bid = await pool.query(`
+      SELECT 
+        b.base_price,
 
+        c.car_id,
+        c.model_name,
+        c.category,
+        c.car_logo,
 
+        cd.engine_type,
+        cd.horsepower,
+        cd.torque,
+        cd.top_speed,
+
+        u.firstname,
+        br.brand_name
+
+      FROM bids b
+      JOIN cars c ON b.car_id = c.car_id
+      JOIN car_details cd ON c.car_id = cd.car_id
+      JOIN users u ON c.user_id = u.id
+      JOIN brands br ON c.brand_id = br.brand_id
+    `);
+
+    return res.status(200).json(bid.rows);
+
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+});
 
 
 

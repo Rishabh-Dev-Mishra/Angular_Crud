@@ -13,6 +13,7 @@ import { CarEntryComponent } from './car-entry/car-entry.component';
 import { AllCarsComponent } from './allcars/allcars.component';
 import { ForgotpasswordComponent } from './forgotpassword/forgotpassword.component';
 import { MailComponent } from './mail/mail.component';
+import { BidsComponent } from './bids/bids.component';
 
 export const routes: Routes = [
     {path: "", component : LoginComponent},
@@ -31,6 +32,7 @@ export const routes: Routes = [
     {path: "mailtoreset", component: MailComponent},
     {path: "forgotPassword/:token/:id", component: ForgotpasswordComponent},
     {path: "allcars/:user_id", component:AllCarsComponent, canActivate: [routeGuardGuard]},
+    {path: "bids", component:BidsComponent},
     {path: "**", component: PageNotFoundComponent}
 
 ];

@@ -137,6 +137,16 @@ export class DataService {
     return this.http.get(`${this.url}/cars/${id}/${user_id}`);
   }
 
+  sellCar(data:any){
+    console.log("From dataservice", data);
+    
+    return this.http.post(`${this.url}/sellCar`, data); 
+  }
+
+  cancelSelling(data: any){
+    return this.http.put(`${this.url}/cancelSell`, data); 
+  }
+
   private id: string = '';
   private name: string = '';
 

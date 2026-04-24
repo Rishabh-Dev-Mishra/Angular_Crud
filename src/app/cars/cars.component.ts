@@ -8,41 +8,35 @@ import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { environment } from '../../environments/environment';
 
-
 @Component({
   selector: 'app-cars',
   standalone: true,
-  imports: [
-    NavbarComponent,
-    FooterComponent,
-    CommonModule,
-    FormsModule,
-  ],
+  imports: [NavbarComponent, FooterComponent, CommonModule, FormsModule],
   templateUrl: './cars.component.html',
   styleUrl: './cars.component.css',
 })
 export class CarsComponent implements OnInit {
-  constructor (private location:Location){}
+  constructor(private location: Location) {}
   private route = inject(ActivatedRoute);
   private dataservice = inject(DataService);
   private router = inject(Router);
   private toast = inject(ToastrService);
 
-  backendUrl = environment.apiUrl
+  backendUrl = environment.apiUrl;
 
   carList: any[] = [];
   filteredCar: any[] = [];
   multiImage: string[] = [];
 
-  userIdFromURL: any = this.route.snapshot.paramMap.get("id")
+  userIdFromURL: any = this.route.snapshot.paramMap.get('id');
 
   trackByCarId(index: number, car: any) {
     return car.car_id;
   }
 
   brand_name = this.route.snapshot.paramMap.get('name') ?? '';
-  goBack(){
-    this.location.back()
+  goBack() {
+    this.location.back();
   }
 
   allCars() {
@@ -50,16 +44,18 @@ export class CarsComponent implements OnInit {
     const name = this.route.snapshot.paramMap.get('name');
 
     if (id && name) {
-      const pageToOffset = (this.currentPage-1)*this.itemsPerPage; 
-      this.dataservice.getCars(id, name, this.itemsPerPage, pageToOffset).subscribe({
-        next: (data: any) => {
-          this.carList = data;
-          this.filteredCar = data;
-        },
-        error: (err) => {
-          console.error('Error fetching cars:', err);
-        },
-      });
+      const pageToOffset = (this.currentPage - 1) * this.itemsPerPage;
+      this.dataservice
+        .getCars(id, name, this.itemsPerPage, pageToOffset)
+        .subscribe({
+          next: (data: any) => {
+            this.carList = data;
+            this.filteredCar = data;
+          },
+          error: (err) => {
+            console.error('Error fetching cars:', err);
+          },
+        });
     } else {
       console.warn('Missing route parameters: id or name');
     }
@@ -86,7 +82,7 @@ export class CarsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.carsPerBrand()
+    this.carsPerBrand();
     this.allCars();
   }
 
@@ -98,7 +94,7 @@ export class CarsComponent implements OnInit {
 
   getAllCars() {
     const id: string = this.route.snapshot.paramMap.get('id') ?? '';
-    const user_id : string = this.route.snapshot.paramMap.get('user_id')?? '';
+    const user_id: string = this.route.snapshot.paramMap.get('user_id') ?? '';
     const name: string =
       this.route.snapshot.paramMap.get('name') ?? 'Unknown Brand';
     this.dataservice.setIdForNavig(id, name);
@@ -136,9 +132,7 @@ export class CarsComponent implements OnInit {
   getImages(carData: any) {
     this.dataservice.getImagesOfOne(carData.car_id).subscribe({
       next: (res: any) => {
-        this.multiImage = res[0].car_logo.map(
-          (img: string) => `${img}`,
-        );
+        this.multiImage = res[0].car_logo.map((img: string) => `${img}`);
         this.showModal = true;
       },
       error: (err: any) => {
@@ -177,10 +171,76 @@ export class CarsComponent implements OnInit {
   confirmDeleteButton: boolean = false;
   selectedCar: any;
 
-
   editCar(data: any) {
     const car_id = data.car_id;
     this.router.navigate(['/editCar', car_id]);
+  }
+
+  confirmSellButton: boolean = false;
+  carForSell: any = null;
+
+  sellCar(car: any) {
+    this.confirmSellButton = true;
+    this.carForSell = car;
+  }
+
+  cancelSell() {
+    this.confirmSellButton = false;
+  }
+
+  completeSell(form: any) {
+    console.log('car i for sell', this.carForSell);
+
+    if (form.invalid) {
+      this.toast.error('Enter the correct value');
+      return;
+    }
+    if (this.carForSell == null) {
+      this.toast.info('No car found');
+      return;
+    }
+    const payload = {
+      car_id: this.carForSell.car_id,
+      base_price: form.value.basePrice,
+    };
+
+    this.dataservice.sellCar(payload).subscribe({
+      next: (res: any) => {
+        this.carsPerBrand();
+        this.allCars();
+        this.confirmSellButton = false;
+        this.toast.success('Added for selling');
+      },
+      error: (err: any) => {
+        console.log(err);
+        this.toast.error(err);
+      },
+    });
+  }
+
+  confirmCancelSell: boolean = false;
+  cancelCar: any = null;
+  toggleSell(car: any){
+    this.confirmCancelSell = !this.confirmCancelSell;
+    this.cancelCar = car;
+  }
+  cancelSelling(){
+    const payload = {
+    car_id: this.cancelCar?.car_id || this.cancelCar?.id
+  };
+    this.dataservice.cancelSelling(payload).subscribe({
+      next:(res: any)=>{
+        this.carsPerBrand();
+        this.allCars();
+        this.toggleSell(null);
+        this.toast.success("Cancelled Selling")
+      },
+      error:(err:any)=>{
+        this.toast.error("error cancelling")
+        console.log(err);
+        
+      }
+    })
   }
 
   currentPage: number = 1;

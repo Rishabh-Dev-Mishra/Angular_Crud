@@ -48,7 +48,7 @@
   <section class="car-box" *ngIf="filteredCar.length > 0; else noData">
     <table class="car-table">
       <tr>
-        <th>Image</th>
+        <th>Click for more images</th>
         <th>Brand</th>
         <th>Model Name</th>
         <th>Price</th>
@@ -58,7 +58,9 @@
         <th>Torque</th>
         <th>Top Speed</th>
         <th>Description</th>
-        <th>Get More Images</th>
+        <th>Edit</th>
+        <th>Delete</th>
+        <th>Sell</th>
       </tr>
       <tr *ngFor="let car of carList; trackBy: trackByCarId">
         <td data-label="Image">
@@ -88,8 +90,67 @@
             Delete Car
           </button>
         </td>
+        <td data-label="Bid" *ngIf="car.sold == 'false'">
+          <button class="btn-delete-trigger" (click)="sellCar(car)">Sell Car</button>
+        </td>
+        <td data-label="Cancel Bid" *ngIf="car.sold == 'true'">
+          <button class="btn-delete-trigger" (click)="toggleSell(car)">Cancel Sellling</button>
+        </td>
       </tr>
     </table>
+
+
+
+      <div class="delete-overlay" *ngIf="confirmCancelSell">
+        <div class="delete-modal">
+          <div class="delete-icon">⚠️</div>
+          <h3>Confirm Your Cancellation</h3>
+
+          
+            <p>
+            Are you sure you want to cancel the
+            <strong>{{ selectedCar?.model_name }}</strong> selling? 
+          </p>
+            <button  type ="button" class="btn-cancel" style="margin-bottom: 4px;" (click)="cancelSelling()">Confirm</button>
+          <div class="delete-actions">
+            <button class="btn-cancel" (click)="toggleSell(null)">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+
+
+
+    <div class="delete-overlay" *ngIf="confirmSellButton">
+      <div class="delete-modal">
+        <div class="delete-icon">⚠️</div>
+        <h3>Confirm Your Selling</h3>
+
+        <form #priceForm="ngForm"  (ngSubmit)="completeSell(priceForm)">
+          <label for="basePrice">Base Price</label>
+          <input type="number" name="basePrice" required ngModel id="basePrice">
+          <p>
+          Are you sure you want to Sell the
+          <strong>{{ selectedCar?.model_name }}</strong> from the vault? 
+        </p>
+          <button  type ="submit" class="btn-cancel" style="margin-bottom: 4px;">Confirm Selling</button>
+        </form>
+        <div class="delete-actions">
+          <button class="btn-cancel" (click)="cancelSell()">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
+    
+
     <div class="delete-overlay" *ngIf="confirmDeleteButton">
       <div class="delete-modal">
         <div class="delete-icon">⚠️</div>

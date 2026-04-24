@@ -1,0 +1,91 @@
+.bids-container {
+  padding: 20px;
+  background: #f5f7fa;
+}
+
+h2 {
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.car-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 900px;
+}
+
+.car-table thead {
+  background: #1e293b;
+  color: #fff;
+}
+
+.car-table th,
+.car-table td {
+  padding: 14px;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.car-table tbody tr {
+  border-bottom: 1px solid #eee;
+  transition: 0.2s;
+}
+
+.car-table tbody tr:hover {
+  background: #f1f5f9;
+}
+
+/* Car Info */
+.car-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.car-img {
+  width: 70px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* Brand */
+.brand-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brand-logo {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+}
+
+/* Price */
+.price {
+  font-weight: bold;
+  color: #16a34a;
+}
+
+/* Button */
+.bid-btn {
+  padding: 8px 14px;
+  border: none;
+  background: #2563eb;
+  color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.bid-btn:hover {
+  background: #1d4ed8;
+}

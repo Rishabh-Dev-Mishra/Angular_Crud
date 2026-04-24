@@ -663,6 +663,7 @@ app.get("/cars/:id/:user_id/:limit/:offset", verifyToken, async (req, res) => {
     const query = `SELECT 
         b.brand_name,
         c.car_id AS car_id, 
+        c.sold,
         c.brand_id,
         c.model_name, 
         c.category, 
@@ -704,6 +705,7 @@ app.get("/cars/:id/:user_id", verifyToken, async (req, res) => {
         c.car_id AS car_id, 
         c.model_name, 
         c.category, 
+        c.sold,
         c.car_logo,
         cd.price, 
         cd.description, 
@@ -726,6 +728,59 @@ app.get("/cars/:id/:user_id", verifyToken, async (req, res) => {
     return res.status(500).json({ error: err.message });
   }
 });
+
+
+
+
+app.post("/sellCar", async(req, res)=>{
+  try{
+    const {car_id, base_price} = req.body;
+    console.log(req.body);
+    
+    if(!car_id || !base_price) return res.status(400).json({message: "Information missing"})
+    const cleanCarId = parseInt(car_id, 10);
+    const cleanPrice = parseInt(base_price, 10);
+    const carExsist = await pool.query("select car_id from cars where car_id=$1", [cleanCarId]);
+    if(carExsist.rows == 0) return res.status(401).json({message: "Car not Found"});
+    await pool.query("insert into bids (car_id, base_price) values ($1, $2)", [cleanCarId, cleanPrice]);
+    await pool.query("Update cars set sold=$1  where car_id = $2",['true', cleanCarId])
+    return res.status(200).json({message: "Success"})
+  }
+  catch(err){
+    console.log(err);
+    return res.status(500).json({message: "Internal server error"})
+  }
+})
+
+app.put("/cancelSell", async(req, res)=>{
+  try{
+    const {car_id} = req.body;
+    console.log(req.body);
+    
+    if(!car_id) return res.status(400).json({message: "Information missing"})
+    const cleanCarId = parseInt(car_id, 10);
+    const carExsist = await pool.query("select car_id from cars where car_id=$1", [cleanCarId]);
+    if(carExsist.rows.length == 0) return res.status(401).json({message: "Car not Found"});
+    await pool.query("delete from bids where car_id = $1", [cleanCarId]);
+    await pool.query("Update cars set sold=$1  where car_id = $2",['false', cleanCarId])
+    return res.status(200).json({message: "Success"})
+  }
+  catch(err){
+    console.log(err);
+    return res.status(500).json({message: "Internal server error"})
+  }
+})
+
+
+
+
+
+
+
+
+
+
+
 
 app.get("/brands/search/:name/:user_id", verifyToken, async (req, res) => {
   try {
@@ -778,6 +833,7 @@ app.get(
       const SQLQuery = `
       SELECT 
         c.car_id AS car_id, 
+        c.sold,
         c.model_name, 
         c.category, 
         c.car_logo,
@@ -817,6 +873,7 @@ app.get("/allcars/:user_id", verifyToken, async (req, res) => {
         b.brand_name,
         c.car_id AS car_id, 
         c.brand_id,
+        c.sold,
         c.model_name, 
         c.category, 
         c.car_logo,

@@ -43,6 +43,21 @@ export class DataService {
   img_path(): string {
     return sessionStorage.getItem('userImage') || '';
   }
+  setIdForNavig(id: string, name: string) {
+    this.id = id;
+    this.name = name;
+    sessionStorage.setItem('navigId', id);
+    sessionStorage.setItem('navigName', name);
+  }
+  private id: string = '';
+  private name: string = '';
+
+  getIdForNavig() {
+    return {
+      id: this.id || sessionStorage.getItem('navigId'),
+      name: this.name || sessionStorage.getItem('navigName'),
+    };
+  }
 
   
   setInfo(name: string, email: string, user_id: any, role:any) {
@@ -151,22 +166,23 @@ export class DataService {
     return this.http.get(`${this.url}/allBids`); 
   }
 
-  private id: string = '';
-  private name: string = '';
-
-  setIdForNavig(id: string, name: string) {
-    this.id = id;
-    this.name = name;
-    sessionStorage.setItem('navigId', id);
-    sessionStorage.setItem('navigName', name);
+  getRoomId(data:any){
+    console.log(data);
+    
+    return this.http.get(`${this.url}/getRoomId/${data.carId}/${data.buyerId}/${data.sellerId}`);
   }
 
-  getIdForNavig() {
-    return {
-      id: this.id || sessionStorage.getItem('navigId'),
-      name: this.name || sessionStorage.getItem('navigName'),
-    };
+  getMessages(conversationId: any){
+      return this.http.get(`${this.url}/getMessages/${conversationId}`);
   }
+
+  insertMessage(data :any){
+    console.log(data);
+    
+    return this.http.post(`${this.url}/insertMessage`, data);
+  }
+
+
 
   getImagesOfOne(id: any) {
     const user_id = this.getUserId();

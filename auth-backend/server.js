@@ -8,6 +8,26 @@ const nodemailer = require("nodemailer");
 const multer = require("multer");
 const cloudinary = require("./config/cloudinary");
 
+const http = require("http");
+const {Server} = require("socket.io");
+const { log, error } = require("console");
+const { console } = require("inspector");
+const server = http.createServer(app)
+
+
+const io = new Server(server,{
+  cors:{
+    origin: '*'
+  }
+});
+
+require("./socket/socket.js")(io);
+
+
+
+
+
+
 require("dotenv").config({ path: "../.env" });
 app.use(
   cors({
@@ -735,7 +755,6 @@ app.get("/cars/:id/:user_id", verifyToken, async (req, res) => {
 app.post("/sellCar", async(req, res)=>{
   try{
     const {car_id, base_price} = req.body;
-    console.log(req.body);
     
     if(!car_id || !base_price) return res.status(400).json({message: "Information missing"})
     const cleanCarId = parseInt(car_id, 10);
@@ -755,7 +774,6 @@ app.post("/sellCar", async(req, res)=>{
 app.put("/cancelSell", async(req, res)=>{
   try{
     const {car_id} = req.body;
-    console.log(req.body);
     
     if(!car_id) return res.status(400).json({message: "Information missing"})
     const cleanCarId = parseInt(car_id, 10);
@@ -776,12 +794,11 @@ app.get("/allBids", async (req, res) => {
     const bid = await pool.query(`
       SELECT 
         b.base_price,
-
         c.car_id,
         c.model_name,
         c.category,
         c.car_logo,
-
+        c.user_id,
         cd.engine_type,
         cd.horsepower,
         cd.torque,
@@ -1383,6 +1400,73 @@ app.put("/resetPassword/:token_number", async (req, res) => {
       .json({ message: `error reseting password pata nhi` });
   }
 });
+
+
+app.get("/getRoomId/:carId/:buyerId/:sellerId", async(req, res)=>{
+  try{
+    const {carId, buyerId, sellerId} = req.params;
+
+    if(!carId || !buyerId || !sellerId) return res.status(402).json({message: "information missing"})
+
+    const cleanCarId = parseInt(carId, 10);
+    const cleanBuyerId = parseInt(buyerId, 10);
+    const cleanSellerId = parseInt(sellerId, 10);
+
+    const exsists = await pool.query("select id from conversation where car_id=$1 and seller_id=$2 and buyer_id=$3",[cleanCarId, cleanBuyerId, cleanSellerId]);
+
+    if(exsists.rows.length > 0){
+      return res.status(200).json(exsists.rows);
+    }
+
+    await pool.query("insert into conversation (car_id, seller_id, buyer_id) values ($1, $2, $3)", [cleanCarId, cleanSellerId, cleanBuyerId])
+
+    const conversationId = await pool.query("select id from conversation where car_id=$1 and seller_id=$2 and buyer_id=$3",[cleanCarId, cleanBuyerId, cleanSellerId]);
+
+    return res.status(200).json(conversationId.rows);
+
+  }
+  catch(err){
+    console.log(err);
+    return res.status(500).json({message:err})
+  }
+})
+
+app.get("/getMessages/:id", async(req, res)=>{
+  try{
+    const id = req.params.id;
+    if(!id)  return res.status(400).json({message: "No id"});
+
+    const cleanId = parseInt(id, 10);
+
+    const allmessages = await pool.query("Select * from messages where conversation_id = $1", [cleanId]);
+
+    return res.status(200).json(allmessages.rows)
+
+  }
+  catch(err){
+    console.log(err);
+    return res.status(400).json({message: err})
+  }
+})
+
+app.post("/insertMessage", async(req, res)=>{
+  try{
+    console.log(req.body);
+    
+    const  {message, conversation_id, sender_id} = req.body;
+    console.log(conversation_id);
+    
+    if(!message || !conversation_id || !sender_id) return res.status(400).json({message: "Info missing"});
+    const cleanConversationId = parseInt(conversation_id, 10);
+    const cleanSenderId = parseInt(sender_id, 10);
+    await pool.query("insert into messages (conversation_id, sender_id, message) values($1,$2,$3)",[cleanConversationId, cleanSenderId, message])
+    return res.status(200).json({message: "Insertion success"})
+  }
+  catch(err){
+    console.log(err);
+    return res.status(400).json({message: err.message})
+  }
+})
 
 app.listen(3000, (req, res) => {
   console.log("Server Is Running");

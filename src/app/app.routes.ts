@@ -14,6 +14,7 @@ import { AllCarsComponent } from './allcars/allcars.component';
 import { ForgotpasswordComponent } from './forgotpassword/forgotpassword.component';
 import { MailComponent } from './mail/mail.component';
 import { BidsComponent } from './bids/bids.component';
+import { ChatsComponent } from './chats/chats.component';
 
 export const routes: Routes = [
     {path: "", component : LoginComponent},
@@ -33,6 +34,7 @@ export const routes: Routes = [
     {path: "forgotPassword/:token/:id", component: ForgotpasswordComponent},
     {path: "allcars/:user_id", component:AllCarsComponent, canActivate: [routeGuardGuard]},
     {path: "bids", component:BidsComponent},
+    {path: "chats/:id", component:ChatsComponent},
     {path: "**", component: PageNotFoundComponent}
 
 ];

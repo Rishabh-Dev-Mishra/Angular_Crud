@@ -240,7 +240,7 @@ export class CarsComponent implements OnInit {
         console.log(err);
         
       }
-    })
+    })   
   }
 
   currentPage: number = 1;

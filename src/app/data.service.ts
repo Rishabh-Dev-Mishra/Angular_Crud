@@ -182,6 +182,13 @@ export class DataService {
     return this.http.post(`${this.url}/insertMessage`, data);
   }
 
+  getSellingCars(user_id:any){
+    return this.http.get(`${this.url}/getMySelling/${user_id}`);
+  }
+
+  getConver(car_id:any){
+    return this.http.get(`${this.url}/converCar/${car_id}`);
+  }
 
 
   getImagesOfOne(id: any) {

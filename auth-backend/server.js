@@ -1468,6 +1468,38 @@ app.post("/insertMessage", async(req, res)=>{
   }
 })
 
+app.get("/getMySelling/:user_id", async(req ,res)=>{
+  try{
+    
+    const  {user_id} = req.params;
+    
+    if(!user_id) return res.status(400).json({message: "Info missing"});
+    const cleanUserId = parseInt(user_id, 10);
+    const cars = await pool.query("select c.*, cd.* from cars c join car_details cd on c.car_id = cd.car_id where c.sold=$1 and c.user_id=$2",['true', cleanUserId])
+    return res.status(200).json(cars.rows)
+  }
+  catch(err){
+    console.log(err);
+    return res.status(400).json({message: err.message})
+  }
+})
+
+app.get("/converCar/:car_id", async(req ,res)=>{
+  try{
+    
+    const  {car_id} = req.params;
+    
+    if(!car_id) return res.status(400).json({message: "Info missing"});
+    const cleanCarId = parseInt(car_id, 10);
+    const convers = await pool.query("select * from conversation where car_id=$1",[cleanCarId])
+    return res.status(200).json(convers.rows)
+  }
+  catch(err){
+    console.log(err);
+    return res.status(400).json({message: err.message})
+  }
+})
+
 app.listen(3000, (req, res) => {
   console.log("Server Is Running");
 });

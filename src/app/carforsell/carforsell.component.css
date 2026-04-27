@@ -1,0 +1,88 @@
+.sell-container {
+  padding: 25px;
+  background: #f5f7fa;
+}
+
+h2 {
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+/* Grid */
+.car-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+/* Card */
+.car-card {
+  background: white;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  transition: 0.3s;
+}
+
+.car-card:hover {
+  transform: translateY(-4px);
+}
+
+/* Image */
+.car-img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+}
+
+/* Info */
+.car-info {
+  padding: 15px;
+}
+
+.car-info h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.category {
+  display: inline-block;
+  margin: 6px 0;
+  font-size: 12px;
+  background: #e0f2fe;
+  color: #0369a1;
+  padding: 3px 8px;
+  border-radius: 20px;
+}
+
+/* Specs */
+.specs p {
+  margin: 2px 0;
+  font-size: 13px;
+  color: #555;
+}
+
+/* Price */
+.price {
+  margin-top: 10px;
+  font-weight: bold;
+  color: #16a34a;
+  font-size: 16px;
+}
+
+/* Button */
+.chat-btn {
+  width: 100%;
+  margin-top: 12px;
+  padding: 10px;
+  border: none;
+  background: #2563eb;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.chat-btn:hover {
+  background: #1d4ed8;
+}

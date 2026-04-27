@@ -15,6 +15,8 @@ import { ForgotpasswordComponent } from './forgotpassword/forgotpassword.compone
 import { MailComponent } from './mail/mail.component';
 import { BidsComponent } from './bids/bids.component';
 import { ChatsComponent } from './chats/chats.component';
+import { CarforsellComponent } from './carforsell/carforsell.component';
+import { ConversationsComponent } from './conversations/conversations.component';
 
 export const routes: Routes = [
     {path: "", component : LoginComponent},
@@ -35,6 +37,8 @@ export const routes: Routes = [
     {path: "allcars/:user_id", component:AllCarsComponent, canActivate: [routeGuardGuard]},
     {path: "bids", component:BidsComponent},
     {path: "chats/:id", component:ChatsComponent},
+    {path: "mySelling", component:CarforsellComponent},
+    {path: "conversations/:car_id", component:ConversationsComponent},
     {path: "**", component: PageNotFoundComponent}
 
 ];

@@ -4,7 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Router, RouterLink } from '@angular/router';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { FooterComponent } from '../footer/footer.component';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 
 @Component({
   selector: 'app-carforsell',
@@ -13,6 +13,8 @@ import { CommonModule } from '@angular/common';
   styleUrl: './carforsell.component.css'
 })
 export class CarforsellComponent {
+
+  constructor (private location:Location){}
   private dataservice = inject(DataService);
   private toast = inject(ToastrService);
   private router = inject(Router)
@@ -34,6 +36,9 @@ export class CarforsellComponent {
         console.log(err);
       }
     })
+  }
+  goBack(){
+    this.location.back();
   }
 
 }

@@ -25,9 +25,37 @@
   padding: 15px;
   overflow-y: auto;
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
   gap: 10px;
 }
+
+.btn-back {
+  /* Layout */
+  position: absolute;
+  top: 12px;
+  left: 10px; /* Added left to anchor it */
+  width: auto;
+  padding: 8px 15px;
+  margin: 5px;
+
+  /* Style */
+  background-color: antiquewhite;
+  color: #c27803; /* Darker text for contrast */
+  font-weight: bold;
+  border-radius: 8px; /* 10% is usually too small, 8px looks better */
+  border: 2px solid rgb(233, 158, 9); /* Fixed border syntax */
+  
+  cursor: pointer;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.btn-back:hover {
+  background-color: #fce4c4; /* Slightly darker antiquewhite */
+  transform: translateX(-5px); /* Fixed the transform syntax */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+
 
 /* Message */
 .message {

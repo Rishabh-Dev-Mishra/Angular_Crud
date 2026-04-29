@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from '../data.service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 
 @Component({
   selector: 'app-conversations',
@@ -14,6 +14,8 @@ export class ConversationsComponent {
   private route = inject(ActivatedRoute);
   private dataservice = inject(DataService);
 
+
+  constructor (private location: Location){}
   car_id = this.route.snapshot.paramMap.get('car_id');
   convers: any[] = [];
   ngOnInit() {
@@ -30,5 +32,8 @@ export class ConversationsComponent {
 
   openChat(conv: any) {
     this.router.navigate(['/chats', conv.id]);
+  }
+  goBack(){
+    this.location.back();
   }
 }

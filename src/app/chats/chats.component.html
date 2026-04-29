@@ -1,5 +1,5 @@
+<button class="btn-back" (click)="goBack()">Back</button>
 <div class="chat-container">
-
   <!-- Header -->
   <div class="chat-header">
     <h3>Chat</h3>
@@ -30,8 +30,9 @@
       type="text" 
       [(ngModel)]="messageText"
       placeholder="Type a message..."
+      (keydown.enter)="sendMessage()" 
     />
-    <button (click)="sendMessage()">Send</button>
+    <button (click)="sendMessage()" >Send</button>
   </div>
 
 </div>  

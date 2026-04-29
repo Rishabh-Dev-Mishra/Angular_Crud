@@ -2,7 +2,7 @@ import { Component, inject, NgZone } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DataService } from '../data.service';
 import { SocketServiceService } from '../socket-service.service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -13,7 +13,7 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './chats.component.css',
 })
 export class ChatsComponent {
-  constructor(private zone: NgZone){}
+  constructor(private zone: NgZone, private location: Location){}
   private dataservice = inject(DataService);
   private socketservice = inject(SocketServiceService);
 
@@ -32,17 +32,17 @@ export class ChatsComponent {
   }
     this.dataservice.getMessages(this.conversationId).subscribe({
       next: (res: any) => {
-        this.messages = res;
+        this.messages = res.reverse();
       },
       error: (err: any) => {},
     });
 
     this.socketservice.onMessage().subscribe((newMsg: any) => {
-      console.log("New Message");
+
       
       this.zone.run(()=>{
         if (newMsg.sender_id !== this.currentUserId) {
-        this.messages = [...this.messages, newMsg]; 
+        this.messages = [newMsg,...this.messages]; 
       }
       })
       
@@ -75,7 +75,7 @@ export class ChatsComponent {
       },
     });
 
-    this.messages.push(msgData);
+    this.messages.unshift(msgData);
 
     this.messageText = '';
   }
@@ -83,5 +83,8 @@ export class ChatsComponent {
     if (this.conversationId) {
       this.socketservice.leaveRoom(`conv_${this.conversationId}`);
     }
+  }
+  goBack(){
+    this.location.back()
   }
 }

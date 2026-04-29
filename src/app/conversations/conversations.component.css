@@ -4,6 +4,33 @@
   min-height: 80vh;
 }
 
+.btn-back {
+  /* Layout */
+  position: absolute;
+  top: 12px;
+  left: 25px; /* Added left to anchor it */
+  width: auto;
+  padding: 8px 15px;
+  margin: 5px;
+
+  /* Style */
+  background-color: rgb(6, 5, 5);
+  color: #eeebe6; /* Darker text for contrast */
+  font-weight: bold;
+  border-radius: 8px; /* 10% is usually too small, 8px looks better */
+  border: 2px solid rgb(235, 228, 214); /* Fixed border syntax */
+  
+  cursor: pointer;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.btn-back:hover {
+  background-color: #3a3a37; /* Slightly darker antiquewhite */
+  transform: translateX(-5px); /* Fixed the transform syntax */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+
 h2 {
   margin-bottom: 20px;
   font-weight: 600;

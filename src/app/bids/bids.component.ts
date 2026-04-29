@@ -44,6 +44,8 @@ export class BidsComponent {
       sellerId: car.user_id,
       buyerId: buyer_id
     }
+    console.log(payload);
+    
     this.dataservice.getRoomId(payload).subscribe({
       next:(res:any)=>{
         this.router.navigate(["/chats", res[0].id])

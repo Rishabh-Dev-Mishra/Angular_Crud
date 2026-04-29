@@ -167,7 +167,7 @@ export class DataService {
   }
 
   getRoomId(data:any){
-    console.log(data);
+    console.log("from dataservice",data);
     
     return this.http.get(`${this.url}/getRoomId/${data.carId}/${data.buyerId}/${data.sellerId}`);
   }

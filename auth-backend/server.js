@@ -1404,6 +1404,8 @@ app.put("/resetPassword/:token_number", async (req, res) => {
 
 app.get("/getRoomId/:carId/:buyerId/:sellerId", async(req, res)=>{
   try{
+    console.log(req.body);
+    
     const {carId, buyerId, sellerId} = req.params;
 
     if(!carId || !buyerId || !sellerId) return res.status(402).json({message: "information missing"})
@@ -1412,15 +1414,20 @@ app.get("/getRoomId/:carId/:buyerId/:sellerId", async(req, res)=>{
     const cleanBuyerId = parseInt(buyerId, 10);
     const cleanSellerId = parseInt(sellerId, 10);
 
-    const exsists = await pool.query("select id from conversation where car_id=$1 and seller_id=$2 and buyer_id=$3",[cleanCarId, cleanBuyerId, cleanSellerId]);
+    const exsists = await pool.query("select id from conversation where car_id=$1 and seller_id=$2 and buyer_id=$3",[cleanCarId,cleanSellerId, cleanBuyerId]);
 
     if(exsists.rows.length > 0){
+      console.log(exsists);
+      
       return res.status(200).json(exsists.rows);
     }
 
     await pool.query("insert into conversation (car_id, seller_id, buyer_id) values ($1, $2, $3)", [cleanCarId, cleanSellerId, cleanBuyerId])
 
-    const conversationId = await pool.query("select id from conversation where car_id=$1 and seller_id=$2 and buyer_id=$3",[cleanCarId, cleanBuyerId, cleanSellerId]);
+    const conversationId = await pool.query("select id from conversation where car_id=$1 and seller_id=$2 and buyer_id=$3",[cleanCarId,cleanSellerId, cleanBuyerId]);
+
+    console.log(conversationId);
+    
 
     return res.status(200).json(conversationId.rows);
 

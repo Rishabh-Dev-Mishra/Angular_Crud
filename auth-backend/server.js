@@ -1443,7 +1443,7 @@ app.get("/getMessages/:id", async(req, res)=>{
 
     const cleanId = parseInt(id, 10);
 
-    const allmessages = await pool.query("Select * from messages where conversation_id = $1", [cleanId]);
+    const allmessages = await pool.query("Select * from messages where conversation_id = $1 order by created_at desc", [cleanId]);
 
     return res.status(200).json(allmessages.rows)
 

@@ -2,7 +2,7 @@ import { Component, inject, NgZone } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DataService } from '../data.service';
 import { SocketServiceService } from '../socket-service.service';
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule, Location, formatDate } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -18,6 +18,9 @@ export class ChatsComponent {
   private socketservice = inject(SocketServiceService);
 
   private route = inject(ActivatedRoute);
+
+  currentTime = new Date();
+  currentDate = new Date();
 
   private conversationId = this.route.snapshot.paramMap.get('id');
   messages: any[] = [];
@@ -42,7 +45,7 @@ export class ChatsComponent {
       
       this.zone.run(()=>{
         if (newMsg.sender_id !== this.currentUserId) {
-        this.messages = [newMsg,...this.messages]; 
+        this.messages = [...this.messages, newMsg]; 
       }
       })
       
@@ -75,7 +78,7 @@ export class ChatsComponent {
       },
     });
 
-    this.messages.unshift(msgData);
+    this.messages.push(msgData);
 
     this.messageText = '';
   }
@@ -84,6 +87,30 @@ export class ChatsComponent {
       this.socketservice.leaveRoom(`conv_${this.conversationId}`);
     }
   }
+
+
+  isDifferentDate(curr: any, prev: any): boolean {
+  const currDate = new Date(curr.created_at).toDateString();
+  const prevDate = new Date(prev.created_at).toDateString();
+
+  return currDate !== prevDate;
+}
+
+getDayLabel(date: string): string {
+  const msgDate = new Date(date);
+  const today = new Date();
+  const yesterday = new Date();
+  yesterday.setDate(today.getDate() - 1);
+
+  if (msgDate.toDateString() === today.toDateString()) {
+    return 'Today';
+  } else if (msgDate.toDateString() === yesterday.toDateString()) {
+    return 'Yesterday';
+  } else {
+    return msgDate.toLocaleDateString();
+  }
+}
+
   goBack(){
     this.location.back()
   }

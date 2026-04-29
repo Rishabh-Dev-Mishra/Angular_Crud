@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, NgZone } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DataService } from '../data.service';
 import { SocketServiceService } from '../socket-service.service';
@@ -13,6 +13,7 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './chats.component.css',
 })
 export class ChatsComponent {
+  constructor(private zone: NgZone){}
   private dataservice = inject(DataService);
   private socketservice = inject(SocketServiceService);
 
@@ -25,11 +26,26 @@ export class ChatsComponent {
   currentUserId = this.dataservice.getUserId();
 
   ngOnInit() {
+    this.socketservice.connect();
+     if (this.conversationId) {
+    this.socketservice.joinRoom(`conv_${this.conversationId}`);
+  }
     this.dataservice.getMessages(this.conversationId).subscribe({
       next: (res: any) => {
         this.messages = res;
       },
       error: (err: any) => {},
+    });
+
+    this.socketservice.onMessage().subscribe((newMsg: any) => {
+      console.log("New Message");
+      
+      this.zone.run(()=>{
+        if (newMsg.sender_id !== this.currentUserId) {
+        this.messages = [...this.messages, newMsg]; 
+      }
+      })
+      
     });
   }
   sendMessage() {
@@ -59,8 +75,13 @@ export class ChatsComponent {
       },
     });
 
-    this.messages.push(msgData); // optional optimistic UI
+    this.messages.push(msgData);
 
     this.messageText = '';
+  }
+  ngOnDestroy() {
+    if (this.conversationId) {
+      this.socketservice.leaveRoom(`conv_${this.conversationId}`);
+    }
   }
 }

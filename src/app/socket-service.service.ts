@@ -10,22 +10,23 @@ export class SocketServiceService {
   private readonly URL = 'http://localhost:3000';
 
   connect(): void {
-    if (this.socket && this.socket.connected) return;
+      console.log('Attempting to connect to socket at:', this.URL);
+    if (this.socket) return;
 
-    this.socket = io(this.URL, {
-      transports: ['websocket'],
-    });
+    this.socket = io(this.URL);
 
     this.socket.on('connect', () => {
       console.log('✅ Socket connected:', this.socket?.id);
     });
 
     this.socket.on('disconnect', () => {
-      console.log('❌ Socket disconnected');
+      console.log('Socket disconnected');
     });
   }
 
   joinRoom(roomId: string): void {
+
+    console.log("Joining room:", `conv_${roomId}`);
     this.socket?.emit('joinRoom', roomId);
   }
 
@@ -45,7 +46,6 @@ export class SocketServiceService {
 
       this.socket?.on('receiveMessage', handler);
 
-      // 🔥 cleanup when unsubscribed
       return () => {
         this.socket?.off('receiveMessage', handler);
       };

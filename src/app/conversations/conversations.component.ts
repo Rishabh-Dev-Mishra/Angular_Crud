@@ -8,29 +8,27 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './conversations.component.html',
-  styleUrl: './conversations.component.css'
+  styleUrl: './conversations.component.css',
 })
 export class ConversationsComponent {
-
   private route = inject(ActivatedRoute);
-  private dataservice = inject(DataService)
+  private dataservice = inject(DataService);
 
   car_id = this.route.snapshot.paramMap.get('car_id');
   convers: any[] = [];
-  ngOnInit(){
+  ngOnInit() {
     this.dataservice.getConver(this.car_id).subscribe({
-      next:(res:any)=>{
+      next: (res: any) => {
         this.convers = res;
       },
-      error:(err:any)=>{
+      error: (err: any) => {
         console.log(err.message);
-        
-      }
-    })
+      },
+    });
   }
   private router = inject(Router);
 
-openChat(conv: any){
-  this.router.navigate(['/chats', conv.id]);
-}
+  openChat(conv: any) {
+    this.router.navigate(['/chats', conv.id]);
+  }
 }

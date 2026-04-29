@@ -10,7 +10,6 @@ const cloudinary = require("./config/cloudinary");
 
 const http = require("http");
 const {Server} = require("socket.io");
-const { log, error } = require("console");
 const { console } = require("inspector");
 const server = http.createServer(app)
 
@@ -1404,7 +1403,7 @@ app.put("/resetPassword/:token_number", async (req, res) => {
 
 app.get("/getRoomId/:carId/:buyerId/:sellerId", async(req, res)=>{
   try{
-    console.log(req.body);
+    console.log(req.params);
     
     const {carId, buyerId, sellerId} = req.params;
 
@@ -1422,9 +1421,8 @@ app.get("/getRoomId/:carId/:buyerId/:sellerId", async(req, res)=>{
       return res.status(200).json(exsists.rows);
     }
 
-    await pool.query("insert into conversation (car_id, seller_id, buyer_id) values ($1, $2, $3)", [cleanCarId, cleanSellerId, cleanBuyerId])
 
-    const conversationId = await pool.query("select id from conversation where car_id=$1 and seller_id=$2 and buyer_id=$3",[cleanCarId,cleanSellerId, cleanBuyerId]);
+    const conversationId = await pool.query("insert into conversation (car_id, seller_id, buyer_id) values ($1, $2, $3)", [cleanCarId, cleanSellerId, cleanBuyerId])
 
     console.log(conversationId);
     
@@ -1498,7 +1496,7 @@ app.get("/converCar/:car_id", async(req ,res)=>{
     
     if(!car_id) return res.status(400).json({message: "Info missing"});
     const cleanCarId = parseInt(car_id, 10);
-    const convers = await pool.query("select * from conversation where car_id=$1",[cleanCarId])
+    const convers = await pool.query("select c.*, b.firstname from conversation c join users b on c.buyer_id = b.id where car_id=$1",[cleanCarId])
     return res.status(200).json(convers.rows)
   }
   catch(err){
@@ -1507,6 +1505,6 @@ app.get("/converCar/:car_id", async(req ,res)=>{
   }
 })
 
-app.listen(3000, (req, res) => {
-  console.log("Server Is Running");
+server.listen(3000, () => {
+  console.log("Server + Socket.IO running on port 3000");
 });

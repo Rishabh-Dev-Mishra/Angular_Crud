@@ -1,0 +1,44 @@
+<app-navbar></app-navbar>
+
+<div class="sell-container">
+  <button (click)="goBack()">Back</button>
+  <h2>Your Cars for Sale</h2>
+
+  <div class="car-grid">
+
+    <div class="car-card" *ngFor="let car of carList">
+
+      <!-- Image -->
+      <img 
+        *ngIf="car.car_logo?.length"
+        [src]="car.car_logo[0]" 
+        class="car-img"
+      />
+
+      <!-- Info -->
+      <div class="car-info">
+        <h3>{{ car.model_name }}</h3>
+        <span class="category">{{ car.category }}</span>
+
+        <div class="specs">
+          <p>{{ car.engine_type }}</p>
+          <p>HP: {{ car.horsepower }}</p>
+          <p>Speed: {{ car.top_speed }} km/h</p>
+        </div>
+
+        <div class="price">
+          ₹{{ car.price }}
+        </div>
+
+        <!-- Chat Button -->
+        <button class="chat-btn" [routerLink]="['/conversations', car.car_id]">
+          Get Conversations
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<app-footer></app-footer>

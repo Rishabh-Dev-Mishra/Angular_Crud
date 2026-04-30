@@ -1,0 +1,38 @@
+<button class="btn-back" (click)="goBack()">Back</button>
+<div class="chat-container">
+  <!-- Header -->
+  <div class="chat-header">
+    <h3>Chat</h3>
+  </div>
+
+  <!-- Messages -->
+  <div class="chat-messages">
+
+    <div 
+      *ngFor="let msg of messages" 
+      class="message"
+      [ngClass]="{'my-message': msg.sender_id == currentUserId, 'other-message': msg.sender_id != currentUserId}"
+    >
+      <div class="message-text">
+        {{ msg.message }}
+      </div>
+
+      <div class="message-time">
+        {{ msg.created_at | date:'shortTime' }}
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Input -->
+  <div class="chat-input">
+    <input 
+      type="text" 
+      [(ngModel)]="messageText"
+      placeholder="Type a message..."
+      (keydown.enter)="sendMessage()" 
+    />
+    <button (click)="sendMessage()" >Send</button>
+  </div>
+
+</div>  

@@ -1,0 +1,36 @@
+<div class="conversation-container">
+
+  <h2>Conversations</h2>
+  <button class="btn-back" (click)="goBack()">Back</button>
+
+  <div *ngIf="convers.length === 0" class="empty">
+    No conversations yet
+  </div>
+
+  <div class="conversation-list">
+
+    <div 
+      class="conversation-card"
+      *ngFor="let conv of convers"
+    >
+
+      <!-- Avatar -->
+      <div class="avatar">
+        {{ conv.firstname[0]}}
+      </div>
+
+      <!-- Info -->
+      <div class="info">
+        <h4>Buyer Name: {{ conv.firstname }}</h4>
+      </div>
+
+      <!-- Action -->
+      <button class="chat-btn" (click)="openChat(conv)">
+        Chat
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

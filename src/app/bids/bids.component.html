@@ -1,0 +1,68 @@
+<app-navbar></app-navbar>
+
+<div class="bids-container">
+  <h2>Cars Available for Bidding</h2>
+
+  <div class="table-wrapper">
+    <table class="car-table">
+      <thead>
+        <tr>
+          <th>Car</th>
+          <th>Brand</th>
+          <th>Category</th>
+          <th>Engine</th>
+          <th>Performance</th>
+          <th>Owner</th>
+          <th>Base Price</th>
+          <th>Chat with owner</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let car of carList">
+          <!-- Car -->
+          <td class="car-info" data-label="Image">
+            <img
+              *ngIf="car.car_logo?.length"
+              [src]="car.car_logo[0]"
+              alt="car"
+              class="car-img"
+            />
+            <div>
+              <h4>{{ car.model_name }}</h4>
+            </div>
+          </td>
+
+          <td data-label="Brand">
+            {{ car.brand_name }}
+          </td>
+
+          <td data-label="Category">
+            <span class="category-badge">{{ car.category }}</span>
+          </td>
+
+          <td data-label="Engine">
+            {{ car.engine_type }}
+          </td>
+
+          <td data-label="Performance">
+            <p>HP: {{ car.horsepower }}</p>
+            <p>Torque: {{ car.torque }}</p>
+            <p>Speed: {{ car.top_speed }} km/h</p>
+          </td>
+
+          <td class="owner" data-label="Owner">
+            {{ car.firstname }}
+          </td>
+
+          <td class="price" data-label="Base Price">$  {{ car.base_price }}</td>
+          <td>
+            <button style="font-size: large;" (click)="goToChats(car)"><i class="fas fa-comments" style="color: rgb(255, 212, 59);"></i></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<app-footer></app-footer>

@@ -8,6 +8,25 @@ const nodemailer = require("nodemailer");
 const multer = require("multer");
 const cloudinary = require("./config/cloudinary");
 
+const http = require("http");
+const {Server} = require("socket.io");
+const { console } = require("inspector");
+const server = http.createServer(app)
+
+
+const io = new Server(server,{
+  cors:{
+    origin: '*'
+  }
+});
+
+require("./socket/socket.js")(io);
+
+
+
+
+
+
 require("dotenv").config({ path: "../.env" });
 app.use(
   cors({
@@ -663,6 +682,7 @@ app.get("/cars/:id/:user_id/:limit/:offset", verifyToken, async (req, res) => {
     const query = `SELECT 
         b.brand_name,
         c.car_id AS car_id, 
+        c.sold,
         c.brand_id,
         c.model_name, 
         c.category, 
@@ -704,6 +724,7 @@ app.get("/cars/:id/:user_id", verifyToken, async (req, res) => {
         c.car_id AS car_id, 
         c.model_name, 
         c.category, 
+        c.sold,
         c.car_logo,
         cd.price, 
         cd.description, 
@@ -726,6 +747,87 @@ app.get("/cars/:id/:user_id", verifyToken, async (req, res) => {
     return res.status(500).json({ error: err.message });
   }
 });
+
+
+
+
+app.post("/sellCar", async(req, res)=>{
+  try{
+    const {car_id, base_price} = req.body;
+    
+    if(!car_id || !base_price) return res.status(400).json({message: "Information missing"})
+    const cleanCarId = parseInt(car_id, 10);
+    const cleanPrice = parseInt(base_price, 10);
+    const carExsist = await pool.query("select car_id from cars where car_id=$1", [cleanCarId]);
+    if(carExsist.rows == 0) return res.status(401).json({message: "Car not Found"});
+    await pool.query("insert into bids (car_id, base_price) values ($1, $2)", [cleanCarId, cleanPrice]);
+    await pool.query("Update cars set sold=$1  where car_id = $2",['true', cleanCarId])
+    return res.status(200).json({message: "Success"})
+  }
+  catch(err){
+    console.log(err);
+    return res.status(500).json({message: "Internal server error"})
+  }
+})
+
+app.put("/cancelSell", async(req, res)=>{
+  try{
+    const {car_id} = req.body;
+    
+    if(!car_id) return res.status(400).json({message: "Information missing"})
+    const cleanCarId = parseInt(car_id, 10);
+    const carExsist = await pool.query("select car_id from cars where car_id=$1", [cleanCarId]);
+    if(carExsist.rows.length == 0) return res.status(401).json({message: "Car not Found"});
+    await pool.query("delete from bids where car_id = $1", [cleanCarId]);
+    await pool.query("Update cars set sold=$1  where car_id = $2",['false', cleanCarId])
+    return res.status(200).json({message: "Success"})
+  }
+  catch(err){
+    console.log(err);
+    return res.status(500).json({message: "Internal server error"})
+  }
+})
+
+app.get("/allBids", async (req, res) => {
+  try {
+    const bid = await pool.query(`
+      SELECT 
+        b.base_price,
+        c.car_id,
+        c.model_name,
+        c.category,
+        c.car_logo,
+        c.user_id,
+        cd.engine_type,
+        cd.horsepower,
+        cd.torque,
+        cd.top_speed,
+
+        u.firstname,
+        br.brand_name
+
+      FROM bids b
+      JOIN cars c ON b.car_id = c.car_id
+      JOIN car_details cd ON c.car_id = cd.car_id
+      JOIN users u ON c.user_id = u.id
+      JOIN brands br ON c.brand_id = br.brand_id
+    `);
+
+    return res.status(200).json(bid.rows);
+
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+
+
+
+
+
+
+
 
 app.get("/brands/search/:name/:user_id", verifyToken, async (req, res) => {
   try {
@@ -778,6 +880,7 @@ app.get(
       const SQLQuery = `
       SELECT 
         c.car_id AS car_id, 
+        c.sold,
         c.model_name, 
         c.category, 
         c.car_logo,
@@ -817,6 +920,7 @@ app.get("/allcars/:user_id", verifyToken, async (req, res) => {
         b.brand_name,
         c.car_id AS car_id, 
         c.brand_id,
+        c.sold,
         c.model_name, 
         c.category, 
         c.car_logo,
@@ -1296,6 +1400,111 @@ app.put("/resetPassword/:token_number", async (req, res) => {
   }
 });
 
-app.listen(3000, (req, res) => {
-  console.log("Server Is Running");
+
+app.get("/getRoomId/:carId/:buyerId/:sellerId", async(req, res)=>{
+  try{
+    console.log(req.params);
+    
+    const {carId, buyerId, sellerId} = req.params;
+
+    if(!carId || !buyerId || !sellerId) return res.status(402).json({message: "information missing"})
+
+    const cleanCarId = parseInt(carId, 10);
+    const cleanBuyerId = parseInt(buyerId, 10);
+    const cleanSellerId = parseInt(sellerId, 10);
+
+    const exsists = await pool.query("select id from conversation where car_id=$1 and seller_id=$2 and buyer_id=$3",[cleanCarId,cleanSellerId, cleanBuyerId]);
+
+    if(exsists.rows.length > 0){
+      console.log(exsists);
+      
+      return res.status(200).json(exsists.rows);
+    }
+
+
+    const conversationId = await pool.query("insert into conversation (car_id, seller_id, buyer_id) values ($1, $2, $3)", [cleanCarId, cleanSellerId, cleanBuyerId])
+
+    console.log(conversationId);
+    
+
+    return res.status(200).json(conversationId.rows);
+
+  }
+  catch(err){
+    console.log(err);
+    return res.status(500).json({message:err})
+  }
+})
+
+app.get("/getMessages/:id", async(req, res)=>{
+  try{
+    const id = req.params.id;
+    if(!id)  return res.status(400).json({message: "No id"});
+
+    const cleanId = parseInt(id, 10);
+
+    const allmessages = await pool.query("Select * from messages where conversation_id = $1", [cleanId]);
+
+    return res.status(200).json(allmessages.rows)
+
+  }
+  catch(err){
+    console.log(err);
+    return res.status(400).json({message: err})
+  }
+})
+
+app.post("/insertMessage", async(req, res)=>{
+  try{
+    console.log(req.body);
+    
+    const  {message, conversation_id, sender_id} = req.body;
+    console.log(conversation_id);
+    
+    if(!message || !conversation_id || !sender_id) return res.status(400).json({message: "Info missing"});
+    const cleanConversationId = parseInt(conversation_id, 10);
+    const cleanSenderId = parseInt(sender_id, 10);
+    await pool.query("insert into messages (conversation_id, sender_id, message) values($1,$2,$3)",[cleanConversationId, cleanSenderId, message])
+    return res.status(200).json({message: "Insertion success"})
+  }
+  catch(err){
+    console.log(err);
+    return res.status(400).json({message: err.message})
+  }
+})
+
+app.get("/getMySelling/:user_id", async(req ,res)=>{
+  try{
+    
+    const  {user_id} = req.params;
+    
+    if(!user_id) return res.status(400).json({message: "Info missing"});
+    const cleanUserId = parseInt(user_id, 10);
+    const cars = await pool.query("select c.*, cd.* from cars c join car_details cd on c.car_id = cd.car_id where c.sold=$1 and c.user_id=$2",['true', cleanUserId])
+    return res.status(200).json(cars.rows)
+  }
+  catch(err){
+    console.log(err);
+    return res.status(400).json({message: err.message})
+  }
+})
+
+app.get("/converCar/:car_id", async(req ,res)=>{
+  try{
+    
+    const  {car_id} = req.params;
+    
+    if(!car_id) return res.status(400).json({message: "Info missing"});
+    const cleanCarId = parseInt(car_id, 10);
+    const convers = await pool.query("select c.*, b.firstname from conversation c join users b on c.buyer_id = b.id where car_id=$1",[cleanCarId])
+    return res.status(200).json(convers.rows)
+  }
+  catch(err){
+    console.log(err);
+    return res.status(400).json({message: err.message})
+  }
+})
+
+server.listen(3000, () => {
+  console.log("Server + Socket.IO running on port 3000");
 });

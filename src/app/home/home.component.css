@@ -401,6 +401,40 @@ tr:hover td img {
   animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
+.tabs-nav {
+  display: flex;
+  align-items: flex-end; 
+  gap: 15px;
+  width: 100%;
+}
+
+.tabs-nav button.bids {
+  border: 1px solid hsl(46, 65%, 52%);
+  border-radius: 4px;
+  color: #070707;
+  font-weight: 500;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #ffd43b; /* Your custom purple tint */
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* CHANGE THIS LINE: Use margin-left to push to the right */
+.tabs-nav button.bids:first-of-type {
+  margin-left: auto; 
+}
+
+.tabs-nav button.bids:hover {
+  background: rgba(243, 187, 4, 0.57);
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+  transform: translateY(-1px);
+}
+
+
+
 .delete-icon {
   font-size: 3.5rem;
   margin-bottom: 20px;

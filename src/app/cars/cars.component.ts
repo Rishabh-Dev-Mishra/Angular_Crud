@@ -70,7 +70,6 @@ export class CarsComponent implements OnInit {
         next: (data: any) => {
           this.filteredCar = data;
           this.calculatePages();
-          this.filteredCar = [];
         },
         error: (err) => {
           console.error('Error fetching cars:', err);

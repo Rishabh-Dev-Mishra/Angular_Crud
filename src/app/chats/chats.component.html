@@ -12,7 +12,40 @@
       <span style="color: greenyellow; margin-left: 10%" *ngIf="sellerId != currentUserId"
         >{{ sellerFirstName }} {{ sellerLastName }}...</span
       >
+      <button class="btn-chat" style="margin-left: 25%;" *ngIf="sellerId == currentUserId" (click)="accept()">Accept</button>
+      <button class="btn-chat" style="margin-left: 2%;" *ngIf="sellerId == currentUserId" (click)="reject()">Reject</button>
     </h3>
+
+    <!-- ACCEPT MODAL -->
+<div class="modal-overlay" *ngIf="acceptModal">
+  <div class="modal-box accept">
+    <h3>Confirm Deal</h3>
+    <p>Are you sure you want to <strong>accept</strong> this deal?</p>
+
+    <div class="modal-actions">
+      <button class="btn cancel" (click)="accept()">Cancel</button>
+      <button class="btn confirm" (click)="confirmAccept()">Accept</button>
+    </div>
+  </div>
+</div>
+
+<!-- REJECT MODAL -->
+<div class="modal-overlay" *ngIf="rejectModal">
+  <div class="modal-box reject">
+    <h3>Reject Deal</h3>
+    <p>
+      Are you sure you want to <strong>reject</strong> this deal?<br />
+      <span class="warning">This action cannot be undone.</span>
+    </p>
+
+    <div class="modal-actions">
+      <button class="btn cancel" (click)="reject()">Cancel</button>
+      <button class="btn danger" (click)="confirmReject()">Reject</button>
+    </div>
+  </div>
+</div>
+
+
   </div>
 
   <!-- Messages -->

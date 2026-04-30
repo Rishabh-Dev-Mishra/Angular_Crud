@@ -11,6 +11,7 @@ const cloudinary = require("./config/cloudinary");
 const http = require("http");
 const {Server} = require("socket.io");
 const { console } = require("inspector");
+const { log } = require("console");
 const server = http.createServer(app)
 
 
@@ -811,7 +812,8 @@ app.get("/allBids", async (req, res) => {
       JOIN car_details cd ON c.car_id = cd.car_id
       JOIN users u ON c.user_id = u.id
       JOIN brands br ON c.brand_id = br.brand_id
-    `);
+      where b.status=$1
+    `,['pending']);
 
     return res.status(200).json(bid.rows);
 
@@ -1524,12 +1526,126 @@ app.get("/converCar/:car_id", async(req ,res)=>{
     
     if(!car_id) return res.status(400).json({message: "Info missing"});
     const cleanCarId = parseInt(car_id, 10);
-    const convers = await pool.query("select c.*, b.firstname from conversation c join users b on c.buyer_id = b.id where car_id=$1",[cleanCarId])
+    const convers = await pool.query("select c.*, b.firstname from conversation c join users b on c.buyer_id = b.id where car_id=$1 and c.deleted_at is null",[cleanCarId])
     return res.status(200).json(convers.rows)
   }
   catch(err){
     console.log(err);
     return res.status(400).json({message: err.message})
+  }
+})
+
+app.put("/acceptOffer", async (req, res) => {
+  try {
+    const { converId } = req.body;
+
+    if (!converId) {
+      return res.status(400).json({ message: "Conversation ID is required" });
+    }
+
+    const cleanConverId = parseInt(converId, 10);
+
+    // 1. Get conversation
+    const convoRes = await pool.query(
+      "SELECT car_id, buyer_id, seller_id FROM conversation WHERE id = $1 AND deleted_at IS NULL",
+      [cleanConverId]
+    );
+
+    if (convoRes.rows.length === 0) {
+      return res.status(404).json({ message: "Conversation not found or already closed" });
+    }
+
+    const { car_id, buyer_id, seller_id } = convoRes.rows[0];
+
+    // 2. Get car + details
+    const carRes = await pool.query(
+      `SELECT c.*, cd.*
+       FROM cars c
+       JOIN car_details cd ON c.car_id = cd.car_id
+       WHERE c.car_id = $1`,
+      [car_id]
+    );
+
+    if (carRes.rows.length === 0) {
+      return res.status(404).json({ message: "Car not found" });
+    }
+
+    const carInfo = carRes.rows[0];
+
+    // 3. Create new car for buyer
+    const newCarRes = await pool.query(
+      `INSERT INTO cars (brand_id, user_id, model_name, category, car_logo)
+       VALUES ($1, $2, $3, $4, $5)
+       RETURNING car_id`,
+      [
+        carInfo.brand_id,
+        buyer_id,
+        carInfo.model_name,
+        carInfo.category,
+        carInfo.car_logo,
+      ]
+    );
+
+    const newCarId = newCarRes.rows[0].car_id;
+
+    // 4. Insert car details
+    await pool.query(
+      `INSERT INTO car_details 
+       (car_id, engine_type, horsepower, torque, top_speed, price, description)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+      [
+        newCarId,
+        carInfo.engine_type,
+        carInfo.horsepower,
+        carInfo.torque,
+        carInfo.top_speed,
+        carInfo.price,
+        carInfo.description,
+      ]
+    );
+
+    // 5. Mark original car sold
+    await pool.query(
+      "UPDATE cars SET deleted_at = NOW(), sold = $1 WHERE car_id = $2 AND user_id = $3",
+      ["sold", car_id, seller_id]
+    );
+
+    // 6. Close conversation
+    await pool.query(
+      "UPDATE conversation SET deleted_at = NOW() WHERE id = $1",
+      [cleanConverId]
+    );
+
+    // 7. Update bids
+    await pool.query(
+      "UPDATE bids SET status = $1 WHERE car_id = $2",
+      ["sold", car_id]
+    );
+
+    return res.status(200).json({ message: "Accepted" });
+
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: err.message });
+  }
+});
+
+app.put("/rejectOffer", async(req, res)=>{
+  try{
+    const { converId } = req.body;
+
+    if (!converId) {
+      return res.status(400).json({ message: "Conversation ID is required" });
+    }
+
+    const cleanConverId = parseInt(converId, 10);
+    await pool.query("update conversation set deleted_at=NOW() where id=$1", [cleanConverId])
+
+    return res.status(200).json({message: "Rejected the offer"})
+  }
+  catch(err){
+    console.log(err);
+    return res.status(400).json({message: "Errpr in rejecting offer"})
   }
 })
 

@@ -4,6 +4,7 @@ import { DataService } from '../data.service';
 import { SocketServiceService } from '../socket-service.service';
 import { CommonModule, Location, formatDate } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-chats',
@@ -18,6 +19,7 @@ export class ChatsComponent {
   private socketservice = inject(SocketServiceService);
 
   private route = inject(ActivatedRoute);
+  private toast = inject(ToastrService);
 
   currentTime = new Date();
   currentDate = new Date();
@@ -138,4 +140,50 @@ getDayLabel(date: string): string {
   goBack(){
     this.location.back()
   }
+
+
+  acceptModal: boolean = false;
+
+  accept(){
+    this.acceptModal = !this.acceptModal
+  }
+
+  rejectModal: boolean = false;
+
+  reject(){
+    this.rejectModal = !this.rejectModal
+  }
+
+  confirmAccept(){
+    const data = {
+      converId: this.conversationId
+    }
+    this.dataservice.acceptOffer(data).subscribe({
+      next:(res:any)=>{
+        this.toast.success("Accepted the offer")
+        this.accept();
+        this.location.back();
+      },
+      error:(err:any)=>{
+
+      }
+    })
+  }
+
+  confirmReject(){
+    const data = {
+      converId: this.conversationId
+    }
+    this.dataservice.rejectOffer(data).subscribe({
+      next:(res:any)=>{
+        this.toast.info("Rejected the offer")
+        this.reject();
+        this.location.back();
+      },
+      error:(err:any)=>{
+        
+      }
+    })
+  }
+
 }

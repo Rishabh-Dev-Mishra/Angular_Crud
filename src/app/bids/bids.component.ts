@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { NavbarComponent } from "../navbar/navbar.component";
 import { FooterComponent } from "../footer/footer.component";
 import { DataService } from '../data.service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -13,10 +13,15 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrl: './bids.component.css'
 })
 export class BidsComponent {
+
+  constructor(private location: Location){}
   private dataservice = inject(DataService);
   private toast = inject(ToastrService);
   private router = inject(Router)
 
+  goBack(){
+    this.location.back();
+  }
 
   ngOnInit(){
     this.getbids();

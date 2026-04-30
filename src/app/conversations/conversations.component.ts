@@ -18,6 +18,8 @@ export class ConversationsComponent {
   constructor (private location: Location){}
   car_id = this.route.snapshot.paramMap.get('car_id');
   convers: any[] = [];
+
+  currentUserId: any = this.dataservice.getUserId();
   ngOnInit() {
     this.dataservice.getConver(this.car_id).subscribe({
       next: (res: any) => {

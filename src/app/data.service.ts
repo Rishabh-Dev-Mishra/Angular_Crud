@@ -198,6 +198,14 @@ export class DataService {
     return this.http.get(`${this.url}/converCar/${car_id}`);
   }
 
+  acceptOffer(converId: any){
+    return this.http.put(`${this.url}/acceptOffer`, converId);
+  }
+
+  rejectOffer(converId: any){
+    return this.http.put(`${this.url}/rejectOffer`, converId);
+  }
+
 
   getImagesOfOne(id: any) {
     const user_id = this.getUserId();

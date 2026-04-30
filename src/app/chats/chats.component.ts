@@ -27,8 +27,32 @@ export class ChatsComponent {
 
   messageText: string = '';
   currentUserId = this.dataservice.getUserId();
+  buyerFirstName: string = '';
+  buyerLastName: string = '';
+
+  sellerFirstName: string = '';
+  sellerLastName: string = '';
+
+  sellerId: string = '';
+
+  
 
   ngOnInit() {
+    this.dataservice.getBuyerName(this.conversationId).subscribe({
+      next:(res:any)=>{
+        this.buyerFirstName = res[0].firstname;
+        this.buyerLastName = res[0].lastname;
+      }
+    })
+    
+    this.dataservice.getSellerName(this.conversationId).subscribe({
+      next:(res:any)=>{
+        this.sellerFirstName = res[0].firstname;
+        this.sellerLastName = res[0].lastname;
+        this.sellerId = res[0].seller_id;
+      }
+    })
+
     this.socketservice.connect();
      if (this.conversationId) {
     this.socketservice.joinRoom(`conv_${this.conversationId}`);

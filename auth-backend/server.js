@@ -1454,6 +1454,34 @@ app.get("/getMessages/:id", async(req, res)=>{
   }
 })
 
+app.get("/buyer/:id", async(req, res)=>{
+  try{
+    const id = req.params.id;
+    if(!id) return res.status(400).json({message: "No id"});
+    const cleanId = parseInt(id, 10);
+    const user = await pool.query("select u.firstname, u.lastname from conversation c join users u on c.buyer_id = u.id where c.id = $1", [cleanId])
+    return res.status(200).json(user.rows);
+  }
+catch(err){
+  console.log(err);
+  return res.status(400).json({message: err})
+}
+})
+
+app.get("/seller/:id", async(req, res)=>{
+  try{
+    const id = req.params.id;
+    if(!id) return res.status(400).json({message: "No id"});
+    const cleanId = parseInt(id, 10);
+    const user = await pool.query("select u.firstname, u.lastname, c.seller_id from conversation c join users u on c.seller_id = u.id where c.id = $1", [cleanId])
+    return res.status(200).json(user.rows);
+  }
+catch(err){
+  console.log(err);
+  return res.status(400).json({message: err})
+}
+})
+
 app.post("/insertMessage", async(req, res)=>{
   try{
     console.log(req.body);

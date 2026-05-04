@@ -2,37 +2,94 @@
 <div class="chat-container">
   <!-- Header -->
   <div class="chat-header">
-    <h3>Chat</h3>
+    <h3>
+      Chatting with
+      <span
+        style="color: greenyellow; margin-left: 10%"
+        *ngIf="sellerId == currentUserId"
+        >{{ buyerFirstName }} {{ buyerLastName }}...</span
+      >
+      <span style="color: greenyellow; margin-left: 10%" *ngIf="sellerId != currentUserId"
+        >{{ sellerFirstName }} {{ sellerLastName }}...</span
+      >
+      <button class="btn-chat" style="margin-left: 25%;" *ngIf="sellerId == currentUserId" (click)="accept()">Accept</button>
+      <button class="btn-chat" style="margin-left: 2%;" *ngIf="sellerId == currentUserId" (click)="reject()">Reject</button>
+    </h3>
+
+    <!-- ACCEPT MODAL -->
+<div class="modal-overlay" *ngIf="acceptModal">
+  <div class="modal-box accept">
+    <h3>Confirm Deal</h3>
+    <p>Are you sure you want to <strong>accept</strong> this deal?</p>
+
+    <div class="modal-actions">
+      <button class="btn cancel" (click)="accept()">Cancel</button>
+      <button class="btn confirm" (click)="confirmAccept()">Accept</button>
+    </div>
+  </div>
+</div>
+
+<!-- REJECT MODAL -->
+<div class="modal-overlay" *ngIf="rejectModal">
+  <div class="modal-box reject">
+    <h3>Reject Deal</h3>
+    <p>
+      Are you sure you want to <strong>reject</strong> this deal?<br />
+      <span class="warning">This action cannot be undone.</span>
+    </p>
+
+    <div class="modal-actions">
+      <button class="btn cancel" (click)="reject()">Cancel</button>
+      <button class="btn danger" (click)="confirmReject()">Reject</button>
+    </div>
+  </div>
+</div>
+
+
   </div>
 
   <!-- Messages -->
   <div class="chat-messages">
+    <ng-container *ngFor="let msg of messages; let i = index">
+      <!-- Date Separator -->
 
-    <div 
-      *ngFor="let msg of messages" 
-      class="message"
-      [ngClass]="{'my-message': msg.sender_id == currentUserId, 'other-message': msg.sender_id != currentUserId}"
-    >
-      <div class="message-text">
-        {{ msg.message }}
+      <div
+        *ngIf="i === 0 || isDifferentDate(msg, messages[i - 1])"
+        class="date-separator"
+      >
+        <span>{{ getDayLabel(msg.created_at) }}</span>
       </div>
+      <!-- Message -->
+      <div
+        class="message"
+        [ngClass]="{
+          'my-message': msg.sender_id == currentUserId,
+          'other-message': msg.sender_id != currentUserId,
+        }"
+      >
+        <div class="message-text">
+          {{ msg.message }}
+        </div>
 
-      <div class="message-time">
-        {{ msg.created_at | date:'shortTime' }}
+        <div class="message-time" *ngIf="msg.created_at; else no">
+          {{ msg.created_at | date: "shortTime" }}
+        </div>
+
+        <ng-template #no>
+          <div class="message-time">
+            {{ currentTime | date: "shortTime" }}
+          </div>
+        </ng-template>
       </div>
-    </div>
-
+    </ng-container>
   </div>
-
-  <!-- Input -->
   <div class="chat-input">
-    <input 
-      type="text" 
+    <input
+      type="text"
       [(ngModel)]="messageText"
       placeholder="Type a message..."
-      (keydown.enter)="sendMessage()" 
+      (keydown.enter)="sendMessage()"
     />
-    <button (click)="sendMessage()" >Send</button>
+    <button (click)="sendMessage()">Send</button>
   </div>
-
-</div>  
+</div>

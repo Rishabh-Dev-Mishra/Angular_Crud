@@ -1,112 +1,149 @@
-.conversation-container {
+/* =========================
+   CONTAINER (auto-applies even if not added)
+========================= */
+:host {
+  display: block;
   padding: 25px;
   background: #f5f7fa;
-  min-height: 80vh;
+  min-height: 100vh;
+  position: relative;
 }
 
+/* =========================
+   BACK BUTTON
+========================= */
 .btn-back {
-  /* Layout */
-  position: absolute;
-  top: 12px;
-  left: 25px; /* Added left to anchor it */
-  width: auto;
+  position: relative; /* FIXED from absolute */
+  margin-bottom: 20px;
   padding: 8px 15px;
-  margin: 5px;
 
-  /* Style */
-  background-color: rgb(6, 5, 5);
-  color: #eeebe6; /* Darker text for contrast */
+  background-color: #060505;
+  color: #eeebe6;
   font-weight: bold;
-  border-radius: 8px; /* 10% is usually too small, 8px looks better */
-  border: 2px solid rgb(235, 228, 214); /* Fixed border syntax */
-  
+  border-radius: 8px;
+  border: 2px solid #ebe4d6;
+
   cursor: pointer;
-  transition: transform 0.3s ease, background-color 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .btn-back:hover {
-  background-color: #3a3a37; /* Slightly darker antiquewhite */
-  transform: translateX(-5px); /* Fixed the transform syntax */
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  background-color: #3a3a37;
+  transform: translateX(-5px);
 }
 
-
-h2 {
-  margin-bottom: 20px;
-  font-weight: 600;
+/* =========================
+   CONVERSATION LIST
+========================= */
+ng-container {
+  display: block;
 }
 
-/* Empty state */
-.empty {
-  text-align: center;
-  color: #777;
-  margin-top: 40px;
-}
-
-/* List */
-.conversation-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-/* Card */
 .conversation-card {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
+
   padding: 14px;
+  margin-bottom: 12px;
+
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-  transition: 0.2s;
+  transition: all 0.2s ease;
 }
 
 .conversation-card:hover {
   background: #f1f5f9;
+  transform: translateY(-2px);
 }
 
-/* Avatar */
+/* =========================
+   AVATAR
+========================= */
 .avatar {
   width: 45px;
   height: 45px;
+  min-width: 45px;
+
   border-radius: 50%;
   background: #2563eb;
-  color: white;
+  color: #fff;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   font-weight: bold;
+  font-size: 16px;
 }
 
-/* Info */
+/* =========================
+   INFO
+========================= */
 .info {
   flex: 1;
-  margin-left: 12px;
 }
 
 .info h4 {
   margin: 0;
   font-size: 15px;
+  font-weight: 600;
+  color: #1e293b;
 }
 
-.info p {
-  margin: 2px 0;
-  font-size: 12px;
-  color: #666;
-}
-
-/* Button */
+/* =========================
+   CHAT BUTTON
+========================= */
 .chat-btn {
   padding: 8px 14px;
   border: none;
   background: #16a34a;
-  color: white;
+  color: #fff;
   border-radius: 8px;
   cursor: pointer;
-  transition: 0.2s;
+  transition: all 0.2s ease;
+  font-size: 13px;
 }
 
 .chat-btn:hover {
   background: #15803d;
+  transform: scale(1.05);
+}
+
+/* =========================
+   EMPTY STATE
+========================= */
+.no-conversations {
+  text-align: center;
+  margin-top: 50px;
+  color: #94a3b8;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* =========================
+   MOBILE RESPONSIVE
+========================= */
+@media (max-width: 768px) {
+
+  .conversation-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .avatar {
+    width: 40px;
+    height: 40px;
+  }
+
+  .info h4 {
+    font-size: 14px;
+  }
+
+  .chat-btn {
+    width: 100%;
+    text-align: center;
+  }
 }

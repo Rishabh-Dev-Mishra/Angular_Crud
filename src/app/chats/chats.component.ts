@@ -2,8 +2,9 @@ import { Component, inject, NgZone } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DataService } from '../data.service';
 import { SocketServiceService } from '../socket-service.service';
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule, Location, formatDate } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-chats',
@@ -18,14 +19,42 @@ export class ChatsComponent {
   private socketservice = inject(SocketServiceService);
 
   private route = inject(ActivatedRoute);
+  private toast = inject(ToastrService);
+
+  currentTime = new Date();
+  currentDate = new Date();
 
   private conversationId = this.route.snapshot.paramMap.get('id');
   messages: any[] = [];
 
   messageText: string = '';
   currentUserId = this.dataservice.getUserId();
+  buyerFirstName: string = '';
+  buyerLastName: string = '';
+
+  sellerFirstName: string = '';
+  sellerLastName: string = '';
+
+  sellerId: string = '';
+
+  
 
   ngOnInit() {
+    this.dataservice.getBuyerName(this.conversationId).subscribe({
+      next:(res:any)=>{
+        this.buyerFirstName = res[0].firstname;
+        this.buyerLastName = res[0].lastname;
+      }
+    })
+    
+    this.dataservice.getSellerName(this.conversationId).subscribe({
+      next:(res:any)=>{
+        this.sellerFirstName = res[0].firstname;
+        this.sellerLastName = res[0].lastname;
+        this.sellerId = res[0].seller_id;
+      }
+    })
+
     this.socketservice.connect();
      if (this.conversationId) {
     this.socketservice.joinRoom(`conv_${this.conversationId}`);
@@ -42,7 +71,7 @@ export class ChatsComponent {
       
       this.zone.run(()=>{
         if (newMsg.sender_id !== this.currentUserId) {
-        this.messages = [newMsg,...this.messages]; 
+        this.messages = [...this.messages, newMsg]; 
       }
       })
       
@@ -75,7 +104,7 @@ export class ChatsComponent {
       },
     });
 
-    this.messages.unshift(msgData);
+    this.messages.push(msgData);
 
     this.messageText = '';
   }
@@ -84,7 +113,77 @@ export class ChatsComponent {
       this.socketservice.leaveRoom(`conv_${this.conversationId}`);
     }
   }
+
+
+  isDifferentDate(curr: any, prev: any): boolean {
+  const currDate = new Date(curr.created_at).toDateString();
+  const prevDate = new Date(prev.created_at).toDateString();
+
+  return currDate !== prevDate;
+}
+
+getDayLabel(date: string): string {
+  const msgDate = new Date(date);
+  const today = new Date();
+  const yesterday = new Date();
+  yesterday.setDate(today.getDate() - 1);
+
+  if (msgDate.toDateString() === today.toDateString()) {
+    return 'Today';
+  } else if (msgDate.toDateString() === yesterday.toDateString()) {
+    return 'Yesterday';
+  } else {
+    return msgDate.toLocaleDateString();
+  }
+}
+
   goBack(){
     this.location.back()
   }
+
+
+  acceptModal: boolean = false;
+
+  accept(){
+    this.acceptModal = !this.acceptModal
+  }
+
+  rejectModal: boolean = false;
+
+  reject(){
+    this.rejectModal = !this.rejectModal
+  }
+
+  confirmAccept(){
+    const data = {
+      converId: this.conversationId
+    }
+    this.dataservice.acceptOffer(data).subscribe({
+      next:(res:any)=>{
+        this.toast.success("Accepted the offer")
+        this.accept();
+        this.location.back();
+      },
+      error:(err:any)=>{
+
+      }
+    })
+  }
+
+  confirmReject(){
+    const data = {
+      converId: this.conversationId
+    }
+    this.dataservice.rejectOffer(data).subscribe({
+      next:(res:any)=>{
+        this.toast.info("Rejected the offer")
+        this.reject();
+        this.location.back();
+      },
+      error:(err:any)=>{
+        
+      }
+    })
+  }
+
 }

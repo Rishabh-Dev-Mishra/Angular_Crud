@@ -182,12 +182,28 @@ export class DataService {
     return this.http.post(`${this.url}/insertMessage`, data);
   }
 
+  getBuyerName(id:any){
+    return this.http.get(`${this.url}/buyer/${id}`);
+  }
+
+  getSellerName(id:any){
+    return this.http.get(`${this.url}/seller/${id}`);
+  }
+
   getSellingCars(user_id:any){
     return this.http.get(`${this.url}/getMySelling/${user_id}`);
   }
 
   getConver(car_id:any){
     return this.http.get(`${this.url}/converCar/${car_id}`);
+  }
+
+  acceptOffer(converId: any){
+    return this.http.put(`${this.url}/acceptOffer`, converId);
+  }
+
+  rejectOffer(converId: any){
+    return this.http.put(`${this.url}/rejectOffer`, converId);
   }
 
 

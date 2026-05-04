@@ -11,13 +11,14 @@ const cloudinary = require("./config/cloudinary");
 const http = require("http");
 const {Server} = require("socket.io");
 const { console } = require("inspector");
-const { log } = require("console");
 const server = http.createServer(app)
 
 
 const io = new Server(server,{
   cors:{
-    origin: '*'
+    origin: process.env.FRONTENDURL,
+    methods: ["GET", "POST"],
+    credentials: true
   }
 });
 
@@ -167,9 +168,9 @@ app.get("/db-test", async (req, res) => {
   try {
     console.log("DB URL:", process.env.DATABASE_URL);
     const result = await pool.query("SELECT NOW()");
-    res.json(result.rows[0]);
+    return res.json(result.rows[0]);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 });
 
@@ -214,10 +215,10 @@ app.post("/register", async (req, res) => {
       [firstname, lastname, email, hashedpassword],
     );
 
-    res.json({ message: "Registered successfully" });
+    return res.status(200).json({ message: "Registered successfully" });
   } catch (err) {
     console.error("Register error:", err.message);
-    res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ message: "Internal server error" });
   }
 });
 
@@ -271,7 +272,7 @@ app.post("/login", async (req, res) => {
     );
     const userName = ExisitingUser.rows[0].firstname;
     const user_id = ExisitingUser.rows[0].id;
-    res.json({
+    return res.status(200).json({
       message: "Login Success",
       token: token,
       img_pth: image_path,
@@ -282,14 +283,14 @@ app.post("/login", async (req, res) => {
     });
   } catch (err) {
     console.error(err.message);
-    return res.status(500).json({ error: "Internal Server Error" });
+    return res.status(500).json({ message: err});
   }
 });
 
 app.get("/getImage/:user_id", async(req, res)=>{
   try{
     const user_id = req.params.user_id;
-    if(!user_id)res.status(400).json({ error: "image not found of user" });
+    if(!user_id) return res.status(400).json({ error: "image not found of user" });
     const cleanId = parseInt(user_id, 10);
     const userImage = await pool.query("select image_path from users where id=$1",[cleanId]);
     return res.status(200).json(userImage.rows);
@@ -430,7 +431,7 @@ app.post(
           cleanUserId,
         ]);
 
-        return res.json({
+        return res.status(200).json({
           message: "Profile updated successfully",
           img_pth: newImagePath,
           name: firstname,
@@ -439,7 +440,7 @@ app.post(
       }
     } catch (err) {
       console.error("Register error:", err.message);
-      res.status(500).json({ message: "Internal server error" });
+      return res.status(500).json({ message: "Internal server error" });
     }
   },
 );
@@ -477,7 +478,7 @@ app.get("/mailCheck/:mail/:user_id", verifyToken, async (req, res) => {
     return res.status(200).json(exsist.rows);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: err });
+    return res.status(500).json({ message: err });
   }
 });
 
@@ -522,7 +523,7 @@ app.post(
         [brandName, imagePath],
       );
 
-      res.status(200).json({
+      return res.status(200).json({
         message: "Success",
         data: brandName,
       });
@@ -627,10 +628,10 @@ app.post(
         ],
       );
 
-      res.status(200).json({ message: "Car details added successfully" });
+      return res.status(200).json({ message: "Car details added successfully" });
     } catch (err) {
       console.error("Database Error:", err.message);
-      res
+      return res
         .status(500)
         .json({ message: "Internal Server Error", error: err.message });
     }
@@ -915,8 +916,13 @@ app.get(
 app.get("/allcars/:user_id", verifyToken, async (req, res) => {
   try {
     const user_id = getUserId(req);
+    console.log(user_id);
+    
     if (!user_id)
       return res.status(405).json({ message: "No user_id to get all cars" });
+
+    const cleanUserId = parseInt(user_id, 10);
+    console.log(cleanUserId);
     const cars = await pool.query(
       `SELECT 
         b.brand_name,
@@ -935,11 +941,12 @@ app.get("/allcars/:user_id", verifyToken, async (req, res) => {
       FROM cars c join brands b on b.brand_id = c.brand_id
       JOIN car_details cd ON c.car_id = cd.car_id where c.user_id = $1 and c.deleted_at is null
     `,
-      [user_id],
+      [cleanUserId],
     );
     return res.status(200).json(cars.rows);
   } catch (err) {
     console.log(err);
+    return res.status(500).json({message: err.message})
   }
 });
 
@@ -1438,7 +1445,7 @@ app.get("/getRoomId/:carId/:buyerId/:sellerId", async(req, res)=>{
   }
 })
 
-app.get("/getMessages/:id", async(req, res)=>{
+app.get("/getMessages/:id", verifyToken, async(req, res)=>{
   try{
     const id = req.params.id;
     if(!id)  return res.status(400).json({message: "No id"});
@@ -1456,7 +1463,7 @@ app.get("/getMessages/:id", async(req, res)=>{
   }
 })
 
-app.get("/buyer/:id", async(req, res)=>{
+app.get("/buyer/:id", verifyToken, async(req, res)=>{
   try{
     const id = req.params.id;
     if(!id) return res.status(400).json({message: "No id"});
@@ -1470,7 +1477,7 @@ catch(err){
 }
 })
 
-app.get("/seller/:id", async(req, res)=>{
+app.get("/seller/:id", verifyToken, async(req, res)=>{
   try{
     const id = req.params.id;
     if(!id) return res.status(400).json({message: "No id"});
@@ -1484,7 +1491,7 @@ catch(err){
 }
 })
 
-app.post("/insertMessage", async(req, res)=>{
+app.post("/insertMessage", verifyToken, async(req, res)=>{
   try{
     console.log(req.body);
     
@@ -1503,7 +1510,7 @@ app.post("/insertMessage", async(req, res)=>{
   }
 })
 
-app.get("/getMySelling/:user_id", async(req ,res)=>{
+app.get("/getMySelling/:user_id", verifyToken, async(req ,res)=>{
   try{
     
     const  {user_id} = req.params;
@@ -1519,7 +1526,7 @@ app.get("/getMySelling/:user_id", async(req ,res)=>{
   }
 })
 
-app.get("/converCar/:car_id", async(req ,res)=>{
+app.get("/converCar/:car_id", verifyToken, async(req ,res)=>{
   try{
     
     const  {car_id} = req.params;
@@ -1535,7 +1542,7 @@ app.get("/converCar/:car_id", async(req ,res)=>{
   }
 })
 
-app.put("/acceptOffer", async (req, res) => {
+app.put("/acceptOffer", verifyToken, async (req, res) => {
   try {
     const { converId } = req.body;
 
@@ -1545,7 +1552,7 @@ app.put("/acceptOffer", async (req, res) => {
 
     const cleanConverId = parseInt(converId, 10);
 
-    // 1. Get conversation
+    
     const convoRes = await pool.query(
       "SELECT car_id, buyer_id, seller_id FROM conversation WHERE id = $1 AND deleted_at IS NULL",
       [cleanConverId]
@@ -1557,7 +1564,6 @@ app.put("/acceptOffer", async (req, res) => {
 
     const { car_id, buyer_id, seller_id } = convoRes.rows[0];
 
-    // 2. Get car + details
     const carRes = await pool.query(
       `SELECT c.*, cd.*
        FROM cars c
@@ -1630,7 +1636,7 @@ app.put("/acceptOffer", async (req, res) => {
   }
 });
 
-app.put("/rejectOffer", async(req, res)=>{
+app.put("/rejectOffer", verifyToken, async(req, res)=>{
   try{
     const { converId } = req.body;
 

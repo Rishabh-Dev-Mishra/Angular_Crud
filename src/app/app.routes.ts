@@ -35,10 +35,10 @@ export const routes: Routes = [
     {path: "mailtoreset", component: MailComponent},
     {path: "forgotPassword/:token/:id", component: ForgotpasswordComponent},
     {path: "allcars/:user_id", component:AllCarsComponent, canActivate: [routeGuardGuard]},
-    {path: "bids", component:BidsComponent},
-    {path: "chats/:id", component:ChatsComponent},
-    {path: "mySelling", component:CarforsellComponent},
-    {path: "conversations/:car_id", component:ConversationsComponent},
+    {path: "bids", component:BidsComponent, canActivate: [routeGuardGuard]},
+    {path: "chats/:id", component:ChatsComponent, canActivate: [routeGuardGuard]},
+    {path: "mySelling", component:CarforsellComponent, canActivate: [routeGuardGuard]},
+    {path: "conversations/:car_id", component:ConversationsComponent, canActivate: [routeGuardGuard]},
     {path: "**", component: PageNotFoundComponent}
 
 ];

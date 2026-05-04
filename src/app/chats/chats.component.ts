@@ -122,15 +122,26 @@ export class ChatsComponent {
   return currDate !== prevDate;
 }
 
-getDayLabel(date: string): string {
+getDayLabel(date: string | null | undefined): string {
+  if (!date) return 'New';   // prevent invalid
+
   const msgDate = new Date(date);
+
+  // check invalid date
+  if (isNaN(msgDate.getTime())) return 'New';
+
   const today = new Date();
   const yesterday = new Date();
   yesterday.setDate(today.getDate() - 1);
 
-  if (msgDate.toDateString() === today.toDateString()) {
+  // normalize time (important)
+  const msg = new Date(msgDate.setHours(0, 0, 0, 0));
+  const tdy = new Date(today.setHours(0, 0, 0, 0));
+  const yest = new Date(yesterday.setHours(0, 0, 0, 0));
+
+  if (msg.getTime() === tdy.getTime()) {
     return 'Today';
-  } else if (msgDate.toDateString() === yesterday.toDateString()) {
+  } else if (msg.getTime() === yest.getTime()) {
     return 'Yesterday';
   } else {
     return msgDate.toLocaleDateString();

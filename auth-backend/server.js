@@ -166,9 +166,9 @@ app.get("/db-test", async (req, res) => {
   try {
     console.log("DB URL:", process.env.DATABASE_URL);
     const result = await pool.query("SELECT NOW()");
-    res.json(result.rows[0]);
+    return res.json(result.rows[0]);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 });
 
@@ -213,10 +213,10 @@ app.post("/register", async (req, res) => {
       [firstname, lastname, email, hashedpassword],
     );
 
-    res.json({ message: "Registered successfully" });
+    return res.status(200).json({ message: "Registered successfully" });
   } catch (err) {
     console.error("Register error:", err.message);
-    res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ message: "Internal server error" });
   }
 });
 
@@ -270,7 +270,7 @@ app.post("/login", async (req, res) => {
     );
     const userName = ExisitingUser.rows[0].firstname;
     const user_id = ExisitingUser.rows[0].id;
-    res.json({
+    return res.status(200).json({
       message: "Login Success",
       token: token,
       img_pth: image_path,
@@ -429,7 +429,7 @@ app.post(
           cleanUserId,
         ]);
 
-        return res.json({
+        return res.status(200).json({
           message: "Profile updated successfully",
           img_pth: newImagePath,
           name: firstname,
@@ -438,7 +438,7 @@ app.post(
       }
     } catch (err) {
       console.error("Register error:", err.message);
-      res.status(500).json({ message: "Internal server error" });
+      return res.status(500).json({ message: "Internal server error" });
     }
   },
 );
@@ -476,7 +476,7 @@ app.get("/mailCheck/:mail/:user_id", verifyToken, async (req, res) => {
     return res.status(200).json(exsist.rows);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: err });
+    return res.status(500).json({ message: err });
   }
 });
 
@@ -521,7 +521,7 @@ app.post(
         [brandName, imagePath],
       );
 
-      res.status(200).json({
+      return res.status(200).json({
         message: "Success",
         data: brandName,
       });
@@ -626,7 +626,7 @@ app.post(
         ],
       );
 
-      res.status(200).json({ message: "Car details added successfully" });
+      return res.status(200).json({ message: "Car details added successfully" });
     } catch (err) {
       console.error("Database Error:", err.message);
       res

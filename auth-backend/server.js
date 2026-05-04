@@ -16,7 +16,9 @@ const server = http.createServer(app)
 
 const io = new Server(server,{
   cors:{
-    origin: '*'
+    origin: process.env.FRONTENDURL,
+    methods: ["GET", "POST"],
+    credentials: true
   }
 });
 
@@ -939,6 +941,7 @@ app.get("/allcars/:user_id", verifyToken, async (req, res) => {
     return res.status(200).json(cars.rows);
   } catch (err) {
     console.log(err);
+    return res.status(500).json({message: "Error in getting allcars"})
   }
 });
 

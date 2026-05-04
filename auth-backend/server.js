@@ -11,6 +11,7 @@ const cloudinary = require("./config/cloudinary");
 const http = require("http");
 const {Server} = require("socket.io");
 const { console } = require("inspector");
+const { log } = require("console");
 const server = http.createServer(app)
 
 
@@ -916,11 +917,13 @@ app.get(
 app.get("/allcars/:user_id", verifyToken, async (req, res) => {
   try {
     const user_id = getUserId(req);
+    console.log(user_id);
+    
     if (!user_id)
       return res.status(405).json({ message: "No user_id to get all cars" });
 
     const cleanUserId = parseInt(user_id, 10);
-
+    console.log(cleanUserId);
     const cars = await pool.query(
       `SELECT 
         b.brand_name,

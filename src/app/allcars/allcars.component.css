@@ -93,12 +93,12 @@
 }
 
 .table-container {
-  padding: 0 40px 60px;
+  padding: 0px 60px 60px 40px;
   overflow-x: hidden; 
 }
 
 .vault-table {
-  width: 100%;
+  width: calc(100% - 20px);
   border-collapse: separate;
   border-spacing: 0 12px; 
   font-family: 'Plus Jakarta Sans', sans-serif;
@@ -138,8 +138,13 @@
   border-radius: 12px 0 0 12px;
 }
 .vault-table td:last-child {
+  padding-right: 100px;
   border-right: 1px solid #f1f5f9;
   border-radius: 0 12px 12px 0;
+}
+
+.vault-table td:last-child button {
+  margin-right: 15px; 
 }
 
 .vehicle-info {
@@ -189,12 +194,13 @@
 
 .truncate {
   max-width: 250px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;        /* allow wrapping */
+  word-break: break-word;     /* break long words */
+  overflow-wrap: break-word;  /* better wrapping support */
   font-size: 0.85rem;
   color: #64748b;
 }
+
 .empty-state {
   text-align: center;
   padding: 80px;
@@ -354,7 +360,7 @@
   }
 
   .table-container {
-    padding: 0 20px 40px;
+    padding: 0 60px 60px 40px;
   }
 
   .truncate {
@@ -449,9 +455,7 @@
   text-align: left;
   }
 
-  .truncate {
-    max-width: 140px;
-  }
+  
   
   .vault-table td {
     overflow: hidden; 

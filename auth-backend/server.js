@@ -288,7 +288,7 @@ app.post("/login", async (req, res) => {
 app.get("/getImage/:user_id", async(req, res)=>{
   try{
     const user_id = req.params.user_id;
-    if(!user_id)res.status(400).json({ error: "image not found of user" });
+    if(!user_id) return res.status(400).json({ error: "image not found of user" });
     const cleanId = parseInt(user_id, 10);
     const userImage = await pool.query("select image_path from users where id=$1",[cleanId]);
     return res.status(200).json(userImage.rows);
@@ -629,7 +629,7 @@ app.post(
       return res.status(200).json({ message: "Car details added successfully" });
     } catch (err) {
       console.error("Database Error:", err.message);
-      res
+      return res
         .status(500)
         .json({ message: "Internal Server Error", error: err.message });
     }

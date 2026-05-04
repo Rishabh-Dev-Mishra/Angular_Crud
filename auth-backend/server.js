@@ -918,6 +918,9 @@ app.get("/allcars/:user_id", verifyToken, async (req, res) => {
     const user_id = getUserId(req);
     if (!user_id)
       return res.status(405).json({ message: "No user_id to get all cars" });
+
+    const cleanUserId = parseInt(user_id, 10);
+
     const cars = await pool.query(
       `SELECT 
         b.brand_name,
@@ -936,12 +939,12 @@ app.get("/allcars/:user_id", verifyToken, async (req, res) => {
       FROM cars c join brands b on b.brand_id = c.brand_id
       JOIN car_details cd ON c.car_id = cd.car_id where c.user_id = $1 and c.deleted_at is null
     `,
-      [user_id],
+      [cleanUserId],
     );
     return res.status(200).json(cars.rows);
   } catch (err) {
     console.log(err);
-    return res.status(500).json({message: "Error in getting allcars"})
+    return res.status(500).json({message: err.message})
   }
 });
 

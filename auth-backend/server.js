@@ -284,7 +284,7 @@ app.post("/login", async (req, res) => {
     });
   } catch (err) {
     console.error(err.message);
-    return res.status(500).json({ error: "Internal Server Error" });
+    return res.status(500).json({ message: err});
   }
 });
 
@@ -917,11 +917,13 @@ app.get(
 app.get("/allcars/:user_id", verifyToken, async (req, res) => {
   try {
     const user_id = getUserId(req);
+    console.log(user_id);
+    
     if (!user_id)
       return res.status(405).json({ message: "No user_id to get all cars" });
 
     const cleanUserId = parseInt(user_id, 10);
-
+    console.log(cleanUserId);
     const cars = await pool.query(
       `SELECT 
         b.brand_name,
@@ -1444,7 +1446,7 @@ app.get("/getRoomId/:carId/:buyerId/:sellerId", async(req, res)=>{
   }
 })
 
-app.get("/getMessages/:id", async(req, res)=>{
+app.get("/getMessages/:id", verifyToken, async(req, res)=>{
   try{
     const id = req.params.id;
     if(!id)  return res.status(400).json({message: "No id"});
@@ -1462,7 +1464,7 @@ app.get("/getMessages/:id", async(req, res)=>{
   }
 })
 
-app.get("/buyer/:id", async(req, res)=>{
+app.get("/buyer/:id", verifyToken, async(req, res)=>{
   try{
     const id = req.params.id;
     if(!id) return res.status(400).json({message: "No id"});
@@ -1476,7 +1478,7 @@ catch(err){
 }
 })
 
-app.get("/seller/:id", async(req, res)=>{
+app.get("/seller/:id", verifyToken, async(req, res)=>{
   try{
     const id = req.params.id;
     if(!id) return res.status(400).json({message: "No id"});
@@ -1490,7 +1492,7 @@ catch(err){
 }
 })
 
-app.post("/insertMessage", async(req, res)=>{
+app.post("/insertMessage", verifyToken, async(req, res)=>{
   try{
     console.log(req.body);
     
@@ -1509,7 +1511,7 @@ app.post("/insertMessage", async(req, res)=>{
   }
 })
 
-app.get("/getMySelling/:user_id", async(req ,res)=>{
+app.get("/getMySelling/:user_id", verifyToken, async(req ,res)=>{
   try{
     
     const  {user_id} = req.params;
@@ -1525,7 +1527,7 @@ app.get("/getMySelling/:user_id", async(req ,res)=>{
   }
 })
 
-app.get("/converCar/:car_id", async(req ,res)=>{
+app.get("/converCar/:car_id", verifyToken, async(req ,res)=>{
   try{
     
     const  {car_id} = req.params;
@@ -1541,7 +1543,7 @@ app.get("/converCar/:car_id", async(req ,res)=>{
   }
 })
 
-app.put("/acceptOffer", async (req, res) => {
+app.put("/acceptOffer", verifyToken, async (req, res) => {
   try {
     const { converId } = req.body;
 
@@ -1551,7 +1553,7 @@ app.put("/acceptOffer", async (req, res) => {
 
     const cleanConverId = parseInt(converId, 10);
 
-    // 1. Get conversation
+    
     const convoRes = await pool.query(
       "SELECT car_id, buyer_id, seller_id FROM conversation WHERE id = $1 AND deleted_at IS NULL",
       [cleanConverId]
@@ -1563,7 +1565,6 @@ app.put("/acceptOffer", async (req, res) => {
 
     const { car_id, buyer_id, seller_id } = convoRes.rows[0];
 
-    // 2. Get car + details
     const carRes = await pool.query(
       `SELECT c.*, cd.*
        FROM cars c
@@ -1636,7 +1637,7 @@ app.put("/acceptOffer", async (req, res) => {
   }
 });
 
-app.put("/rejectOffer", async(req, res)=>{
+app.put("/rejectOffer", verifyToken, async(req, res)=>{
   try{
     const { converId } = req.body;
 

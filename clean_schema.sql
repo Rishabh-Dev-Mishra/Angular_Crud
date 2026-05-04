@@ -2,10 +2,11 @@
 -- PostgreSQL database dump
 --
 
-\restrict 3yooDviBEMKQphDxRGABWUJJDVz41GRZaBSuMm12um3mfuYldt4BKex0QHgO3TL
 
 -- Dumped from database version 14.22 (Ubuntu 14.22-0ubuntu0.22.04.1)
 -- Dumped by pg_dump version 14.22 (Ubuntu 14.22-0ubuntu0.22.04.1)
+
+SET search_path TO public;
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -23,7 +24,7 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- Name: bids; Type: TABLE; Schema: public; Owner: postgres
+-- Name: bids; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.bids (
@@ -34,10 +35,8 @@ CREATE TABLE public.bids (
 );
 
 
-ALTER TABLE public.bids OWNER TO postgres;
-
 --
--- Name: bid_bid_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: bid_bid_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE public.bid_bid_id_seq
@@ -49,17 +48,15 @@ CREATE SEQUENCE public.bid_bid_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.bid_bid_id_seq OWNER TO postgres;
-
 --
--- Name: bid_bid_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+-- Name: bid_bid_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
 ALTER SEQUENCE public.bid_bid_id_seq OWNED BY public.bids.bid_id;
 
 
 --
--- Name: brands; Type: TABLE; Schema: public; Owner: postgres
+-- Name: brands; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.brands (
@@ -69,10 +66,8 @@ CREATE TABLE public.brands (
 );
 
 
-ALTER TABLE public.brands OWNER TO postgres;
-
 --
--- Name: brands_brand_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: brands_brand_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE public.brands_brand_id_seq
@@ -84,17 +79,15 @@ CREATE SEQUENCE public.brands_brand_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.brands_brand_id_seq OWNER TO postgres;
-
 --
--- Name: brands_brand_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+-- Name: brands_brand_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
 ALTER SEQUENCE public.brands_brand_id_seq OWNED BY public.brands.brand_id;
 
 
 --
--- Name: car_details; Type: TABLE; Schema: public; Owner: postgres
+-- Name: car_details; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.car_details (
@@ -110,10 +103,8 @@ CREATE TABLE public.car_details (
 );
 
 
-ALTER TABLE public.car_details OWNER TO postgres;
-
 --
--- Name: car_details_detail_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: car_details_detail_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE public.car_details_detail_id_seq
@@ -125,17 +116,15 @@ CREATE SEQUENCE public.car_details_detail_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.car_details_detail_id_seq OWNER TO postgres;
-
 --
--- Name: car_details_detail_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+-- Name: car_details_detail_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
 ALTER SEQUENCE public.car_details_detail_id_seq OWNED BY public.car_details.detail_id;
 
 
 --
--- Name: cars; Type: TABLE; Schema: public; Owner: postgres
+-- Name: cars; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.cars (
@@ -153,10 +142,8 @@ CREATE TABLE public.cars (
 );
 
 
-ALTER TABLE public.cars OWNER TO postgres;
-
 --
--- Name: cars_car_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: cars_car_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE public.cars_car_id_seq
@@ -168,17 +155,15 @@ CREATE SEQUENCE public.cars_car_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.cars_car_id_seq OWNER TO postgres;
-
 --
--- Name: cars_car_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+-- Name: cars_car_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
 ALTER SEQUENCE public.cars_car_id_seq OWNED BY public.cars.car_id;
 
 
 --
--- Name: conversation; Type: TABLE; Schema: public; Owner: postgres
+-- Name: conversation; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.conversation (
@@ -192,10 +177,8 @@ CREATE TABLE public.conversation (
 );
 
 
-ALTER TABLE public.conversation OWNER TO postgres;
-
 --
--- Name: conversation_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: conversation_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE public.conversation_id_seq
@@ -207,17 +190,15 @@ CREATE SEQUENCE public.conversation_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.conversation_id_seq OWNER TO postgres;
-
 --
--- Name: conversation_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+-- Name: conversation_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
 ALTER SEQUENCE public.conversation_id_seq OWNED BY public.conversation.id;
 
 
 --
--- Name: messages; Type: TABLE; Schema: public; Owner: postgres
+-- Name: messages; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.messages (
@@ -229,10 +210,8 @@ CREATE TABLE public.messages (
 );
 
 
-ALTER TABLE public.messages OWNER TO postgres;
-
 --
--- Name: messages_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: messages_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE public.messages_id_seq
@@ -244,17 +223,15 @@ CREATE SEQUENCE public.messages_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.messages_id_seq OWNER TO postgres;
-
 --
--- Name: messages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+-- Name: messages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
 ALTER SEQUENCE public.messages_id_seq OWNED BY public.messages.id;
 
 
 --
--- Name: requests; Type: TABLE; Schema: public; Owner: postgres
+-- Name: requests; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.requests (
@@ -267,10 +244,8 @@ CREATE TABLE public.requests (
 );
 
 
-ALTER TABLE public.requests OWNER TO postgres;
-
 --
--- Name: requests_request_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: requests_request_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE public.requests_request_id_seq
@@ -282,17 +257,15 @@ CREATE SEQUENCE public.requests_request_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.requests_request_id_seq OWNER TO postgres;
-
 --
--- Name: requests_request_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+-- Name: requests_request_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
 ALTER SEQUENCE public.requests_request_id_seq OWNED BY public.requests.request_id;
 
 
 --
--- Name: users; Type: TABLE; Schema: public; Owner: postgres
+-- Name: users; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.users (
@@ -312,10 +285,8 @@ CREATE TABLE public.users (
 );
 
 
-ALTER TABLE public.users OWNER TO postgres;
-
 --
--- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE public.users_id_seq
@@ -327,73 +298,71 @@ CREATE SEQUENCE public.users_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.users_id_seq OWNER TO postgres;
-
 --
--- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
 ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
--- Name: bids bid_id; Type: DEFAULT; Schema: public; Owner: postgres
+-- Name: bids bid_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.bids ALTER COLUMN bid_id SET DEFAULT nextval('public.bid_bid_id_seq'::regclass);
 
 
 --
--- Name: brands brand_id; Type: DEFAULT; Schema: public; Owner: postgres
+-- Name: brands brand_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.brands ALTER COLUMN brand_id SET DEFAULT nextval('public.brands_brand_id_seq'::regclass);
 
 
 --
--- Name: car_details detail_id; Type: DEFAULT; Schema: public; Owner: postgres
+-- Name: car_details detail_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.car_details ALTER COLUMN detail_id SET DEFAULT nextval('public.car_details_detail_id_seq'::regclass);
 
 
 --
--- Name: cars car_id; Type: DEFAULT; Schema: public; Owner: postgres
+-- Name: cars car_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.cars ALTER COLUMN car_id SET DEFAULT nextval('public.cars_car_id_seq'::regclass);
 
 
 --
--- Name: conversation id; Type: DEFAULT; Schema: public; Owner: postgres
+-- Name: conversation id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.conversation ALTER COLUMN id SET DEFAULT nextval('public.conversation_id_seq'::regclass);
 
 
 --
--- Name: messages id; Type: DEFAULT; Schema: public; Owner: postgres
+-- Name: messages id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.messages ALTER COLUMN id SET DEFAULT nextval('public.messages_id_seq'::regclass);
 
 
 --
--- Name: requests request_id; Type: DEFAULT; Schema: public; Owner: postgres
+-- Name: requests request_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.requests ALTER COLUMN request_id SET DEFAULT nextval('public.requests_request_id_seq'::regclass);
 
 
 --
--- Name: users id; Type: DEFAULT; Schema: public; Owner: postgres
+-- Name: users id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
 
 
 --
--- Name: bids bid_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: bids bid_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.bids
@@ -401,7 +370,7 @@ ALTER TABLE ONLY public.bids
 
 
 --
--- Name: brands brands_brand_name_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: brands brands_brand_name_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.brands
@@ -409,7 +378,7 @@ ALTER TABLE ONLY public.brands
 
 
 --
--- Name: brands brands_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: brands brands_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.brands
@@ -417,7 +386,7 @@ ALTER TABLE ONLY public.brands
 
 
 --
--- Name: car_details car_details_car_id_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: car_details car_details_car_id_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.car_details
@@ -425,7 +394,7 @@ ALTER TABLE ONLY public.car_details
 
 
 --
--- Name: car_details car_details_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: car_details car_details_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.car_details
@@ -433,7 +402,7 @@ ALTER TABLE ONLY public.car_details
 
 
 --
--- Name: cars cars_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: cars cars_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.cars
@@ -441,7 +410,7 @@ ALTER TABLE ONLY public.cars
 
 
 --
--- Name: conversation conversation_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: conversation conversation_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.conversation
@@ -449,7 +418,7 @@ ALTER TABLE ONLY public.conversation
 
 
 --
--- Name: messages messages_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: messages messages_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.messages
@@ -457,7 +426,7 @@ ALTER TABLE ONLY public.messages
 
 
 --
--- Name: requests requests_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: requests requests_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.requests
@@ -465,7 +434,7 @@ ALTER TABLE ONLY public.requests
 
 
 --
--- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.users
@@ -473,7 +442,7 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: bids bid_car_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: bids bid_car_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.bids
@@ -481,7 +450,7 @@ ALTER TABLE ONLY public.bids
 
 
 --
--- Name: cars fk_brand; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: cars fk_brand; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.cars
@@ -489,7 +458,7 @@ ALTER TABLE ONLY public.cars
 
 
 --
--- Name: car_details fk_car_details; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: car_details fk_car_details; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.car_details
@@ -497,7 +466,7 @@ ALTER TABLE ONLY public.car_details
 
 
 --
--- Name: messages messages_conversation_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: messages messages_conversation_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.messages
@@ -508,5 +477,4 @@ ALTER TABLE ONLY public.messages
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 3yooDviBEMKQphDxRGABWUJJDVz41GRZaBSuMm12um3mfuYldt4BKex0QHgO3TL
 

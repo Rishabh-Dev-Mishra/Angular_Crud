@@ -1,10 +1,7 @@
 module.exports = (io) => {
   io.on("connection", (socket) => {
-    // console.log("User connected", socket.id);
     socket.on("joinRoom", (roomId) => {
-      // console.log("Joining room")
       socket.join(roomId);
-      // console.log("Joined Room", roomId)
     });
 
     socket.on("sendMessage", (data) => {

@@ -94,7 +94,7 @@
 
 .table-container {
   padding: 0 40px 60px;
-  overflow-x: auto; 
+  overflow-x: hidden; 
 }
 
 .vault-table {
@@ -225,7 +225,7 @@
   border-radius: 32px;
   padding: 60px 40px 40px;
   position: relative;
-  overflow-y: auto;
+  overflow-y: hidden;
 }
 
 .modal-content button {

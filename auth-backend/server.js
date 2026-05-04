@@ -811,6 +811,7 @@ app.get("/allBids", async (req, res) => {
       JOIN car_details cd ON c.car_id = cd.car_id
       JOIN users u ON c.user_id = u.id
       JOIN brands br ON c.brand_id = br.brand_id
+      where b.status='pending'
     `);
 
     return res.status(200).json(bid.rows);

@@ -17,7 +17,9 @@ const server = http.createServer(app)
 
 const io = new Server(server,{
   cors:{
-    origin: '*'
+    origin: process.env.FRONTENDURL,
+    methods: ["GET", "POST"],
+    credentials: true
   }
 });
 
@@ -167,9 +169,9 @@ app.get("/db-test", async (req, res) => {
   try {
     console.log("DB URL:", process.env.DATABASE_URL);
     const result = await pool.query("SELECT NOW()");
-    res.json(result.rows[0]);
+    return res.json(result.rows[0]);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 });
 
@@ -214,10 +216,10 @@ app.post("/register", async (req, res) => {
       [firstname, lastname, email, hashedpassword],
     );
 
-    res.json({ message: "Registered successfully" });
+    return res.status(200).json({ message: "Registered successfully" });
   } catch (err) {
     console.error("Register error:", err.message);
-    res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ message: "Internal server error" });
   }
 });
 
@@ -271,7 +273,7 @@ app.post("/login", async (req, res) => {
     );
     const userName = ExisitingUser.rows[0].firstname;
     const user_id = ExisitingUser.rows[0].id;
-    res.json({
+    return res.status(200).json({
       message: "Login Success",
       token: token,
       img_pth: image_path,
@@ -289,7 +291,7 @@ app.post("/login", async (req, res) => {
 app.get("/getImage/:user_id", async(req, res)=>{
   try{
     const user_id = req.params.user_id;
-    if(!user_id)res.status(400).json({ error: "image not found of user" });
+    if(!user_id) return res.status(400).json({ error: "image not found of user" });
     const cleanId = parseInt(user_id, 10);
     const userImage = await pool.query("select image_path from users where id=$1",[cleanId]);
     return res.status(200).json(userImage.rows);
@@ -430,7 +432,7 @@ app.post(
           cleanUserId,
         ]);
 
-        return res.json({
+        return res.status(200).json({
           message: "Profile updated successfully",
           img_pth: newImagePath,
           name: firstname,
@@ -439,7 +441,7 @@ app.post(
       }
     } catch (err) {
       console.error("Register error:", err.message);
-      res.status(500).json({ message: "Internal server error" });
+      return res.status(500).json({ message: "Internal server error" });
     }
   },
 );
@@ -477,7 +479,7 @@ app.get("/mailCheck/:mail/:user_id", verifyToken, async (req, res) => {
     return res.status(200).json(exsist.rows);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: err });
+    return res.status(500).json({ message: err });
   }
 });
 
@@ -522,7 +524,7 @@ app.post(
         [brandName, imagePath],
       );
 
-      res.status(200).json({
+      return res.status(200).json({
         message: "Success",
         data: brandName,
       });
@@ -627,10 +629,10 @@ app.post(
         ],
       );
 
-      res.status(200).json({ message: "Car details added successfully" });
+      return res.status(200).json({ message: "Car details added successfully" });
     } catch (err) {
       console.error("Database Error:", err.message);
-      res
+      return res
         .status(500)
         .json({ message: "Internal Server Error", error: err.message });
     }
@@ -917,6 +919,9 @@ app.get("/allcars/:user_id", verifyToken, async (req, res) => {
     const user_id = getUserId(req);
     if (!user_id)
       return res.status(405).json({ message: "No user_id to get all cars" });
+
+    const cleanUserId = parseInt(user_id, 10);
+
     const cars = await pool.query(
       `SELECT 
         b.brand_name,
@@ -935,11 +940,12 @@ app.get("/allcars/:user_id", verifyToken, async (req, res) => {
       FROM cars c join brands b on b.brand_id = c.brand_id
       JOIN car_details cd ON c.car_id = cd.car_id where c.user_id = $1 and c.deleted_at is null
     `,
-      [user_id],
+      [cleanUserId],
     );
     return res.status(200).json(cars.rows);
   } catch (err) {
     console.log(err);
+    return res.status(500).json({message: err.message})
   }
 });
 

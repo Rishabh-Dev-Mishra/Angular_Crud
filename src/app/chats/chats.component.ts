@@ -47,6 +47,8 @@ export class ChatsComponent {
   isTyping: boolean = false;
   otherIsTyping: boolean = false;
 
+  typingMessage = '';
+
   ngOnInit() {
     this.dataservice.getBuyerName(this.conversationId).subscribe({
       next: (res: any) => {
@@ -86,21 +88,13 @@ export class ChatsComponent {
       });
     });
 
-    this.socketservice.onTyping().subscribe((data: any) => {
-      this.zone.run(() => {
-        if (String(data.userId) != String(this.currentUserId)) {
-          this.otherIsTyping = true;
-        }
-      });
+    this.socketservice.onTyping().subscribe(() => {
+      this.typingMessage = 'Typing...';
     });
 
-    this.socketservice.onStopTyping().subscribe((data:any)=>{
-      this.zone.run(()=>{
-        if(String(data.userId) != String(this.currentUserId)){
-          this.otherIsTyping = false;
-        }
-      })
-    })
+    this.socketservice.onStopTyping().subscribe(() => {
+      this.typingMessage = '';
+    });
   }
 
   onInputChanged() {

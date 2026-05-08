@@ -8,7 +8,9 @@ import { io, Socket } from 'socket.io-client';
 
 export class SocketServiceService {
   private socket: Socket | null = null;
-  private readonly URL = 'http://localhost:3000';
+  private readonly URL = 'https://angular-crud-pvj9.onrender.com';
+
+  socketId: any;
   
 
   onlineUsers$ = new BehaviorSubject<string[]>([]);
@@ -21,6 +23,7 @@ export class SocketServiceService {
 
     this.socket.on('connect', () => {
       console.log('Socket connected:', this.socket?.id);
+      this.socketId = this.socket?.id
       this.setUserOnline(userId);
     });
 

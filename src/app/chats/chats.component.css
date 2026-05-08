@@ -92,6 +92,11 @@
   border-radius: 50%;
 }
 
+.typing-indicator{
+  color: white;
+  font-size: large;
+}
+
 .online {
   background: #22c55e;
   box-shadow: 0 0 8px #22c55e;

@@ -5,12 +5,14 @@ import { io, Socket } from 'socket.io-client';
 @Injectable({
   providedIn: 'root',
 })
+
 export class SocketServiceService {
   private socket: Socket | null = null;
   private readonly URL = 'http://localhost:3000';
+  
 
   onlineUsers$ = new BehaviorSubject<string[]>([]);
-
+  
   connect(userId: string): void {
     console.log('Attempting to connect to socket at:', this.URL);
     if (this.socket) return;
@@ -18,7 +20,7 @@ export class SocketServiceService {
     this.socket = io(this.URL);
 
     this.socket.on('connect', () => {
-      console.log('✅ Socket connected:', this.socket?.id);
+      console.log('Socket connected:', this.socket?.id);
       this.setUserOnline(userId);
     });
 
@@ -43,8 +45,41 @@ export class SocketServiceService {
   sendMessage(data: any): void {
     this.socket?.emit('sendMessage', data);
   }
+
   setUserOnline(userId: string): void {
     this.socket?.emit('user-online', userId);
+  }
+
+  sendTyping(data: any): void{
+    this.socket?.emit("typing", data)
+  }
+
+  sendStopTyping(data: any): void{
+    this.socket?.emit("stopTyping", data);
+  }
+
+  onTyping(): Observable<any>{
+    return new Observable((observer)=>{
+      const handler = (data:any)=>{
+        observer.next(data);
+      }
+      this.socket?.on('typing', handler);
+      return ()=>{
+        this.socket?.off('typing', handler);
+      }
+    })
+  }
+
+  onStopTyping(): Observable<any>{
+    return new Observable((observer)=>{
+      const handler = (data:any)=>{
+        observer.next(data);
+      }
+      this.socket?.on('stopTyping', handler);
+      return ()=>{
+        this.socket?.off('stopTyping', handler)
+      }
+    })
   }
 
   onMessage(): Observable<any> {

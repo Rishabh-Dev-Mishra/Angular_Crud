@@ -43,6 +43,10 @@ export class ChatsComponent {
 
   onlineUsers: string[] = [];
 
+  typingTimeOut: any;
+  isTyping: boolean = false;
+  otherIsTyping: boolean = false;
+
   ngOnInit() {
     this.dataservice.getBuyerName(this.conversationId).subscribe({
       next: (res: any) => {
@@ -61,9 +65,9 @@ export class ChatsComponent {
     });
 
     this.socketservice.connect(this.currentUserId);
-     this.socketservice.onlineUsers$.subscribe(users=>{
+    this.socketservice.onlineUsers$.subscribe((users) => {
       this.onlineUsers = users;
-    })
+    });
     if (this.conversationId) {
       this.socketservice.joinRoom(`conv_${this.conversationId}`);
     }
@@ -82,9 +86,41 @@ export class ChatsComponent {
       });
     });
 
-   
+    this.socketservice.onTyping().subscribe((data: any) => {
+      this.zone.run(() => {
+        if (String(data.userId) != String(this.currentUserId)) {
+          this.otherIsTyping = true;
+        }
+      });
+    });
 
+    this.socketservice.onStopTyping().subscribe((data:any)=>{
+      this.zone.run(()=>{
+        if(String(data.userId) != String(this.currentUserId)){
+          this.otherIsTyping = false;
+        }
+      })
+    })
   }
+
+  onInputChanged() {
+    if (!this.isTyping) {
+      this.isTyping = true;
+      this.socketservice.sendTyping({
+        userId: this.currentUserId,
+        roomId: `conv_${this.conversationId}`,
+      });
+    }
+    clearTimeout(this.typingTimeOut);
+    this.typingTimeOut = setTimeout(() => {
+      this.isTyping = false;
+      this.socketservice.sendStopTyping({
+        userId: this.currentUserId,
+        roomId: `conv_${this.conversationId}`,
+      });
+    }, 1500);
+  }
+
   sendMessage() {
     if (!this.messageText.trim()) return;
 
@@ -116,6 +152,7 @@ export class ChatsComponent {
 
     this.messageText = '';
   }
+
   ngOnDestroy() {
     if (this.conversationId) {
       this.socketservice.leaveRoom(`conv_${this.conversationId}`);

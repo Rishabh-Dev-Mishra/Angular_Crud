@@ -1,5 +1,10 @@
 module.exports = (io) => {
+
+
   const onlineUsers = new Map();
+  const isUserTyping = false;
+
+
   io.on("connection", (socket) => {
     socket.on("joinRoom", (roomId) => {
       socket.join(roomId);
@@ -15,6 +20,20 @@ module.exports = (io) => {
       console.log("Sent Message");
 
     });
+
+    socket.on("typing", (data)=>{
+      socket.to(data.roomId).emit("typing", {
+        userId: data.userId,
+        socketId: socket.id
+      })
+    })
+
+    socket.on("stopTyping", (data)=>{
+      socket.to(data.roomId).emit("stopTyping",{
+        userId: data.userId,
+        socketId: socket.id
+      })
+    })
 
     
 

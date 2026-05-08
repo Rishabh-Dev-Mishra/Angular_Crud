@@ -4,7 +4,6 @@
 
 <table>
 
-  <!-- TABLE HEADINGS -->
   <thead>
     <tr>
       <th>Car</th>
@@ -24,7 +23,6 @@
 
       <tr *ngFor="let car of carList">
 
-        <!-- Car -->
         <td class="car-info" data-label="Image">
           <img
             *ngIf="car.car_logo?.length"
@@ -72,7 +70,6 @@
 
     </ng-container>
 
-    <!-- Empty state -->
     <ng-template #noCars>
       <tr>
         <td colspan="8" class="no-data">

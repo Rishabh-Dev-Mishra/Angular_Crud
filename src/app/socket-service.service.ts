@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
 
 @Injectable({
@@ -9,14 +9,21 @@ export class SocketServiceService {
   private socket: Socket | null = null;
   private readonly URL = 'http://localhost:3000';
 
-  connect(): void {
-      console.log('Attempting to connect to socket at:', this.URL);
+  onlineUsers$ = new BehaviorSubject<string[]>([]);
+
+  connect(userId: string): void {
+    console.log('Attempting to connect to socket at:', this.URL);
     if (this.socket) return;
 
     this.socket = io(this.URL);
 
     this.socket.on('connect', () => {
       console.log('✅ Socket connected:', this.socket?.id);
+      this.setUserOnline(userId);
+    });
+
+    this.socket.on('users-online', (users: string[]) => {
+      this.onlineUsers$.next(users);
     });
 
     this.socket.on('disconnect', () => {
@@ -25,8 +32,7 @@ export class SocketServiceService {
   }
 
   joinRoom(roomId: string): void {
-
-    console.log("Joining room:", `conv_${roomId}`);
+    console.log('Joining room:', `conv_${roomId}`);
     this.socket?.emit('joinRoom', roomId);
   }
 
@@ -36,6 +42,9 @@ export class SocketServiceService {
 
   sendMessage(data: any): void {
     this.socket?.emit('sendMessage', data);
+  }
+  setUserOnline(userId: string): void {
+    this.socket?.emit('user-online', userId);
   }
 
   onMessage(): Observable<any> {
@@ -56,6 +65,4 @@ export class SocketServiceService {
     this.socket?.disconnect();
     this.socket = null;
   }
-
-
 }

@@ -41,7 +41,7 @@
         $ {{ car.base_price }}
       </td>
 
-      <td>
+      <td *ngIf="currentUserId != car.id">
         <button style="font-size: large;" (click)="goToChats(car)">
           <i class="fas fa-comments" style="color: rgb(255, 212, 59);"></i>
         </button>

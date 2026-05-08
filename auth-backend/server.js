@@ -795,6 +795,7 @@ app.get("/allBids", async (req, res) => {
   try {
     const bid = await pool.query(`
       SELECT 
+        u.id,
         b.base_price,
         c.car_id,
         c.model_name,
@@ -1469,7 +1470,7 @@ app.get("/buyer/:id", verifyToken, async(req, res)=>{
     const id = req.params.id;
     if(!id) return res.status(400).json({message: "No id"});
     const cleanId = parseInt(id, 10);
-    const user = await pool.query("select u.firstname, u.lastname from conversation c join users u on c.buyer_id = u.id where c.id = $1", [cleanId])
+    const user = await pool.query("select u.firstname, u.lastname, u.id from conversation c join users u on c.buyer_id = u.id where c.id = $1", [cleanId])
     return res.status(200).json(user.rows);
   }
 catch(err){

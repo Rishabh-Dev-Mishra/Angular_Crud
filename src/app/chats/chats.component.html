@@ -1,81 +1,132 @@
-<button class="btn-back" (click)="goBack()">Back</button>
+<button class="btn-back" (click)="goBack()">← Back</button>
+
 <div class="chat-container">
-  <!-- Header -->
+  <!-- HEADER -->
   <div class="chat-header">
-    <h3>
-      Chatting with
-      <span
-        style="color: greenyellow; margin-left: 10%"
-        *ngIf="sellerId == currentUserId"
-        >{{ buyerFirstName }} {{ buyerLastName }}...</span
-      >
-      <span
-        style="color: greenyellow; margin-left: 10%"
-        *ngIf="sellerId != currentUserId"
-        >{{ sellerFirstName }} {{ sellerLastName }}...</span
-      >
-      <button
-        class="btn-chat"
-        style="margin-left: 25%"
-        *ngIf="sellerId == currentUserId"
-        (click)="accept()"
-      >
-        Accept
-      </button>
-      <button
-        class="btn-chat"
-        style="margin-left: 2%"
-        *ngIf="sellerId == currentUserId"
-        (click)="reject()"
-      >
-        Reject
-      </button>
-    </h3>
+    <div class="header-left">
+      <!-- BUYER INFO -->
+      <ng-container *ngIf="sellerId == currentUserId">
+        <div class="user-info">
+          <div class="avatar">
+            {{ buyerFirstName?.charAt(0) }}
+          </div>
 
-    <!-- ACCEPT MODAL -->
-    <div class="modal-overlay" *ngIf="acceptModal">
-      <div class="modal-box accept">
-        <h3>Confirm Deal</h3>
-        <p>Are you sure you want to <strong>accept</strong> this deal?</p>
+          <div class="user-details">
+            <div class="user-name">
+              {{ buyerFirstName }} {{ buyerLastName }}
+            </div>
 
-        <div class="modal-actions">
-          <button class="btn cancel" (click)="accept()">Cancel</button>
-          <button class="btn confirm" (click)="confirmAccept()">Accept</button>
+            <div class="user-status">
+              <span
+                class="status-dot"
+                [ngClass]="{
+                  online: onlineUsers.includes(buyerId),
+                  offline: !onlineUsers.includes(buyerId),
+                }"
+              ></span>
+
+              <span class="status-text">
+                {{ onlineUsers.includes(buyerId) ? "Online" : "Offline" }}
+              </span>
+
+            </div>
+          
+          </div>
         </div>
-      </div>
+      </ng-container>
+
+
+      <!-- SELLER INFO -->
+      <ng-container *ngIf="sellerId != currentUserId">
+        <div class="user-info">
+          <div class="avatar">
+            {{ sellerFirstName?.charAt(0) }}
+          </div>
+
+          <div class="user-details">
+            <div class="user-name">
+              {{ sellerFirstName }} {{ sellerLastName }}
+            </div>
+
+            <div class="user-status">
+              <span
+                class="status-dot"
+                [ngClass]="{
+                  online: onlineUsers.includes(sellerId),
+                  offline: !onlineUsers.includes(sellerId),
+                }"
+              ></span>
+
+              <span class="status-text">
+                {{ onlineUsers.includes(sellerId) ? "Online" : "Offline" }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+            <div *ngIf="isTyping" class="typing-indicator">hi{{typingMessage}}</div>
     </div>
 
-    <!-- REJECT MODAL -->
-    <div class="modal-overlay" *ngIf="rejectModal">
-      <div class="modal-box reject">
-        <h3>Reject Deal</h3>
-        <p>
-          Are you sure you want to <strong>reject</strong> this deal?<br />
-          <span class="warning">This action cannot be undone.</span>
-        </p>
+    <!-- ACTION BUTTONS -->
+    <div class="header-actions" *ngIf="sellerId == currentUserId">
+      <button class="btn-chat accept-btn" (click)="accept()">Accept</button>
 
-        <div class="modal-actions">
-          <button class="btn cancel" (click)="reject()">Cancel</button>
-          <button class="btn danger" (click)="confirmReject()">Reject</button>
-        </div>
+      <button class="btn-chat reject-btn" (click)="reject()">Reject</button>
+    </div>
+  </div>
+
+  <!-- ACCEPT MODAL -->
+  <div class="modal-overlay" *ngIf="acceptModal">
+    <div class="modal-box accept">
+      <h3>Confirm Deal</h3>
+
+      <p>
+        Are you sure you want to
+        <strong>accept</strong> this deal?
+      </p>
+
+      <div class="modal-actions">
+        <button class="btn cancel" (click)="accept()">Cancel</button>
+
+        <button class="btn confirm" (click)="confirmAccept()">Accept</button>
       </div>
     </div>
   </div>
 
-  <!-- Messages -->
+  <!-- REJECT MODAL -->
+  <div class="modal-overlay" *ngIf="rejectModal">
+    <div class="modal-box reject">
+      <h3>Reject Deal</h3>
+
+      <p>
+        Are you sure you want to
+        <strong>reject</strong> this deal?
+      </p>
+
+      <span class="warning"> This action cannot be undone. </span>
+
+      <div class="modal-actions">
+        <button class="btn cancel" (click)="reject()">Cancel</button>
+
+        <button class="btn danger" (click)="confirmReject()">Reject</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHAT MESSAGES -->
   <div class="chat-messages">
     <ng-container *ngFor="let msg of messages; let i = index">
-      <!-- Date Separator -->
-
+      <!-- DATE SEPARATOR -->
       <div
         *ngIf="i === 0 || isDifferentDate(msg, messages[i - 1])"
         class="date-separator"
       >
-        <ng-container *ngIf="getDayLabel(msg?.created_at) as label">
-          <span>{{ label }}</span>
-        </ng-container>
+        <span>
+          {{ getDayLabel(msg?.created_at) }}
+        </span>
       </div>
-      <!-- Message -->
+
+      <!-- MESSAGE -->
       <div
         class="message"
         [ngClass]="{
@@ -99,13 +150,18 @@
       </div>
     </ng-container>
   </div>
+ 
+  <!-- INPUT -->
+
   <div class="chat-input">
     <input
       type="text"
       [(ngModel)]="messageText"
       placeholder="Type a message..."
       (keydown.enter)="sendMessage()"
+      (input)="onInputChanged()"
     />
-    <button (click)="sendMessage()">Send</button>
+
+    <button class="send-btn" (click)="sendMessage()">Send</button>
   </div>
 </div>

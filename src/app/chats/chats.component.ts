@@ -14,7 +14,10 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './chats.component.css',
 })
 export class ChatsComponent {
-  constructor(private zone: NgZone, private location: Location){}
+  constructor(
+    private zone: NgZone,
+    private location: Location,
+  ) {}
   private dataservice = inject(DataService);
   private socketservice = inject(SocketServiceService);
 
@@ -28,7 +31,7 @@ export class ChatsComponent {
   messages: any[] = [];
 
   messageText: string = '';
-  currentUserId = this.dataservice.getUserId();
+  currentUserId: any = this.dataservice.getUserId();
   buyerFirstName: string = '';
   buyerLastName: string = '';
 
@@ -36,29 +39,40 @@ export class ChatsComponent {
   sellerLastName: string = '';
 
   sellerId: string = '';
+  buyerId: string = '';
 
-  
+  onlineUsers: string[] = [];
+
+  typingTimeOut: any;
+  isTyping: boolean = false;
+  otherIsTyping: boolean = false;
+
+  typingMessage = '';
 
   ngOnInit() {
     this.dataservice.getBuyerName(this.conversationId).subscribe({
-      next:(res:any)=>{
+      next: (res: any) => {
         this.buyerFirstName = res[0].firstname;
         this.buyerLastName = res[0].lastname;
-      }
-    })
-    
+        this.buyerId = String(res[0].id);
+      },
+    });
+
     this.dataservice.getSellerName(this.conversationId).subscribe({
-      next:(res:any)=>{
+      next: (res: any) => {
         this.sellerFirstName = res[0].firstname;
         this.sellerLastName = res[0].lastname;
-        this.sellerId = res[0].seller_id;
-      }
-    })
+        this.sellerId = String(res[0].seller_id);
+      },
+    });
 
-    this.socketservice.connect();
-     if (this.conversationId) {
-    this.socketservice.joinRoom(`conv_${this.conversationId}`);
-  }
+    this.socketservice.connect(this.currentUserId);
+    this.socketservice.onlineUsers$.subscribe((users) => {
+      this.onlineUsers = users;
+    });
+    if (this.conversationId) {
+      this.socketservice.joinRoom(`conv_${this.conversationId}`);
+    }
     this.dataservice.getMessages(this.conversationId).subscribe({
       next: (res: any) => {
         this.messages = res.reverse();
@@ -67,16 +81,40 @@ export class ChatsComponent {
     });
 
     this.socketservice.onMessage().subscribe((newMsg: any) => {
-
-      
-      this.zone.run(()=>{
+      this.zone.run(() => {
         if (newMsg.sender_id !== this.currentUserId) {
-        this.messages = [...this.messages, newMsg]; 
-      }
-      })
-      
+          this.messages = [...this.messages, newMsg];
+        }
+      });
+    });
+
+    this.socketservice.onTyping().subscribe(() => {
+      this.typingMessage = 'Typing...';
+    });
+
+    this.socketservice.onStopTyping().subscribe(() => {
+      this.typingMessage = '';
     });
   }
+
+  onInputChanged() {
+    if (!this.isTyping) {
+      this.isTyping = true;
+      this.socketservice.sendTyping({
+        userId: this.currentUserId,
+        roomId: `conv_${this.conversationId}`,
+      });
+    }
+    clearTimeout(this.typingTimeOut);
+    this.typingTimeOut = setTimeout(() => {
+      this.isTyping = false;
+      this.socketservice.sendStopTyping({
+        userId: this.currentUserId,
+        roomId: `conv_${this.conversationId}`,
+      });
+    }, 1500);
+  }
+
   sendMessage() {
     if (!this.messageText.trim()) return;
 
@@ -108,93 +146,87 @@ export class ChatsComponent {
 
     this.messageText = '';
   }
+
   ngOnDestroy() {
     if (this.conversationId) {
       this.socketservice.leaveRoom(`conv_${this.conversationId}`);
     }
   }
 
-
   isDifferentDate(curr: any, prev: any): boolean {
-  const currDate = new Date(curr.created_at).toDateString();
-  const prevDate = new Date(prev.created_at).toDateString();
+    const currDate = new Date(curr.created_at).toDateString();
+    const prevDate = new Date(prev.created_at).toDateString();
 
-  return currDate !== prevDate;
-}
-
-getDayLabel(date: string | null | undefined): string {
-  if (!date) return 'New';   // prevent invalid
-
-  const msgDate = new Date(date);
-
-  // check invalid date
-  if (isNaN(msgDate.getTime())) return 'New';
-
-  const today = new Date();
-  const yesterday = new Date();
-  yesterday.setDate(today.getDate() - 1);
-
-  // normalize time (important)
-  const msg = new Date(msgDate.setHours(0, 0, 0, 0));
-  const tdy = new Date(today.setHours(0, 0, 0, 0));
-  const yest = new Date(yesterday.setHours(0, 0, 0, 0));
-
-  if (msg.getTime() === tdy.getTime()) {
-    return 'Today';
-  } else if (msg.getTime() === yest.getTime()) {
-    return 'Yesterday';
-  } else {
-    return msgDate.toLocaleDateString();
-  }
-}
-
-  goBack(){
-    this.location.back()
+    return currDate !== prevDate;
   }
 
+  getDayLabel(date: string | null | undefined): string {
+    if (!date) return 'New'; // prevent invalid
+
+    const msgDate = new Date(date);
+
+    // check invalid date
+    if (isNaN(msgDate.getTime())) return 'New';
+
+    const today = new Date();
+    const yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1);
+
+    // normalize time (important)
+    const msg = new Date(msgDate.setHours(0, 0, 0, 0));
+    const tdy = new Date(today.setHours(0, 0, 0, 0));
+    const yest = new Date(yesterday.setHours(0, 0, 0, 0));
+
+    if (msg.getTime() === tdy.getTime()) {
+      return 'Today';
+    } else if (msg.getTime() === yest.getTime()) {
+      return 'Yesterday';
+    } else {
+      return msgDate.toLocaleDateString();
+    }
+  }
+
+  goBack() {
+    this.location.back();
+  }
 
   acceptModal: boolean = false;
 
-  accept(){
-    this.acceptModal = !this.acceptModal
+  accept() {
+    this.acceptModal = !this.acceptModal;
   }
 
   rejectModal: boolean = false;
 
-  reject(){
-    this.rejectModal = !this.rejectModal
+  reject() {
+    this.rejectModal = !this.rejectModal;
   }
 
-  confirmAccept(){
+  confirmAccept() {
     const data = {
-      converId: this.conversationId
-    }
+      converId: this.conversationId,
+    };
     this.dataservice.acceptOffer(data).subscribe({
-      next:(res:any)=>{
-        this.toast.success("Accepted the offer")
+      next: (res: any) => {
+        this.toast.success('Accepted the offer');
         this.accept();
         this.location.back();
       },
-      error:(err:any)=>{
-
-      }
-    })
+      error: (err: any) => {},
+    });
   }
 
-  confirmReject(){
+  confirmReject() {
     const data = {
-      converId: this.conversationId
-    }
+      converId: this.conversationId,
+    };
     this.dataservice.rejectOffer(data).subscribe({
-      next:(res:any)=>{
-        this.toast.info("Rejected the offer")
+      next: (res: any) => {
+        this.toast.info('Rejected the offer');
         this.reject();
         this.location.back();
       },
-      error:(err:any)=>{
-        
-      }
-    })
+      error: (err: any) => {},
+    });
   }
-
 }

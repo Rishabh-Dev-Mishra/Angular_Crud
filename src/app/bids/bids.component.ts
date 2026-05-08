@@ -19,6 +19,8 @@ export class BidsComponent {
   private toast = inject(ToastrService);
   private router = inject(Router)
 
+  currentUserId: any = this.dataservice.getUserId();
+
   goBack(){
     this.location.back();
   }

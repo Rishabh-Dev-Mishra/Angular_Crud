@@ -56,6 +56,24 @@ td {
   font-size: 14px;
   vertical-align: middle;
 }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+thead {
+  background: #0f172a;
+  color: white;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+
 
 /* =========================
    CAR INFO

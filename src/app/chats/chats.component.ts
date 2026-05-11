@@ -1,4 +1,11 @@
-import { Component, inject, NgZone } from '@angular/core';
+import {
+  Component,
+  inject,
+  NgZone,
+  ElementRef,
+  ViewChild,
+  AfterViewChecked,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DataService } from '../data.service';
 import { SocketServiceService } from '../socket-service.service';
@@ -18,6 +25,7 @@ export class ChatsComponent {
     private zone: NgZone,
     private location: Location,
   ) {}
+  @ViewChild('chatBox') chatBox!: ElementRef;
   private dataservice = inject(DataService);
   private socketservice = inject(SocketServiceService);
 
@@ -80,6 +88,9 @@ export class ChatsComponent {
     this.dataservice.getMessages(this.conversationId).subscribe({
       next: (res: any) => {
         this.messages = res.reverse();
+        setTimeout(() => {
+          this.scrollToBottom();
+        });
       },
       error: (err: any) => {},
     });
@@ -89,6 +100,9 @@ export class ChatsComponent {
         if (newMsg.sender_id !== this.currentUserId) {
           this.messages = [...this.messages, newMsg];
         }
+      });
+      setTimeout(() => {
+        this.scrollToBottom();
       });
     });
 
@@ -103,6 +117,13 @@ export class ChatsComponent {
         this.otherIsTyping = false;
       }
     });
+  }
+
+  scrollToBottom(): void {
+    try {
+      const el = this.chatBox.nativeElement;
+      el.scrollTop = el.scrollHeight;
+    } catch (err) {}
   }
 
   onInputChanged() {

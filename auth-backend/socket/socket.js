@@ -6,20 +6,18 @@ module.exports = (io) => {
       socket.join(roomId);
     });
 
-    socket.on("user-online", (userId) => {
+    socket.on("userOnline", (userId) => {
       onlineUsers.set(String(userId), socket.id);
-      io.emit("users-online", Array.from(onlineUsers.keys()));
+      io.emit("usersOnline", Array.from(onlineUsers.keys()));
     });
 
 
     socket.on("sendMessage", (data) => {
       io.to(data.roomId).emit("receiveMessage", data);
-      console.log("Sent Message");
     });
 
-    socket.on("typing-message", (data) => {
+    socket.on("typingMessage", (data) => {
       const receiverSocketId = onlineUsers.get(String(data.recieverId))
-      console.log("Socekt id from socketjs",receiverSocketId);
       
 
       if (receiverSocketId) {
@@ -27,7 +25,7 @@ module.exports = (io) => {
       }
     });
 
-    socket.on("stopTyping-message", (data) => {
+    socket.on("stopTypingMessage", (data) => {
       const receiverSocketId = onlineUsers.get(String(data.recieverId))
 
       if (receiverSocketId) {
@@ -42,8 +40,7 @@ module.exports = (io) => {
           break;
         }
       }
-      io.emit("users-online", Array.from(onlineUsers.keys()));
-      console.log("User disconnected", socket.id);
+      io.emit("usersOnline", Array.from(onlineUsers.keys()));
     });
 
     socket.on("leaveRoom", (roomId) => {

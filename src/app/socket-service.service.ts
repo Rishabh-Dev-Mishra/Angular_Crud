@@ -8,8 +8,8 @@ import { io, Socket } from 'socket.io-client';
 
 export class SocketServiceService {
   private socket: Socket | null = null;
-  private readonly URL = 'https://angular-crud-pvj9.onrender.com';
-  // private readonly URL = 'http://localhost:3000';
+  // private readonly URL = 'https://angular-crud-pvj9.onrender.com';
+  private readonly URL = 'http://localhost:3000';
 
   socketId: any;
   
@@ -28,7 +28,7 @@ export class SocketServiceService {
       this.setUserOnline(userId);
     });
 
-    this.socket.on('users-online', (users: string[]) => {
+    this.socket.on('usersOnline', (users: string[]) => {
       this.onlineUsers$.next(users);
     });
 
@@ -51,15 +51,15 @@ export class SocketServiceService {
   }
 
   setUserOnline(userId: string): void {
-    this.socket?.emit('user-online', userId);
+    this.socket?.emit('userOnline', userId);
   }
 
   sendTyping(data: any): void{
-    this.socket?.emit("typing-message", data)
+    this.socket?.emit("typingMessage", data)
   }
 
   sendStopTyping(data: any): void{
-    this.socket?.emit("stopTyping-message", data);
+    this.socket?.emit("stopTypingMessage", data);
   }
 
   onTyping(): Observable<any>{

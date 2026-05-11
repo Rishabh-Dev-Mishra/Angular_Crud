@@ -28,8 +28,6 @@ require("./socket/socket.js")(io);
 
 
 
-
-
 require("dotenv").config({ path: "../.env" });
 app.use(
   cors({

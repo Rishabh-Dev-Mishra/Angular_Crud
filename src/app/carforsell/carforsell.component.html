@@ -8,14 +8,12 @@
 
     <div class="car-card" *ngFor="let car of carList">
 
-      <!-- Image -->
       <img 
         *ngIf="car.car_logo?.length"
         [src]="car.car_logo[0]" 
         class="car-img"
       />
 
-      <!-- Info -->
       <div class="car-info">
         <h3>{{ car.model_name }}</h3>
         <span class="category">{{ car.category }}</span>
@@ -27,10 +25,9 @@
         </div>
 
         <div class="price">
-          ₹{{ car.price }}
+          ${{ car.price }}
         </div>
 
-        <!-- Chat Button -->
         <button class="chat-btn" [routerLink]="['/conversations', car.car_id]">
           Get Conversations
         </button>

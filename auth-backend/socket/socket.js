@@ -17,19 +17,21 @@ module.exports = (io) => {
       console.log("Sent Message");
     });
 
-    socket.on("typing", (data) => {
-      const receiverSocketId = onlineUsers.get(String(data.receiverId));
+    socket.on("typing-message", (data) => {
+      const receiverSocketId = onlineUsers.get(String(data.recieverId))
+      console.log("Socekt id from socketjs",receiverSocketId);
+      
 
       if (receiverSocketId) {
-        socket.to(receiverSocketId).emit("typing", "typing...");
+        socket.to(receiverSocketId).emit("typing", {currentUserId: data.currentUserId});
       }
     });
 
-    socket.on("stopTyping", (data) => {
-      const receiverSocketId = onlineUsers.get(String(data.receiverId));
+    socket.on("stopTyping-message", (data) => {
+      const receiverSocketId = onlineUsers.get(String(data.recieverId))
 
       if (receiverSocketId) {
-        socket.to(receiverSocketId).emit("stopTyping", "stopped");
+        socket.to(receiverSocketId).emit("stopTyping", {currentUserId: data.currentUserId});
       }
     });
 

@@ -28,13 +28,10 @@
               <span class="status-text">
                 {{ onlineUsers.includes(buyerId) ? "Online" : "Offline" }}
               </span>
-
             </div>
-          
           </div>
         </div>
       </ng-container>
-
 
       <!-- SELLER INFO -->
       <ng-container *ngIf="sellerId != currentUserId">
@@ -64,7 +61,7 @@
           </div>
         </div>
       </ng-container>
-            <div *ngIf="isTyping" class="typing-indicator">{{typingMessage}}</div>
+      <div *ngIf="otherIsTyping" class="typing-indicator">{{ typingMessage }}</div>
     </div>
 
     <!-- ACTION BUTTONS -->
@@ -150,7 +147,7 @@
       </div>
     </ng-container>
   </div>
- 
+
   <!-- INPUT -->
 
   <div class="chat-input">

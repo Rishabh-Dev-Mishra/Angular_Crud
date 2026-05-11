@@ -31,7 +31,7 @@ export class ChatsComponent {
   messages: any[] = [];
 
   messageText: string = '';
-  currentUserId: any = this.dataservice.getUserId();
+  currentUserId: string = String(this.dataservice.getUserId());
   buyerFirstName: string = '';
   buyerLastName: string = '';
 
@@ -41,13 +41,17 @@ export class ChatsComponent {
   sellerId: string = '';
   buyerId: string = '';
 
+  get receiverId(): string {
+    return this.currentUserId == this.buyerId ? this.sellerId : this.buyerId;
+  }
+
   onlineUsers: string[] = [];
 
   typingTimeOut: any;
   isTyping: boolean = false;
   otherIsTyping: boolean = false;
 
-  typingMessage = '';
+  typingMessage = 'Typing...';
 
   ngOnInit() {
     this.dataservice.getBuyerName(this.conversationId).subscribe({
@@ -88,12 +92,16 @@ export class ChatsComponent {
       });
     });
 
-    this.socketservice.onTyping().subscribe(() => {
-      this.typingMessage = 'Typing...';
+    this.socketservice.onTyping().subscribe((data: any) => {
+      if (data.currentUserId !== this.currentUserId) {
+        this.otherIsTyping = true;
+      }
     });
 
-    this.socketservice.onStopTyping().subscribe(() => {
-      this.typingMessage = '';
+    this.socketservice.onStopTyping().subscribe((data: any) => {
+      if (data.currentUserId !== this.currentUserId) {
+        this.otherIsTyping = false;
+      }
     });
   }
 
@@ -101,7 +109,8 @@ export class ChatsComponent {
     if (!this.isTyping) {
       this.isTyping = true;
       this.socketservice.sendTyping({
-        userId: this.currentUserId,
+        currentUserId: this.currentUserId,
+        recieverId: this.receiverId,
         roomId: `conv_${this.conversationId}`,
       });
     }
@@ -109,7 +118,8 @@ export class ChatsComponent {
     this.typingTimeOut = setTimeout(() => {
       this.isTyping = false;
       this.socketservice.sendStopTyping({
-        userId: this.currentUserId,
+        currentUserId: this.currentUserId,
+        recieverId: this.receiverId,
         roomId: `conv_${this.conversationId}`,
       });
     }, 1500);
@@ -143,6 +153,13 @@ export class ChatsComponent {
     });
 
     this.messages.push(msgData);
+    this.socketservice.sendStopTyping({
+      currentUserId: this.currentUserId,
+      recieverId: this.receiverId,
+      roomId: `conv_${this.conversationId}`,
+    });
+
+    this.isTyping = false;
 
     this.messageText = '';
   }

@@ -9,6 +9,7 @@ import { io, Socket } from 'socket.io-client';
 export class SocketServiceService {
   private socket: Socket | null = null;
   private readonly URL = 'https://angular-crud-pvj9.onrender.com';
+  // private readonly URL = 'http://localhost:3000';
 
   socketId: any;
   
@@ -54,11 +55,11 @@ export class SocketServiceService {
   }
 
   sendTyping(data: any): void{
-    this.socket?.emit("typing", data)
+    this.socket?.emit("typing-message", data)
   }
 
   sendStopTyping(data: any): void{
-    this.socket?.emit("stopTyping", data);
+    this.socket?.emit("stopTyping-message", data);
   }
 
   onTyping(): Observable<any>{

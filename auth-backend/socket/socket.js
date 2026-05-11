@@ -1,6 +1,5 @@
 module.exports = (io) => {
   const onlineUsers = new Map();
-  const isUserTyping = false;
 
   io.on("connection", (socket) => {
     socket.on("joinRoom", (roomId) => {
@@ -11,6 +10,7 @@ module.exports = (io) => {
       onlineUsers.set(String(userId), socket.id);
       io.emit("users-online", Array.from(onlineUsers.keys()));
     });
+
 
     socket.on("sendMessage", (data) => {
       io.to(data.roomId).emit("receiveMessage", data);

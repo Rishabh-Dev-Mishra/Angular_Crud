@@ -168,6 +168,7 @@ export class ChatsComponent {
     if (this.conversationId) {
       this.socketservice.leaveRoom(`conv_${this.conversationId}`);
     }
+    this.socketservice.disconnect();
   }
 
   isDifferentDate(curr: any, prev: any): boolean {
@@ -204,6 +205,9 @@ export class ChatsComponent {
   }
 
   goBack() {
+    this.socketservice.onlineUsers$.subscribe((users) => {
+      this.onlineUsers = users;
+    });
     this.location.back();
   }
 

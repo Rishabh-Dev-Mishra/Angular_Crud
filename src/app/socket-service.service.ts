@@ -100,6 +100,7 @@ export class SocketServiceService {
     });
   }
 
+
   disconnect(): void {
     this.socket?.disconnect();
     this.socket = null;

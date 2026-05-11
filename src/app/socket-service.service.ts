@@ -8,8 +8,8 @@ import { io, Socket } from 'socket.io-client';
 
 export class SocketServiceService {
   private socket: Socket | null = null;
-  // private readonly URL = 'https://angular-crud-pvj9.onrender.com';
-  private readonly URL = 'http://localhost:3000';
+  private readonly URL = 'https://angular-crud-pvj9.onrender.com';
+  // private readonly URL = 'http://localhost:3000';
 
   socketId: any;
   
